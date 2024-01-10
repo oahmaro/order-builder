@@ -1,0 +1,14 @@
+import { forwardRef } from 'react'
+import classes from './{{dashCase componentName}}.module.css'
+
+export interface {{properCase componentName}}Props {}
+
+const {{properCase componentName}} = forwardRef<HTMLDivElement, {{properCase componentName}}Props>((props, ref) => (
+  <div ref={ref} className={classes.root}>
+    {{properCase componentName}} component
+  </div>
+))
+
+{{properCase componentName}}.displayName = '{{properCase componentName}}'
+
+export default {{properCase componentName}}

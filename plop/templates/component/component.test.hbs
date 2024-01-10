@@ -1,0 +1,11 @@
+import { render, screen } from '@/test-utils'
+
+import {{properCase componentName}} from './{{dashCase componentName}}'
+
+describe('{{properCase componentName}} component', () => {
+  it('renders text with the correct content', () => {
+    render(<{{properCase componentName}} />)
+
+    expect(screen.getByText('{{properCase componentName}} component')).toBeInTheDocument()
+  })
+})

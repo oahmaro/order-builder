@@ -5,6 +5,7 @@
     "datasource",
     "mantine",
     "nextjs",
+    "plopfile",
     "stylelint",
     "tabler",
     "typecheck"
