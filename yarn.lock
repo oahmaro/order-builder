@@ -4677,6 +4677,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-polyglot@npm:^2":
+  version: 2.5.0
+  resolution: "@types/node-polyglot@npm:2.5.0"
+  checksum: 8d33ec428352c09a0a4f669ce1dac73ada41c1eb2096d151646cdc3bbc394790864273661f45ccb29a6275d8d6b9eaa5b962304940a44e6d6e6f4a90ca10531c
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:^20.8.10":
   version: 20.8.10
   resolution: "@types/node@npm:20.8.10"
@@ -5662,6 +5669,20 @@ __metadata:
     es-abstract: "npm:^1.22.1"
     es-shim-unscopables: "npm:^1.0.0"
   checksum: 67b3f1d602bb73713265145853128b1ad77cc0f9b833c7e1e056b323fbeac41a4ff1c9c99c7b9445903caea924d9ca2450578d9011913191aa88cc3c3a4b54f4
+  languageName: node
+  linkType: hard
+
+"array.prototype.foreach@npm:^1.0.2":
+  version: 1.0.5
+  resolution: "array.prototype.foreach@npm:1.0.5"
+  dependencies:
+    call-bind: "npm:^1.0.2"
+    define-properties: "npm:^1.2.0"
+    es-abstract: "npm:^1.22.1"
+    es-array-method-boxes-properly: "npm:^1.0.0"
+    get-intrinsic: "npm:^1.2.1"
+    is-string: "npm:^1.0.7"
+  checksum: a8ae28ef68683a5a430d17be92d88c9b74fd9ed202b8307ff9dd94446e5a49b7ce483b4e235ef3b61459487a9704a86b79d09c75eb4683b3bef757ef4defde73
   languageName: node
   linkType: hard
 
@@ -7872,6 +7893,13 @@ __metadata:
     unbox-primitive: "npm:^1.0.2"
     which-typed-array: "npm:^1.1.11"
   checksum: a491c640a01b7c18f3cc626a3d08b5c67f8d3dac70ff8b4268cda6fa0ebed80bb028ff3ee731137512e054d39e98d02575144da904fe28045019fc59e503f1f8
+  languageName: node
+  linkType: hard
+
+"es-array-method-boxes-properly@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "es-array-method-boxes-properly@npm:1.0.0"
+  checksum: 4b7617d3fbd460d6f051f684ceca6cf7e88e6724671d9480388d3ecdd72119ddaa46ca31f2c69c5426a82e4b3091c1e81867c71dcdc453565cd90005ff2c382d
   languageName: node
   linkType: hard
 
@@ -11651,6 +11679,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.5.1"
     "@types/jest": "npm:^29.5.7"
     "@types/node": "npm:^20.8.10"
+    "@types/node-polyglot": "npm:^2"
     "@types/react": "npm:18.2.34"
     "@typescript-eslint/eslint-plugin": "npm:^6.9.1"
     "@typescript-eslint/parser": "npm:^6.9.1"
@@ -11671,6 +11700,7 @@ __metadata:
     jest-environment-jsdom: "npm:^29.7.0"
     mysql2: "npm:^3.7.0"
     next: "npm:^14.0.4"
+    node-polyglot: "npm:^2.5.0"
     plop: "npm:^4.0.1"
     postcss: "npm:^8.4.31"
     postcss-preset-mantine: "npm:1.12.3"
@@ -12401,6 +12431,19 @@ __metadata:
   peerDependencies:
     webpack: ">=5"
   checksum: fc3dcef5888c10d0ff9924a389e5bd9d9c95109e31cb7c8a27775b17ef14a63b587365b43bfedd81eb5f93cb16a04c0e8234a2c623bfaa2f2a528a9e45811f91
+  languageName: node
+  linkType: hard
+
+"node-polyglot@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "node-polyglot@npm:2.5.0"
+  dependencies:
+    array.prototype.foreach: "npm:^1.0.2"
+    has: "npm:^1.0.3"
+    object.entries: "npm:^1.1.5"
+    string.prototype.trim: "npm:^1.2.6"
+    warning: "npm:^4.0.3"
+  checksum: 0d3e512deaaea33f6a4b510da3ed4148c784ca70d6c8ae24d31a6ef29763a3e7cef6028296dc7f0fcd521e3999e8bbbb013878afad942add1a0fd207e9dc5535
   languageName: node
   linkType: hard
 
@@ -15146,7 +15189,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string.prototype.trim@npm:^1.2.8":
+"string.prototype.trim@npm:^1.2.6, string.prototype.trim@npm:^1.2.8":
   version: 1.2.8
   resolution: "string.prototype.trim@npm:1.2.8"
   dependencies:
@@ -16495,6 +16538,15 @@ __metadata:
   dependencies:
     makeerror: "npm:1.0.12"
   checksum: a17e037bccd3ca8a25a80cb850903facdfed0de4864bd8728f1782370715d679fa72e0a0f5da7c1c1379365159901e5935f35be531229da53bbfc0efdabdb48e
+  languageName: node
+  linkType: hard
+
+"warning@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "warning@npm:4.0.3"
+  dependencies:
+    loose-envify: "npm:^1.0.0"
+  checksum: aebab445129f3e104c271f1637fa38e55eb25f968593e3825bd2f7a12bd58dc3738bb70dc8ec85826621d80b4acfed5a29ebc9da17397c6125864d72301b937e
   languageName: node
   linkType: hard
 

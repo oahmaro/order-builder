@@ -1,19 +1,39 @@
 import { Button, Group, Stack, Text, Title } from '@mantine/core';
+import { Order, PrismaClient } from '@prisma/client';
+import Polyglot from 'node-polyglot';
+import Link from 'next/link';
 import { OrdersTable } from '@/components';
 
-export default function OrderListPage() {
+const prisma = new PrismaClient();
+
+const polyglot = new Polyglot({
+  locale: 'he',
+  phrases: { orders: '%{smart_count} הזמנה |||| %{smart_count} הזמנות' },
+});
+
+export default async function OrderListPage() {
+  let orders: Order[] = [];
+
+  try {
+    orders = await prisma.order.findMany();
+  } catch (error) {
+    return <div>Failed to fetch orders!</div>;
+  }
+
   return (
     <Stack gap={40}>
-      <Group justify="space-between">
+      <Group justify="space-between" align="flex-start">
         <Stack gap={0}>
           <Title order={1}>הזמנות</Title>
-          <Text c="dimmed">3 הזמנות שנמצאו</Text>
+          <Text c="dimmed">{polyglot.t('orders', orders.length)}</Text>
         </Stack>
 
-        <Button>צור ערך חדש</Button>
+        <Button component={Link} mt={8} href="/orders/create">
+          צור ערך חדש
+        </Button>
       </Group>
 
-      <OrdersTable />
+      <OrdersTable orders={orders} />
     </Stack>
   );
 }
