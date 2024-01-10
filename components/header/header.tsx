@@ -1,38 +1,34 @@
 import { forwardRef } from 'react';
-import { Avatar, Box, Breadcrumbs, Button, Group } from '@mantine/core';
+import { Anchor, Avatar, Box, Button, Group } from '@mantine/core';
 import Link from 'next/link';
 import classes from './header.module.css';
-
-const items = [
-  { title: 'אמנות', href: '/' },
-  { title: 'הזמנות', href: '/orders' },
-].map((item, index) => (
-  <Button
-    size="compact-md"
-    className={classes.breadcrumbItem}
-    color="gray"
-    c="dark"
-    component={Link}
-    variant="subtle"
-    href={item.href}
-    key={index}
-  >
-    {item.title}
-  </Button>
-));
 
 export interface HeaderProps {}
 
 const Header = forwardRef<HTMLDivElement, HeaderProps>((props, ref) => (
   <div ref={ref} className={classes.root}>
-    <Group>
-      <Box className={classes.logo} />
-      <Breadcrumbs styles={{ separator: { color: 'var(--mantine-color-gray-5)' } }}>
-        {items}
-      </Breadcrumbs>
+    <Anchor component={Link} href="/" underline="never">
+      <Group gap={8} w={200}>
+        <Box className={classes.logo} />
+        <Box fz="lg" fw={600}>
+          אמנות
+        </Box>
+      </Group>
+    </Anchor>
+
+    <Group component="nav" flex={1} justify="center">
+      <Button component={Link} href="/orders" variant="subtle" color="gray" c="dark">
+        הזמנות
+      </Button>
+
+      <Button component={Link} href="/customers" variant="subtle" color="gray" c="dark">
+        לקוחות
+      </Button>
     </Group>
 
-    <Avatar />
+    <Group w={200} justify="flex-end">
+      <Avatar size={32} />
+    </Group>
   </div>
 ));
 
