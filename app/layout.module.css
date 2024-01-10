@@ -1,0 +1,14 @@
+.body {
+  background-color: #fafafb;
+}
+
+.main {
+  max-width: 500px;
+
+  padding: 24px 80px;
+  margin: 0 auto;
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    padding: 24px 12px;
+  }
+}

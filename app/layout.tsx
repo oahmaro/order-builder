@@ -2,6 +2,7 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
 import { theme } from '../theme';
+import classes from './layout.module.css';
 
 export const metadata = {
   title: 'Mantine Next.js template',
@@ -20,9 +21,11 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
 
-      <body>
+      <body className={classes.body}>
         <DirectionProvider>
-          <MantineProvider theme={theme}>{children}</MantineProvider>
+          <MantineProvider theme={theme}>
+            <main className={classes.main}>{children}</main>
+          </MantineProvider>
         </DirectionProvider>
       </body>
     </html>
