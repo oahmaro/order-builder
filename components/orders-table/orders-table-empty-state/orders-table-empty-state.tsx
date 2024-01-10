@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Button, Stack, Text } from '@mantine/core';
+import Link from 'next/link';
 
 export interface OrdersTableEmptyStateProps {}
 
@@ -19,7 +20,9 @@ export default function OrdersTableEmptyState() {
           </Text>
         </Stack>
 
-        <Button variant="light">צור ערך חדש</Button>
+        <Button variant="light" component={Link} href="/orders/create">
+          צור ערך חדש
+        </Button>
       </Stack>
     </Stack>
   );
