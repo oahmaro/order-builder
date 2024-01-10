@@ -1,1 +1,2 @@
-export * from './welcome';
+export * from './header';
+export * from './orders-table';

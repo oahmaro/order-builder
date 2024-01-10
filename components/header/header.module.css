@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 70px;
+
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  background-color: var(--mantine-color-gray-3);
+}
