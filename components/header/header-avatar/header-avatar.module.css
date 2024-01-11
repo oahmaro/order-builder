@@ -1,0 +1,10 @@
+.avatarWrapper {
+  border: 1px solid var(--mantine-color-gray-4);
+  border-radius: 100%;
+}
+
+.avatar {
+  cursor: pointer;
+  border: 2px solid var(--mantine-color-gray-1);
+  border-radius: 100%;
+}
