@@ -1,3 +1,3 @@
 export default function OrderPage() {
-  return <div>Single order page</div>;
+  return <div>View Single order page</div>;
 }

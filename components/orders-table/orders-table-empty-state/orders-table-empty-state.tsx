@@ -7,7 +7,7 @@ export interface OrdersTableEmptyStateProps {}
 export default function OrdersTableEmptyState() {
   return (
     <Stack justify="center" align="center">
-      <Stack align="center" justify="center" p={56}>
+      <Stack align="center" justify="center" p={24}>
         <Image src="/empty.svg" width={240} height={120} alt="Empty results" />
 
         <Stack align="center" justify="center" gap={0} maw={320} ta="center">

@@ -3,6 +3,7 @@ import { Order, PrismaClient } from '@prisma/client';
 import Polyglot from 'node-polyglot';
 import Link from 'next/link';
 import { OrdersTable } from '@/components';
+import { TableFooter } from '@/components/table-footer';
 
 const prisma = new PrismaClient();
 
@@ -33,7 +34,10 @@ export default async function OrderListPage() {
         </Button>
       </Group>
 
-      <OrdersTable orders={orders} />
+      <Stack gap={16}>
+        <OrdersTable orders={orders} />
+        <TableFooter />
+      </Stack>
     </Stack>
   );
 }
