@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const { PrismaClient } = require('@prisma/client');
+
 const { adhesions, descriptions, prints, users } = require('./data.js');
 
 const prisma = new PrismaClient();
@@ -33,9 +34,12 @@ async function load() {
     console.log('reset adhesion auto increment to 1');
 
     // Create Records
-    await prisma.user.createMany({
-      data: users,
-    });
+    // await prisma.user.createMany({
+    //   data: users.map(async (user) => ({
+    //     ...user,
+    //     password: await bcrypt.hash(user.password, 10),
+    //   })),
+    // });
     console.log('Added user data');
 
     await prisma.print.createMany({
