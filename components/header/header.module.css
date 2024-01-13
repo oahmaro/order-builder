@@ -1,7 +1,7 @@
 .root {
   display: flex;
   justify-content: space-between;
-  padding: 8px 70px;
+  padding: 16px 70px;
   background-color: white;
 
   border-bottom: 1px solid var(--mantine-color-gray-3);

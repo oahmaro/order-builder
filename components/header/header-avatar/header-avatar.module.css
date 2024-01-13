@@ -5,6 +5,6 @@
 
 .avatar {
   cursor: pointer;
-  border: 2px solid var(--mantine-color-gray-1);
+  border: 2px solid var(--mantine-color-gray-1) !important;
   border-radius: 100%;
 }

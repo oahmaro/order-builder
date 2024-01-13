@@ -10,7 +10,7 @@ export default function HeaderAvatar() {
       <Menu shadow="md" width={140} position="bottom-end">
         <Menu.Target>
           <Box className={classes.avatarWrapper}>
-            <Avatar className={classes.avatar} color="black" variant="filled" size={32}>
+            <Avatar className={classes.avatar} color="black" variant="filled">
               OA
             </Avatar>
           </Box>
