@@ -1,3 +1,5 @@
+import { RegisterCard } from '@/components';
+
 export default function RegisterPage() {
-  return <div>Register page</div>;
+  return <RegisterCard />;
 }
