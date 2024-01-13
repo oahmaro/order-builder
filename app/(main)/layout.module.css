@@ -8,7 +8,7 @@
   padding: 24px 80px;
   margin: 0 auto;
 
-  @media (max-width: $mantine-breakpoint-xs) {
+  @media (max-width: $mantine-breakpoint-sm) {
     padding: 24px 12px;
   }
 }
