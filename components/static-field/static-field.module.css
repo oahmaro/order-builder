@@ -1,0 +1,15 @@
+.label {
+  font-weight: bold;
+  color: var(--mantine-color-gray-9);
+  user-select: none;
+}
+
+.separator {
+  font-weight: bold;
+  color: var(--mantine-color-gray-9);
+  user-select: none;
+}
+
+.value {
+  color: var(--mantine-color-gray-7);
+}

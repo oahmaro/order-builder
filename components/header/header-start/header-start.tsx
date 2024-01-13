@@ -13,7 +13,7 @@ export default function HeaderStart() {
   return (
     <>
       <Group>
-        <ActionIcon size="lg" variant="default" onClick={open}>
+        <ActionIcon size={32} variant="default" onClick={open}>
           <IoIosMenu />
         </ActionIcon>
 

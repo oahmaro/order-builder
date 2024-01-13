@@ -4,3 +4,12 @@
   background-color: white;
   padding: 16px 24px;
 }
+
+.inputRoot {
+  display: flex;
+  align-items: center;
+}
+
+.inputLabel {
+  margin-left: 8px;
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, Box, Group, Menu } from '@mantine/core';
+import Link from 'next/link';
 import classes from './header-avatar.module.css';
 
 export default function HeaderAvatar() {
@@ -9,14 +10,16 @@ export default function HeaderAvatar() {
       <Menu shadow="md" width={140} position="bottom-end">
         <Menu.Target>
           <Box className={classes.avatarWrapper}>
-            <Avatar className={classes.avatar} color="black" variant="filled">
+            <Avatar className={classes.avatar} color="black" variant="filled" size={32}>
               OA
             </Avatar>
           </Box>
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item>הגדרות</Menu.Item>
+          <Menu.Item component={Link} href="/user-settings">
+            הגדרות
+          </Menu.Item>
           <Menu.Divider />
           <Menu.Item>להתנתק</Menu.Item>
         </Menu.Dropdown>

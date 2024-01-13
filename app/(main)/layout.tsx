@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
-import { theme } from '../theme';
+import { theme } from '../../theme';
 import classes from './layout.module.css';
 import { Header } from '@/components/header';
 

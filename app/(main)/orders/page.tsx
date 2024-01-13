@@ -2,8 +2,7 @@ import { Button, Group, Stack, Text, Title } from '@mantine/core';
 import { Order, PrismaClient } from '@prisma/client';
 import Polyglot from 'node-polyglot';
 import Link from 'next/link';
-import { OrdersTable } from '@/components';
-import { TableFooter } from '@/components/table-footer';
+import { OrdersTable, TableFooter } from '@/components';
 
 const prisma = new PrismaClient();
 
