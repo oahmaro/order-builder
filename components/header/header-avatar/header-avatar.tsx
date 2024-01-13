@@ -17,8 +17,8 @@ export default function HeaderAvatar() {
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item component={Link} href="/user-settings">
-            הגדרות
+          <Menu.Item component={Link} href="/profile">
+            פרופיל
           </Menu.Item>
           <Menu.Divider />
           <Menu.Item>להתנתק</Menu.Item>

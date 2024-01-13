@@ -1,0 +1,14 @@
+.inputsWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: '100%';
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    flex-direction: column;
+  }
+}
+
+.input {
+  flex: 1;
+}
