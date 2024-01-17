@@ -1,8 +1,11 @@
-.body {
-  background-color: #fafafb;
+html,
+body,
+:root {
+  background-color: #fafafb !important;
+  height: 100%;
 }
 
-.main {
+main {
   max-width: 1200px;
 
   padding: 24px 80px;

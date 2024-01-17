@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function PageNotFound() {
   return (
-    <Stack align="center" justify="center" h="calc(100vh - 200px)" gap={0}>
+    <Stack align="center" justify="center" h="100%" mt={72} gap={0}>
       <Image src="/page-not-found.svg" width={500} height={300} alt="Page not found illustration" />
 
       <Stack mt={-32}>

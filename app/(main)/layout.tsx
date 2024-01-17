@@ -2,7 +2,7 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
 import { theme } from '../../theme';
-import classes from './global.module.css';
+import './global.css';
 import { Header } from '@/components/header';
 
 export const metadata = {
@@ -22,12 +22,12 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
 
-      <body className={classes.body}>
+      <body>
         <DirectionProvider>
           <MantineProvider theme={theme}>
             <Header />
 
-            <main className={classes.main}>{children}</main>
+            <main>{children}</main>
           </MantineProvider>
         </DirectionProvider>
       </body>
