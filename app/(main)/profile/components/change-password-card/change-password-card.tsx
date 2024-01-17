@@ -1,9 +1,9 @@
-import { Box, Card, Flex, Stack, TextInput, Title } from '@mantine/core';
+import { Box, Flex, Paper, Stack, TextInput, Title } from '@mantine/core';
 import classes from './change-password-card.module.css';
 
 export default function ChangePasswordCard() {
   return (
-    <Card>
+    <Paper shadow="xs" radius="md" p="lg">
       <Stack>
         <Title order={2}>שנה סיסמא</Title>
 
@@ -17,6 +17,6 @@ export default function ChangePasswordCard() {
           <TextInput label="אשר סיסמה" flex={1} />
         </Flex>
       </Stack>
-    </Card>
+    </Paper>
   );
 }

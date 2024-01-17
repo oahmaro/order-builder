@@ -1,10 +1,10 @@
-import { Card, Flex, Stack, TextInput, Title } from '@mantine/core';
+import { Flex, Paper, Stack, TextInput, Title } from '@mantine/core';
 
 import classes from './profile-card.module.css';
 
 export default function ProfileCard() {
   return (
-    <Card>
+    <Paper shadow="xs" radius="md" p="lg">
       <Stack>
         <Title order={2}>פרופיל</Title>
 
@@ -18,6 +18,6 @@ export default function ProfileCard() {
           <TextInput flex={1} label="שם משתמש" />
         </Flex>
       </Stack>
-    </Card>
+    </Paper>
   );
 }

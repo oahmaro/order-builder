@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { Badge, Table } from '@mantine/core';
+import { Badge, Paper, Table } from '@mantine/core';
 import { Order, OrderStatus } from '@prisma/client';
 import classes from './orders-table.module.css';
 import { OrdersTableEmptyState } from './orders-table-empty-state';
@@ -80,7 +80,7 @@ const OrdersTable = forwardRef<HTMLDivElement, OrdersTableProps>(({ orders = [] 
   });
 
   return (
-    <div ref={ref} className={classes.root}>
+    <Paper ref={ref} className={classes.root} radius="md" shadow="sm">
       {orders.length === 0 ? (
         <OrdersTableEmptyState />
       ) : (
@@ -100,7 +100,7 @@ const OrdersTable = forwardRef<HTMLDivElement, OrdersTableProps>(({ orders = [] 
           </Table>
         </Table.ScrollContainer>
       )}
-    </div>
+    </Paper>
   );
 });
 
