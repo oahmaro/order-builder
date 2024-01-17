@@ -2,7 +2,7 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
 import { theme } from '../../theme';
-import classes from './layout.module.css';
+import classes from './global.module.css';
 import { Header } from '@/components/header';
 
 export const metadata = {
