@@ -33,13 +33,6 @@ async function load() {
     await prisma.$queryRaw`ALTER TABLE Adhesion AUTO_INCREMENT = 1`;
     console.log('reset adhesion auto increment to 1');
 
-    // Create Records
-    // await prisma.user.createMany({
-    //   data: users.map(async (user) => ({
-    //     ...user,
-    //     password: await bcrypt.hash(user.password, 10),
-    //   })),
-    // });
     console.log('Added user data');
 
     await prisma.print.createMany({

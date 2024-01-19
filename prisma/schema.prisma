@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,26 +8,48 @@ datasource db {
   relationMode  = "prisma"
 }
 
-model User {
-  id                Int       @id @default(autoincrement())
-  firstName         String
-  lastName          String
-  email             String    @unique
-  username          String?   @unique
-  password          String
-  role              UserRole  @default(USER)
-  active            Boolean   @default(true)
+model Account {
+  id                String    @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?   @db.Text
+  access_token      String?   @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?   @db.Text
+  session_state     String?
 
-  createdCustomers  Customer[] @relation("CreatedByCustomer")
-  updatedCustomers  Customer[] @relation("UpdatedByCustomer")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdOrders     Order[]    @relation("CreatedByOrder")
-  updatedOrders     Order[]    @relation("UpdatedByOrder")
-
-  createdOrderItems OrderItem[] @relation("CreatedByOrderItem")
-  updatedOrderItems OrderItem[] @relation("UpdatedByOrderItem")
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
+model User {
+  id               Int       @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  username         String?   @unique
+  email            String    @unique
+  emailVerified    DateTime?
+  password         String?
+  role             UserRole  @default(USER)
+  active           Boolean   @default(true)
+
+  accounts         Account[]
+
+  createdCustomers Customer[] @relation("CreatedByCustomer")
+  updatedCustomers Customer[] @relation("UpdatedByCustomer")
+
+  createdOrders    Order[]    @relation("CreatedByOrder")
+  updatedOrders    Order[]    @relation("UpdatedByOrder")
+
+  createdAt        DateTime? @default(now())
+  updatedAt        DateTime? @updatedAt
+}
 
 enum UserRole {
   USER
@@ -40,17 +62,17 @@ model Customer {
   lastName    String
   phone       String   @unique
   email       String?  @unique
-  dateOfBirth String? 
-  
+  dateOfBirth String?
+
   createdBy   User?    @relation("CreatedByCustomer", fields: [createdById], references: [id])
   createdById Int?
-  
+
   updatedBy   User?    @relation("UpdatedByCustomer", fields: [updatedById], references: [id])
   updatedById Int?
 
   orders      Order[]
-  createdAt   DateTime?  @default(now())
-  updatedAt   DateTime?  @updatedAt
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
 
   @@index([createdById])
   @@index([updatedById])
@@ -58,11 +80,11 @@ model Customer {
 
 model Frame {
   id         Int      @id @default(autoincrement())
-  code       String   @unique  // Unique code for each frame
+  code       String   @unique // Unique code for each frame
 
   orderItems OrderItem[]
-  createdAt  DateTime?  @default(now())
-  updatedAt  DateTime?  @updatedAt
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
 }
 
 model Adhesion {
@@ -70,8 +92,8 @@ model Adhesion {
   name       String
 
   orderItems OrderItem[]
-  createdAt  DateTime?  @default(now())
-  updatedAt  DateTime?  @updatedAt
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
 }
 
 model Print {
@@ -79,8 +101,8 @@ model Print {
   name       String
 
   orderItems OrderItem[]
-  createdAt  DateTime?  @default(now())
-  updatedAt  DateTime?  @updatedAt
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
 }
 
 model Description {
@@ -88,18 +110,18 @@ model Description {
   name       String
 
   orderItems OrderItem[]
-  createdAt  DateTime?  @default(now())
-  updatedAt  DateTime?  @updatedAt
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
 }
 
 enum OrderStatus {
-  PENDING // The order has been placed but not yet processed.
+  PENDING    // The order has been placed but not yet processed.
   PROCESSING // The order is being handled, items are being picked, and it's in the process of being fulfilled.
-  SHIPPED // The order has been shipped and is on its way to the customer.
-  DELIVERED // The customer has received the order successfully.
-  CANCELLED // The order was cancelled, either by the customer or due to some other reason.
-  REFUNDED // The payment for the order has been refunded to the customer.
-  ON_HOLD // The order is temporarily on hold, possibly awaiting some action or clarification.
+  SHIPPED    // The order has been shipped and is on its way to the customer.
+  DELIVERED  // The customer has received the order successfully.
+  CANCELLED  // The order was cancelled, either by the customer or due to some other reason.
+  REFUNDED   // The payment for the order has been refunded to the customer.
+  ON_HOLD    // The order is temporarily on hold, possibly awaiting some action or clarification.
 }
 
 model Order {
@@ -111,7 +133,7 @@ model Order {
 
   createdBy  User?    @relation("CreatedByOrder", fields: [createdById], references: [id])
   createdById Int?
-  
+
   updatedBy  User?    @relation("UpdatedByOrder", fields: [updatedById], references: [id])
   updatedById Int?
 
@@ -123,8 +145,8 @@ model Order {
 
   orderItems      OrderItem[]
 
-  createdAt       DateTime?  @default(now())
-  updatedAt       DateTime?  @updatedAt
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
 
   @@index([customerId])
   @@index([createdById])
@@ -167,20 +189,12 @@ model OrderItem {
   notes           String?
   image           String?
 
-  createdBy  User?    @relation("CreatedByOrderItem", fields: [createdById], references: [id])
-  createdById Int?
-  
-  updatedBy  User?    @relation("UpdatedByOrderItem", fields: [updatedById], references: [id])
-  updatedById Int?
-
-  createdAt       DateTime?  @default(now())
-  updatedAt       DateTime?  @updatedAt
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
 
   @@index([orderId])
   @@index([frameId])
   @@index([adhesionId])
   @@index([printId])
   @@index([descriptionId])
-  @@index([createdById])
-  @@index([updatedById])
 }
