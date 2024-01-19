@@ -1,5 +1,5 @@
 import { RegisterCard } from '../_components/register-card';
 
-export default function RegisterPage() {
+export default function RegisterAdminPage() {
   return <RegisterCard />;
 }
