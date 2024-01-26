@@ -1,6 +1,8 @@
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 import { theme } from '../../theme';
 import './global.css';
@@ -26,6 +28,7 @@ export default function RootLayout({ children }: { children: any }) {
       <body>
         <DirectionProvider>
           <MantineProvider theme={theme}>
+            <Notifications />
             <Header />
 
             <main>{children}</main>
