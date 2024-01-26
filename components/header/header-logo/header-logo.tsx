@@ -9,8 +9,14 @@ interface HeaderLogoProps {
 
 export default function HeaderLogo({ onClick }: HeaderLogoProps) {
   return (
-    <Anchor component={Link} href="/" underline="never" onClick={onClick}>
-      <Group gap={12} w={200}>
+    <Anchor
+      className={classes.wrapper}
+      component={Link}
+      href="/"
+      underline="never"
+      onClick={onClick}
+    >
+      <Group gap={12} px="xs">
         <Box className={classes.logo} />
         <Box fw={600}>אמנות</Box>
       </Group>

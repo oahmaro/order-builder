@@ -22,7 +22,7 @@ const menus = [
 
 export default function MainDrawer({ opened, onClose }: MainDrawerProps) {
   return (
-    <Drawer.Root opened={opened} onClose={onClose} offset={2} radius="lg" size="xs">
+    <Drawer.Root opened={opened} onClose={onClose} offset={4} radius="lg" size="xs">
       <Drawer.Overlay color="#000" backgroundOpacity={0.1} />
 
       <Drawer.Content>

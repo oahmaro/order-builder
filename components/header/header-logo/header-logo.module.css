@@ -1,3 +1,7 @@
+.wrapper {
+  border-radius: var(--mantine-radius-sm);
+}
+
 .logo {
   width: 34px;
   height: 34px;
