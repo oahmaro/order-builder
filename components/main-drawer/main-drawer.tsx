@@ -1,30 +1,23 @@
-import { Button, Drawer, Stack } from '@mantine/core';
-import Link from 'next/link';
+'use client';
+
+import { Drawer, Stack } from '@mantine/core';
+import { UserRole } from '@prisma/client';
+import { Session } from 'next-auth';
+
 import { HeaderLogo } from '../header/header-logo';
+import OrderManagerSection from './order-manager-section';
+import AdminPanelSection from './admin-panel-section';
 
 export interface MainDrawerProps {
   opened: boolean;
+  session?: Session | null;
   onClose(): void;
 }
 
-const menus = [
-  { label: 'הזמנות', value: 'orders', url: '/orders?page=1&pageSize=10&sort=id:ASC' },
-  { label: 'לקוחות', value: 'customers', url: '/customers?page=1&pageSize=10&sort=name:ASC' },
-  { label: 'מסגרות', value: 'frames', url: '/frames?page=1&pageSize=10&sort=code:ASC' },
-  { label: 'הידבקויות', value: 'adhesions', url: '/adhesions?page=1&pageSize=10&sort=name:ASC' },
-  { label: 'הדפסים', value: 'prints', url: '/prints?page=1&pageSize=10&sort=name:ASC' },
-  {
-    label: 'תיאורים',
-    value: 'descriptions',
-    url: '/descriptions?page=1&pageSize=10&sort=name:ASC',
-  },
-];
-
-export default function MainDrawer({ opened, onClose }: MainDrawerProps) {
+export default function MainDrawer({ opened, session, onClose }: MainDrawerProps) {
   return (
     <Drawer.Root opened={opened} onClose={onClose} offset={4} radius="lg" size="xs">
       <Drawer.Overlay color="#000" backgroundOpacity={0.1} />
-
       <Drawer.Content>
         <Drawer.Header>
           <Drawer.Title>
@@ -34,21 +27,8 @@ export default function MainDrawer({ opened, onClose }: MainDrawerProps) {
         </Drawer.Header>
         <Drawer.Body>
           <Stack gap={0}>
-            {menus.map((menu) => (
-              <Button
-                key={menu.value}
-                component={Link}
-                href={menu.url}
-                variant="subtle"
-                color="gray"
-                c="dark"
-                fullWidth
-                justify="flex-start"
-                onClick={onClose}
-              >
-                {menu.label}
-              </Button>
-            ))}
+            <OrderManagerSection onClose={onClose} />
+            {session?.user?.role === UserRole.ADMIN && <AdminPanelSection onClose={onClose} />}
           </Stack>
         </Drawer.Body>
       </Drawer.Content>

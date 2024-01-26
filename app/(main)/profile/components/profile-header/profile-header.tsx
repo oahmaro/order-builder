@@ -1,4 +1,5 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title, rem } from '@mantine/core';
+import { PiCheckBold } from 'react-icons/pi';
 
 interface ProfileHeaderProps {
   title: string;
@@ -13,7 +14,13 @@ export default function ProfileHeader({ title, isSaveDisabled, isLoading }: Prof
         {title}
       </Title>
 
-      <Button size="md" type="submit" loading={isLoading} disabled={!isSaveDisabled}>
+      <Button
+        size="md"
+        type="submit"
+        loading={isLoading}
+        disabled={!isSaveDisabled}
+        rightSection={<PiCheckBold style={{ width: rem(16), height: rem(16) }} />}
+      >
         להציל
       </Button>
     </Group>

@@ -23,7 +23,7 @@ const Header = forwardRef<HTMLDivElement, HeaderProps>(async (props, ref) => {
 
   return (
     <div ref={ref} className={classes.root}>
-      <HeaderStart />
+      <HeaderStart session={session} />
       <HeaderAvatar initials={initials} />
     </div>
   );

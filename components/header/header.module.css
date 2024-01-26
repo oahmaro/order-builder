@@ -9,4 +9,8 @@
   @media print {
     display: none;
   }
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    padding: 16px;
+  }
 }
