@@ -9,9 +9,11 @@ import { getUserById } from './utils/user';
 
 declare module 'next-auth' {
   interface User {
+    id?: string;
     firstName?: string;
     lastName?: string;
     role?: UserRole;
+    username?: string;
   }
 }
 
@@ -34,9 +36,10 @@ export const {
 
       return {
         ...token,
-        role: existingUser.role,
-        firstName: existingUser.firstName,
-        lastName: existingUser.lastName,
+        username: existingUser?.username,
+        firstName: existingUser?.firstName,
+        lastName: existingUser?.lastName,
+        role: existingUser?.role,
       };
     },
     async session({ token, session }: { token?: JWT; session: Session }) {
@@ -44,9 +47,11 @@ export const {
         ...session,
         user: {
           ...session.user,
+          id: token?.sub as string,
           role: token?.role as UserRole,
           firstName: token?.firstName as string,
           lastName: token?.lastName as string,
+          username: token?.username as string,
         },
       };
     },
