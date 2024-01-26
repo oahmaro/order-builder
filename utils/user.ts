@@ -16,7 +16,7 @@ export async function getUserById(id: number) {
   }
 }
 
-export async function getUserByEmailOrUsername(identifier: string) {
+export async function getUserByEmailOrUsername(identifier?: string) {
   try {
     return (
       await db.user.findMany({

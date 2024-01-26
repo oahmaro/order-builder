@@ -1,15 +1,15 @@
-import { Stack } from '@mantine/core';
-import { ChangePasswordCard, ProfileCard, ProfileHeader } from './components';
+import { User } from '@prisma/client';
 
-export default function ProfilePage() {
-  return (
-    <Stack component="form" gap={40}>
-      <ProfileHeader />
+import { auth } from '@/auth';
+import { getUserByEmailOrUsername } from '@/utils/user';
+import { ProfileForm } from './components';
 
-      <Stack>
-        <ProfileCard />
-        <ChangePasswordCard />
-      </Stack>
-    </Stack>
-  );
+export default async function ProfilePage() {
+  const session = await auth();
+
+  const user = (await getUserByEmailOrUsername(
+    session?.user?.email || session?.user?.username
+  )) as User;
+
+  return <ProfileForm user={user} />;
 }

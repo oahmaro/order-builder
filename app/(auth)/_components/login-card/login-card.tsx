@@ -63,6 +63,7 @@ export default function LoginCard() {
             w="100%"
             size="md"
             required
+            spellCheck="false"
             disabled={isPending}
             {...form.getInputProps('usernameOrEmail')}
           />
@@ -71,6 +72,7 @@ export default function LoginCard() {
             w="100%"
             size="md"
             required
+            spellCheck="false"
             disabled={isPending}
             {...form.getInputProps('password')}
           />
