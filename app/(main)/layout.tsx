@@ -1,6 +1,7 @@
-import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+
 import { theme } from '../../theme';
 import './global.css';
 import { Header } from '@/components/header';

@@ -1,8 +1,13 @@
 import { Stack, Text, Title } from '@mantine/core';
 
-export default function HomePage() {
+import { auth } from '@/auth';
+
+export default async function HomePage() {
+  const session = await auth();
+
   return (
     <Stack maw={700} align="center" ta="center" m="24px auto">
+      <div>{JSON.stringify(session)}</div>
       <Title order={1}>ברוך הבא 👋</Title>
 
       <Stack gap={0} align="center">

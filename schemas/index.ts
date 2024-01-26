@@ -1,3 +1,3 @@
 export * from './login';
-export * from './register-admin';
+export * from './register';
 export * from './invite-new-user';

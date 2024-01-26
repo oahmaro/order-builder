@@ -1,17 +1,14 @@
 'use server';
 
 import * as z from 'zod';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
-import { RegisterAdminSchema } from '@/schemas';
-import { ResponseObject } from './types';
+import { RegisterSchema } from '@/schemas';
 import { db } from '@/lib/db';
 import { getUserByEmail } from '@/utils/user';
 
-export async function registerAdmin(
-  values: z.infer<typeof RegisterAdminSchema>
-): Promise<ResponseObject> {
-  const validatedFields = RegisterAdminSchema.safeParse(values);
+export async function register(values: z.infer<typeof RegisterSchema>) {
+  const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { message: 'Invalid fields!', status: 422 };
@@ -26,7 +23,12 @@ export async function registerAdmin(
   const hashedPassword = await bcrypt.hash(password, 10);
 
   await db.user.create({
-    data: { firstName, lastName: lastName || '', email, password: hashedPassword },
+    data: {
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    },
   });
 
   return { message: 'Registered successfully', status: 200 };

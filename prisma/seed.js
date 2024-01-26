@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const { PrismaClient } = require('@prisma/client');
-
+const bcrypt = require('bcryptjs');
 const { adhesions, descriptions, prints, users } = require('./data.js');
 
 const prisma = new PrismaClient();
@@ -33,6 +33,16 @@ async function load() {
     await prisma.$queryRaw`ALTER TABLE Adhesion AUTO_INCREMENT = 1`;
     console.log('reset adhesion auto increment to 1');
 
+    const usersWithHashedPassword = await Promise.all(
+      users.map(async (user) => ({
+        ...user,
+        password: await bcrypt.hash(user.password, 10),
+      }))
+    );
+
+    await prisma.user.createMany({
+      data: await usersWithHashedPassword,
+    });
     console.log('Added user data');
 
     await prisma.print.createMany({

@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-export const RegisterAdminSchema = z
+export const RegisterSchema = z
   .object({
     firstName: z
       .string({ required_error: 'נדרש שם פרטי' })

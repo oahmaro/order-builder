@@ -18,7 +18,7 @@ import { useForm, zodResolver } from '@mantine/form';
 
 import classes from './register-card.module.css';
 import { RegisterSchema } from '@/schemas';
-import { registerAdmin } from '@/actions/register-admin';
+import { register } from '@/actions/register';
 
 type FormValues = z.infer<typeof RegisterSchema>;
 
@@ -32,7 +32,7 @@ export default function RegisterCard() {
     setResponse(null);
 
     startTransition(async () => {
-      setResponse(await registerAdmin(values));
+      setResponse(await register(values));
     });
   }
 

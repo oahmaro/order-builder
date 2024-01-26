@@ -15,3 +15,17 @@ export async function getUserById(id: number) {
     return null;
   }
 }
+
+export async function getUserByEmailOrUsername(identifier: string) {
+  try {
+    return (
+      await db.user.findMany({
+        where: {
+          OR: [{ email: identifier }, { username: identifier }],
+        },
+      })
+    )?.[0];
+  } catch {
+    return null;
+  }
+}

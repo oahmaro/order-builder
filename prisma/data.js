@@ -1,3 +1,7 @@
+const { UserRole } = require('@prisma/client');
+
+const users = [{ id: 1, username: 'admin', password: 'admin', role: UserRole.ADMIN }];
+
 const adhesionOptions = [
   'מתיחה על עץ 1.7',
   'מתיחה על עץ 2.7',
@@ -54,6 +58,7 @@ const descriptions = descriptionOptions.map((description, index) => ({
 }));
 
 module.exports = {
+  users,
   adhesions,
   prints,
   descriptions,

@@ -3,13 +3,10 @@
 import * as z from 'zod';
 
 import { InviteNewUserSchema } from '@/schemas';
-import { ResponseObject } from './types';
 import { getUserByEmail } from '@/utils/user';
 import { db } from '@/lib/db';
 
-export async function inviteNewUser(
-  values: z.infer<typeof InviteNewUserSchema>
-): Promise<ResponseObject> {
+export async function inviteNewUser(values: z.infer<typeof InviteNewUserSchema>) {
   const validatedFields = InviteNewUserSchema.safeParse(values);
 
   if (!validatedFields.success) {

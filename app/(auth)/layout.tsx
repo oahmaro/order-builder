@@ -1,7 +1,8 @@
-import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
-import { theme } from '../../theme';
+import '@mantine/core/styles.css';
+
+import { theme } from '@/theme';
 import classes from './layout.module.css';
 
 export const metadata = {
@@ -9,7 +10,7 @@ export const metadata = {
   description: 'אפליקציה ליצירה וניהול הזמנות',
 };
 
-export default function RootLayout({ children }: { children: any }) {
+export default async function RootLayout({ children }: { children: any }) {
   return (
     <html lang="he" dir="rtl">
       <head>

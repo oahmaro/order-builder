@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
 export const LoginSchema = z.object({
-  email: z.string({ required_error: 'נדרש שם פרטי' }).email({ message: 'אימייל שגוי' }),
+  usernameOrEmail: z.string({ required_error: 'יש צורך בשם משתמש או דוא"ל.' }),
   password: z.string({ required_error: 'דרושה סיסמא' }),
 });

@@ -2,6 +2,8 @@
 
 import { Avatar, Box, Group, Menu } from '@mantine/core';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
+
 import classes from './header-avatar.module.css';
 
 export default function HeaderAvatar() {
@@ -21,7 +23,7 @@ export default function HeaderAvatar() {
             פרופיל
           </Menu.Item>
           <Menu.Divider />
-          <Menu.Item>להתנתק</Menu.Item>
+          <Menu.Item onClick={() => signOut()}>להתנתק</Menu.Item>
         </Menu.Dropdown>
       </Menu>
     </Group>

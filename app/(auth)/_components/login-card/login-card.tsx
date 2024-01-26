@@ -13,6 +13,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
+import { IconInfoCircle } from '@tabler/icons-react';
 import * as z from 'zod';
 
 import classes from './login-card.module.css';
@@ -58,12 +59,12 @@ export default function LoginCard() {
 
         <Stack w="100%">
           <TextInput
-            label="אימייל"
+            label='שם משתמש או דוא"ל'
             w="100%"
             size="md"
             required
             disabled={isPending}
-            {...form.getInputProps('email')}
+            {...form.getInputProps('usernameOrEmail')}
           />
           <PasswordInput
             label="סיסמה"
@@ -76,12 +77,12 @@ export default function LoginCard() {
         </Stack>
 
         {response?.status === 422 && (
-          <Alert variant="light" color="red" title="Alert title" w="100%">
+          <Alert variant="light" color="red" w="100%" icon={<IconInfoCircle />}>
             {response.message}
           </Alert>
         )}
 
-        <Button size="md" w="100%" type="submit" disabled={isPending}>
+        <Button size="md" w="100%" type="submit" loading={isPending}>
           התחברות
         </Button>
       </Stack>
