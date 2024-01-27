@@ -1,0 +1,10 @@
+.root {
+  width: 100%;
+  margin-top: var(--mantine-spacing-xl);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--mantine-color-gray-5);
+}
