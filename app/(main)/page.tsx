@@ -1,7 +1,36 @@
 import { Stack, Text, Title } from '@mantine/core';
+
 import { StatCardList } from './_components';
+import { db } from '@/lib/db';
 
 export default async function HomePage() {
+  const totalCustomers = await db.customer.count();
+  const totalOrders = await db.order.count();
+
+  const pendingOrders = await db.order.count({
+    where: {
+      status: 'PENDING',
+    },
+  });
+
+  const processingOrders = await db.order.count({
+    where: {
+      status: 'PROCESSING',
+    },
+  });
+
+  const deliveredOrders = await db.order.count({
+    where: {
+      status: 'DELIVERED',
+    },
+  });
+
+  const shippedOrders = await db.order.count({
+    where: {
+      status: 'SHIPPED',
+    },
+  });
+
   return (
     <Stack m="0 auto">
       <Title order={1}>ברוך הבא 👋</Title>
@@ -12,7 +41,14 @@ export default async function HomePage() {
           התהליכים שלך ושמור על סדר בצורה יעילה.
         </Text>
 
-        <StatCardList />
+        <StatCardList
+          customers={totalCustomers}
+          orders={totalOrders}
+          pendingOrders={pendingOrders}
+          processingOrders={processingOrders}
+          deliveredOrders={deliveredOrders}
+          shippedOrders={shippedOrders}
+        />
       </Stack>
     </Stack>
   );

@@ -6,31 +6,45 @@ import { PiReceipt, PiUsers, PiTruck, PiHandshake, PiPause, PiTimer } from 'reac
 import classes from './stat-card-list.module.css';
 import StatCard from '../stat-card/stat-card';
 
-const generalStats = [
-  {
-    title: 'לקוחות',
-    subtitle: 'כל הלקוחות',
-    icon: <PiUsers className={classes.icon} />,
-    value: 0,
-  },
-  {
-    title: 'הזמנות',
-    subtitle: 'כל ההזמנות',
-    icon: <PiReceipt className={classes.icon} />,
-    value: 0,
-  },
-] as const;
+export interface StatCardListProps {
+  customers: number;
+  orders: number;
+  pendingOrders: number;
+  processingOrders: number;
+  deliveredOrders: number;
+  shippedOrders: number;
+}
 
-const orderStats = [
-  { title: 'ממתין ל', icon: <PiPause className={classes.icon} />, value: 0 },
-  { title: 'מעבד', icon: <PiTimer className={classes.icon} />, value: 0 },
-  { title: 'נשלח', icon: <PiTruck className={classes.icon} />, value: 0 },
-  { title: 'נמסר', icon: <PiHandshake className={classes.icon} />, value: 0 },
-] as const;
+export default function StatCardList({
+  customers,
+  orders,
+  pendingOrders,
+  processingOrders,
+  shippedOrders,
+  deliveredOrders,
+}: StatCardListProps) {
+  const generalStats = [
+    {
+      title: 'לקוחות',
+      subtitle: 'כל הלקוחות',
+      icon: <PiUsers className={classes.icon} />,
+      value: customers,
+    },
+    {
+      title: 'הזמנות',
+      subtitle: 'כל ההזמנות',
+      icon: <PiReceipt className={classes.icon} />,
+      value: orders,
+    },
+  ] as const;
 
-export interface StatCardListProps {}
+  const orderStats = [
+    { title: 'ממתין ל', icon: <PiPause className={classes.icon} />, value: pendingOrders },
+    { title: 'מעבד', icon: <PiTimer className={classes.icon} />, value: processingOrders },
+    { title: 'נשלח', icon: <PiTruck className={classes.icon} />, value: shippedOrders },
+    { title: 'נמסר', icon: <PiHandshake className={classes.icon} />, value: deliveredOrders },
+  ] as const;
 
-export default function StatCardList() {
   return (
     <Stack className={classes.root} gap={32}>
       <SimpleGrid cols={{ base: 1, xs: 2 }}>
