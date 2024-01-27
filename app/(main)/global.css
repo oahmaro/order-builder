@@ -7,11 +7,12 @@ body,
 
 main {
   max-width: 1024px;
-
   padding: 24px 80px;
+  padding-bottom: 72px;
   margin: 0 auto;
 
   @media (max-width: $mantine-breakpoint-sm) {
     padding: 24px 12px;
+    padding-bottom: 72px;
   }
 }
