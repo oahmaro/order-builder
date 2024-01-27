@@ -1,20 +1,24 @@
 import * as z from 'zod';
 
+import errorMessages from '@/utils/error-messages';
+
 export const RegisterSchema = z
   .object({
     firstName: z
-      .string({ required_error: 'נדרש שם פרטי' })
-      .min(3, { message: 'מינימום 3 תווים נדרשים' }),
+      .string({ required_error: errorMessages['field-required'] })
+      .min(3, { message: errorMessages['min-3'] }),
     lastName: z.string().optional(),
-    email: z.string({ required_error: 'נדרש דוא"ל' }).email({ message: 'אימייל שגוי' }),
+    email: z
+      .string({ required_error: errorMessages['field-required'] })
+      .email({ message: errorMessages['email-valid'] }),
     password: z
-      .string({ required_error: 'דרושה סיסמא' })
-      .min(8, { message: 'מינימום 8 תווים נדרשים' }),
+      .string({ required_error: errorMessages['field-required'] })
+      .min(8, { message: errorMessages['min-8'] }),
     confirmPassword: z
-      .string({ required_error: 'אישור סיסמה נדרשת' })
-      .min(8, { message: 'מינימום 8 תווים נדרשים' }),
+      .string({ required_error: errorMessages['field-required'] })
+      .min(8, { message: errorMessages['min-8'] }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'הסיסמאות אינן תואמות',
+    message: errorMessages['password-match'],
     path: ['confirmPassword'],
   });

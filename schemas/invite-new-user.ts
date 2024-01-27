@@ -1,11 +1,15 @@
-import { UserRole } from '@prisma/client';
 import * as z from 'zod';
+import { UserRole } from '@prisma/client';
+
+import errorMessages from '@/utils/error-messages';
 
 export const InviteNewUserSchema = z.object({
   firstName: z
-    .string({ required_error: 'נדרש שם פרטי' })
-    .min(3, { message: 'מינימום 3 תווים נדרשים' }),
+    .string({ required_error: errorMessages['field-required'] })
+    .min(3, { message: errorMessages['min-3'] }),
   lastName: z.string().optional(),
-  email: z.string({ required_error: 'נדרש דוא"ל' }).email({ message: 'אימייל שגוי' }),
+  email: z
+    .string({ required_error: errorMessages['field-required'] })
+    .email({ message: errorMessages['email-valid'] }),
   role: z.nativeEnum(UserRole),
 });

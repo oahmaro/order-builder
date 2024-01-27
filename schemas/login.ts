@@ -1,6 +1,8 @@
 import * as z from 'zod';
 
+import errorMessages from '@/utils/error-messages';
+
 export const LoginSchema = z.object({
-  usernameOrEmail: z.string({ required_error: 'יש צורך בשם משתמש או דוא"ל.' }),
-  password: z.string({ required_error: 'דרושה סיסמא' }),
+  usernameOrEmail: z.string({ required_error: errorMessages['field-required'] }),
+  password: z.string({ required_error: errorMessages['field-required'] }),
 });

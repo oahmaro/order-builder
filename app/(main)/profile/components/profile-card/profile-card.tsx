@@ -17,13 +17,13 @@ export default function ProfileCard() {
             flex={1}
             required
             spellCheck="false"
-            {...form.getInputProps('firstName')}
+            {...form.getInputProps('profile.firstName')}
           />
           <TextInput
             label="שם משפחה"
             flex={1}
             spellCheck="false"
-            {...form.getInputProps('lastName')}
+            {...form.getInputProps('profile.lastName')}
           />
         </Flex>
 
@@ -33,13 +33,13 @@ export default function ProfileCard() {
             label="אימייל"
             required
             spellCheck="false"
-            {...form.getInputProps('email')}
+            {...form.getInputProps('profile.email')}
           />
           <TextInput
             flex={1}
             label="שם משתמש"
             spellCheck="false"
-            {...form.getInputProps('username')}
+            {...form.getInputProps('profile.username')}
           />
         </Flex>
       </Stack>

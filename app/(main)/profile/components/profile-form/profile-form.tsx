@@ -8,11 +8,13 @@ import { User } from '@prisma/client';
 
 import { ProfileHeader } from '../profile-header';
 import { ProfileCard } from '../profile-card';
-import { ProfileSchema } from '@/schemas';
 import { updateProfile } from '@/actions/update-profile';
 import { generateUserTitle } from '@/utils/get-user-title';
 import { ChangePasswordCard } from '../change-password-card';
 import { FormValues, ProfileFormProvider, useProfileForm } from '../../profile.context';
+import { ProfileFormSchema } from '@/schemas';
+import { StrictPasswordSchema } from '@/schemas/password';
+import errorMessages from '@/utils/error-messages';
 
 interface ProfileFormProps {
   user: User;
@@ -21,15 +23,32 @@ interface ProfileFormProps {
 export default function ProfileForm({ user }: ProfileFormProps) {
   const form = useProfileForm({
     initialValues: {
-      email: user?.email || '',
-      username: user?.username || '',
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      currentPassword: '',
-      password: '',
-      confirmPassword: '',
+      profile: {
+        email: user?.email || '',
+        username: user?.username || '',
+        firstName: user?.firstName || '',
+        lastName: user?.lastName || '',
+      },
+      password: {
+        currentPassword: '',
+        password: '',
+        confirmPassword: '',
+      },
     },
-    validate: zodResolver(ProfileSchema),
+    validate: (values) =>
+      values.password.password || values.password.confirmPassword
+        ? zodResolver(
+            ProfileFormSchema.extend({
+              password: StrictPasswordSchema.refine(
+                (data) => data.password === data.confirmPassword,
+                {
+                  message: errorMessages['password-match'],
+                  path: ['confirmPassword'],
+                }
+              ),
+            })
+          )(values)
+        : zodResolver(ProfileFormSchema)(values),
   });
 
   const [isPending, startTransition] = useTransition();
@@ -43,30 +62,21 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     startTransition(async () => {
       const { message, status, updatedUser } = await updateProfile(user.id!, values);
       setResponse({ message, status, updatedUser });
-
-      if (status === 200) {
-        form.setValues({
-          firstName: updatedUser?.firstName || '',
-          lastName: updatedUser?.lastName || '',
-          email: updatedUser?.email || '',
-          username: updatedUser?.username || '',
-          password: '',
-          currentPassword: '',
-          confirmPassword: '',
-        });
-
-        form.resetDirty();
-      }
     });
   }
 
   useEffect(() => {
     if (response?.status === 200) {
+      form.resetDirty();
       notifications.show({
         color: 'teal',
         title: 'הַצלָחָה',
         message: response?.message,
       });
+    }
+
+    if (response?.status === 403) {
+      form.setFieldError('password.currentPassword', 'Invalid password');
     }
   }, [response]);
 
