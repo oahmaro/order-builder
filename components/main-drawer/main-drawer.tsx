@@ -1,8 +1,8 @@
 'use client';
 
 import { Drawer, Stack } from '@mantine/core';
-import { UserRole } from '@prisma/client';
 import { Session } from 'next-auth';
+import { UserRole } from '@prisma/client';
 
 import { HeaderLogo } from '../header/header-logo';
 import OrderManagerSection from './order-manager-section';

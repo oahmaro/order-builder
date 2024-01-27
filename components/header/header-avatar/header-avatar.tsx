@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useTransition } from 'react';
-import { Avatar, Box, Group, Menu, rem } from '@mantine/core';
+import { Avatar, Box, Group, Menu, Stack, Text, rem } from '@mantine/core';
 import { nprogress } from '@mantine/nprogress';
 import { signOut } from 'next-auth/react';
 import { PiUser } from 'react-icons/pi';
@@ -11,10 +11,12 @@ import classes from './header-avatar.module.css';
 import { Link } from '@/components';
 
 interface HeaderAvatarProps {
+  title?: string;
+  subtitle?: string;
   initials?: string;
 }
 
-export default function HeaderAvatar({ initials }: HeaderAvatarProps) {
+export default function HeaderAvatar({ initials, title, subtitle }: HeaderAvatarProps) {
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function HeaderAvatar({ initials }: HeaderAvatarProps) {
 
   return (
     <Group w={200} justify="flex-end">
-      <Menu shadow="md" width={140} position="bottom-end">
+      <Menu shadow="md" width={200} position="bottom-end">
         <Menu.Target>
           <Box className={classes.avatarWrapper}>
             <Avatar className={classes.avatar} color="black" variant="filled">
@@ -40,6 +42,24 @@ export default function HeaderAvatar({ initials }: HeaderAvatarProps) {
         </Menu.Target>
 
         <Menu.Dropdown>
+          {(title || subtitle) && (
+            <>
+              <Menu.Label>
+                <Stack gap={0}>
+                  <Text size="sm" fw="bold" c="dark" truncate="start">
+                    {title}
+                  </Text>
+                  {subtitle && (
+                    <Text size="sm" c="dimmed" truncate="start">
+                      {subtitle}
+                    </Text>
+                  )}
+                </Stack>
+              </Menu.Label>
+              <Menu.Divider />
+            </>
+          )}
+
           <Menu.Item
             component={Link}
             href="/profile"

@@ -1,8 +1,6 @@
 export function generateUserTitle(user: {
   firstName?: string | null;
   lastName?: string | null;
-  email?: string | null;
-  username?: string | null;
 }): string {
   let result = '';
 
@@ -12,9 +10,14 @@ export function generateUserTitle(user: {
     if (user?.lastName) {
       result += ` ${user?.lastName}`;
     }
-  } else {
-    result += user.email || user.username;
   }
 
   return result;
+}
+
+export function generateUserSubtitle(user: {
+  email?: string | null;
+  username?: string | null;
+}): string {
+  return user?.email || user?.username || '';
 }
