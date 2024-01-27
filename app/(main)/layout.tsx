@@ -9,7 +9,7 @@ import '@mantine/nprogress/styles.css';
 import { theme } from '../../theme';
 import './global.css';
 import { Header } from '@/components/header';
-import NProgressDone from '@/components/nprogress-complete/nprogress-complete';
+import { NprogressComplete } from '@/components';
 
 export const metadata = {
   title: 'בונה מסדר עומנו',
@@ -34,11 +34,9 @@ export default function RootLayout({ children }: { children: any }) {
             <Notifications />
             <NavigationProgress />
             <Suspense fallback={null}>
-              <NProgressDone />
+              <NprogressComplete />
             </Suspense>
-
             <Header />
-
             <main>{children}</main>
           </MantineProvider>
         </DirectionProvider>

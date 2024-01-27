@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 export interface NprogressCompleteProps {}
 
-export default function NProgressDone() {
+export default function NProgressComplete() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   useEffect(() => nprogress.complete(), [pathname, searchParams]);
