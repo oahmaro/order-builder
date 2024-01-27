@@ -1,7 +1,8 @@
 import { Button, rem } from '@mantine/core';
-import Link from 'next/link';
 import { PiHouse, PiReceipt, PiUsers, PiSticker, PiImages, PiFrameCorners } from 'react-icons/pi';
 import { LiaImages } from 'react-icons/lia';
+
+import { Link } from '../link';
 
 const menus = [
   {

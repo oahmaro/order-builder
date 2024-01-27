@@ -2316,6 +2316,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/nprogress@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "@mantine/nprogress@npm:7.5.0"
+  dependencies:
+    "@mantine/store": "npm:7.5.0"
+  peerDependencies:
+    "@mantine/core": 7.5.0
+    "@mantine/hooks": 7.5.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 6bb09813d70a135df37b6d15c6ded9912cfa58068e0f2bed0ac0c8790af82baf2b87ac4d56adaaf68ef74ecdbc90f476a434d9b3e6d63a35014e91def18faeff
+  languageName: node
+  linkType: hard
+
 "@mantine/store@npm:7.5.0":
   version: 7.5.0
   resolution: "@mantine/store@npm:7.5.0"
@@ -11812,6 +11826,7 @@ __metadata:
     "@mantine/form": "npm:^7.4.2"
     "@mantine/hooks": "npm:7.4.0"
     "@mantine/notifications": "npm:^7.5.0"
+    "@mantine/nprogress": "npm:^7.5.0"
     "@next/bundle-analyzer": "npm:^14.0.1"
     "@next/eslint-plugin-next": "npm:^14.0.1"
     "@prisma/client": "npm:^5.8.1"

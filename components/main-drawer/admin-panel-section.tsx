@@ -1,8 +1,9 @@
 import { Button, Divider, Group, Stack, Text, rem } from '@mantine/core';
-import Link from 'next/link';
 import { RiAdminLine } from 'react-icons/ri';
 
-const adminMenus = [
+import { Link } from '../link';
+
+const menus = [
   {
     label: 'משתמשים',
     value: 'users',
@@ -27,7 +28,7 @@ export default function AdminPanelSection({ onClose }: AdminPanelSectionProps) {
       </Group>
 
       <Stack>
-        {adminMenus.map((menu) => (
+        {menus.map((menu) => (
           <Button
             key={menu.value}
             component={Link}

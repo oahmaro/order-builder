@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Button, Stack, Text } from '@mantine/core';
-import Link from 'next/link';
+
+import { Link } from '@/components';
 
 export interface OrdersTableEmptyStateProps {}
 

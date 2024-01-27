@@ -1,7 +1,7 @@
 import { Anchor, Box, Group } from '@mantine/core';
-import Link from 'next/link';
 
 import classes from './header-logo.module.css';
+import { Link } from '@/components';
 
 interface HeaderLogoProps {
   onClick?(): void;

@@ -1,20 +1,32 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { Avatar, Box, Group, Menu, rem } from '@mantine/core';
+import { nprogress } from '@mantine/nprogress';
 import { signOut } from 'next-auth/react';
-import Link from 'next/link';
 import { PiUser } from 'react-icons/pi';
 import { FiLogOut } from 'react-icons/fi';
 
 import classes from './header-avatar.module.css';
+import { Link } from '@/components';
 
 interface HeaderAvatarProps {
   initials?: string;
 }
 
 export default function HeaderAvatar({ initials }: HeaderAvatarProps) {
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (isPending) {
+      nprogress.start();
+      return;
+    }
+
+    if (!isPending) {
+      nprogress.complete();
+    }
+  }, [isPending]);
 
   return (
     <Group w={200} justify="flex-end">

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { NavigationProgress } from '@mantine/nprogress';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/nprogress/styles.css';
 
 import { theme } from '../../theme';
 import './global.css';
 import { Header } from '@/components/header';
+import NProgressDone from '@/components/nprogress-complete/nprogress-complete';
 
 export const metadata = {
   title: 'בונה מסדר עומנו',
@@ -29,6 +32,11 @@ export default function RootLayout({ children }: { children: any }) {
         <DirectionProvider>
           <MantineProvider theme={theme}>
             <Notifications />
+            <NavigationProgress />
+            <Suspense fallback={null}>
+              <NProgressDone />
+            </Suspense>
+
             <Header />
 
             <main>{children}</main>

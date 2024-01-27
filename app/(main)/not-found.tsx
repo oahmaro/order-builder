@@ -1,6 +1,9 @@
+'use client';
+
 import { Button, Stack, Title } from '@mantine/core';
 import Image from 'next/image';
-import Link from 'next/link';
+
+import { Link } from '@/components';
 
 export default function PageNotFound() {
   return (
