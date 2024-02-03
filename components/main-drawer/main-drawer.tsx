@@ -1,7 +1,7 @@
 'use client';
 
 import { Drawer, Stack } from '@mantine/core';
-import { Session } from 'next-auth';
+import { User } from 'next-auth';
 import { UserRole } from '@prisma/client';
 
 import { HeaderLogo } from '../header/header-logo';
@@ -10,11 +10,11 @@ import AdminPanelSection from './admin-panel-section';
 
 export interface MainDrawerProps {
   opened: boolean;
-  session?: Session | null;
+  user?: User | null;
   onClose(): void;
 }
 
-export default function MainDrawer({ opened, session, onClose }: MainDrawerProps) {
+export default function MainDrawer({ opened, user, onClose }: MainDrawerProps) {
   return (
     <Drawer.Root opened={opened} onClose={onClose} offset={6} radius="lg" size="xs">
       <Drawer.Overlay color="#000" backgroundOpacity={0.1} />
@@ -28,7 +28,7 @@ export default function MainDrawer({ opened, session, onClose }: MainDrawerProps
         <Drawer.Body>
           <Stack gap={0}>
             <OrderManagerSection onClose={onClose} />
-            {session?.user?.role === UserRole.ADMIN && <AdminPanelSection onClose={onClose} />}
+            {user?.role === UserRole.ADMIN && <AdminPanelSection onClose={onClose} />}
           </Stack>
         </Drawer.Body>
       </Drawer.Content>

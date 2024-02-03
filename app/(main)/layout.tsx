@@ -10,13 +10,16 @@ import { theme } from '../../theme';
 import './global.css';
 import { Header } from '@/components/header';
 import { NprogressComplete } from '@/components';
+import { auth } from '@/auth';
 
 export const metadata = {
   title: 'בונה מסדר עומנו',
   description: 'אפליקציה ליצירה וניהול הזמנות',
 };
 
-export default function RootLayout({ children }: { children: any }) {
+export default async function RootLayout({ children }: { children: any }) {
+  const session = await auth();
+
   return (
     <html lang="he" dir="rtl">
       <head>
@@ -36,7 +39,7 @@ export default function RootLayout({ children }: { children: any }) {
             <Suspense fallback={null}>
               <NprogressComplete />
             </Suspense>
-            <Header />
+            <Header user={session?.user} />
             <main>{children}</main>
           </MantineProvider>
         </DirectionProvider>

@@ -1,25 +1,25 @@
 import { forwardRef } from 'react';
+import { User } from 'next-auth';
 
 import classes from './header.module.css';
 import { HeaderAvatar } from './header-avatar';
 import { HeaderStart } from './header-start';
-import { auth } from '@/auth';
 import { generateUserSubtitle, generateUserTitle } from '@/utils/get-user-title';
 import { getUserInitials } from '@/utils/get-user-initials';
 
-export interface HeaderProps {}
+export interface HeaderProps {
+  user?: User;
+}
 
-const Header = forwardRef<HTMLDivElement, HeaderProps>(async (props, ref) => {
-  const session = await auth();
-
+const Header = forwardRef<HTMLDivElement, HeaderProps>(({ user }, ref) => {
   const title = generateUserTitle({
-    firstName: session?.user?.firstName,
-    lastName: session?.user?.lastName,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
   });
 
   const subtitle = generateUserSubtitle({
-    username: session?.user?.username,
-    email: session?.user?.email,
+    username: user?.username,
+    email: user?.email,
   });
 
   const initials = getUserInitials(title || subtitle);
@@ -27,7 +27,7 @@ const Header = forwardRef<HTMLDivElement, HeaderProps>(async (props, ref) => {
   return (
     <div ref={ref} className={classes.root}>
       <div className={classes.header}>
-        <HeaderStart session={session} />
+        <HeaderStart user={user} />
         <HeaderAvatar initials={initials} title={title} subtitle={subtitle} />
       </div>
     </div>
