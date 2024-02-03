@@ -1,16 +1,16 @@
-import { Button, Group, Stack, Text, Title } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import Polyglot from 'node-polyglot';
-import Link from 'next/link';
 import { Order } from '@prisma/client';
 import { OrdersTable, TableFooter } from '@/components';
 import { db } from '@/lib/db';
+import { PageHeader } from '@/components/page-header';
 
 const polyglot = new Polyglot({
   locale: 'he',
   phrases: { orders: '%{smart_count} הזמנה |||| %{smart_count} הזמנות' },
 });
 
-export default async function OrderListPage() {
+export default async function OrderPage() {
   let orders: Order[] = [];
 
   try {
@@ -21,16 +21,11 @@ export default async function OrderListPage() {
 
   return (
     <Stack gap={40}>
-      <Group justify="space-between" align="flex-start">
-        <Stack gap={0}>
-          <Title order={1}>הזמנות</Title>
-          <Text c="dimmed">{polyglot.t('orders', orders.length)}</Text>
-        </Stack>
-
-        <Button component={Link} mt={8} href="/orders/create">
-          צור ערך חדש
-        </Button>
-      </Group>
+      <PageHeader
+        title="הזמנות"
+        subtitle={polyglot.t('orders', orders.length)}
+        action={{ label: 'צור ערך חדש', link: '/orders/create' }}
+      />
 
       <Stack gap={16}>
         <OrdersTable orders={orders} />

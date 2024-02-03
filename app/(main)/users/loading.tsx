@@ -1,5 +1,11 @@
-import { TableLoading } from '@/components';
+import { Stack } from '@mantine/core';
+
+import { PageHeader } from '@/components/page-header';
 
 export default function LoadingPage() {
-  return <TableLoading />;
+  return (
+    <Stack gap={40}>
+      <PageHeader isLoading />
+    </Stack>
+  );
 }
