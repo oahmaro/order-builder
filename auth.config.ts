@@ -16,7 +16,7 @@ export default {
 
           const user = await getUserByEmailOrUsername(usernameOrEmail);
 
-          if (!user || !user.password) return null;
+          if (!user || !user.password || !user.active) return null;
 
           const passwordMatch = await bcrypt.compare(password, user.password);
 
