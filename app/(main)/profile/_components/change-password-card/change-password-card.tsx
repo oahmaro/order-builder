@@ -1,6 +1,6 @@
 import { Box, Flex, Paper, PasswordInput, Stack, Title } from '@mantine/core';
 import classes from './change-password-card.module.css';
-import { useProfileFormContext } from '../../profile.context';
+import { useProfileFormContext } from '../../_context/profile.context';
 
 export default function ChangePasswordCard() {
   const form = useProfileFormContext();

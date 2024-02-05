@@ -1,7 +1,7 @@
 import { Flex, Paper, Stack, TextInput, Title } from '@mantine/core';
 
 import classes from './profile-card.module.css';
-import { useProfileFormContext } from '../../profile.context';
+import { useProfileFormContext } from '../../_context/profile.context';
 
 export default function ProfileCard() {
   const form = useProfileFormContext();

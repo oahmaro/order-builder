@@ -11,7 +11,7 @@ import { ProfileCard } from '../profile-card';
 import { updateProfile } from '@/actions/update-profile';
 import { generateUserTitle } from '@/utils/get-user-title';
 import { ChangePasswordCard } from '../change-password-card';
-import { FormValues, ProfileFormProvider, useProfileForm } from '../../profile.context';
+import { FormValues, ProfileFormProvider, useProfileForm } from '../../_context/profile.context';
 import { ProfileFormSchema } from '@/schemas';
 import { StrictPasswordSchema } from '@/schemas/password';
 import errorMessages from '@/utils/error-messages';

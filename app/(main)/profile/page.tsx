@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 
 import { auth } from '@/auth';
 import { getUserByEmailOrUsername } from '@/utils/user';
-import { ProfileForm } from './components';
+import { ProfileForm } from './_components';
 
 export default async function ProfilePage() {
   const session = await auth();
