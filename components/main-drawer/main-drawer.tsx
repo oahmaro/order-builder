@@ -17,7 +17,7 @@ export interface MainDrawerProps {
 export default function MainDrawer({ opened, user, onClose }: MainDrawerProps) {
   return (
     <Drawer.Root opened={opened} onClose={onClose} offset={6} radius="lg" size="xs">
-      <Drawer.Overlay color="#000" backgroundOpacity={0.1} />
+      <Drawer.Overlay color="#000" backgroundOpacity={0.2} />
       <Drawer.Content>
         <Drawer.Header>
           <Drawer.Title>

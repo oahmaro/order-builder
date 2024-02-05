@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { ReactNode, Suspense } from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { NavigationProgress } from '@mantine/nprogress';
@@ -17,7 +17,7 @@ export const metadata = {
   description: 'אפליקציה ליצירה וניהול הזמנות',
 };
 
-export default async function RootLayout({ children }: { children: any }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
   const session = await auth();
 
   return (
