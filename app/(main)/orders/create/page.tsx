@@ -1,5 +1,5 @@
 import { Stack } from '@mantine/core';
-import { OrderHeaderCard, OrderItemCard } from '../components';
+import { OrderHeaderCard, OrderItemCard } from '../_components';
 
 export default function CreateOrderPage() {
   return (
