@@ -1,0 +1,5 @@
+.card {
+  border-radius: var(--mantine-spacing-md);
+  box-shadow: var(--mantine-shadow-sm);
+  padding: 24px;
+}
