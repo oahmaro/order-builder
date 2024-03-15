@@ -5,6 +5,11 @@
   min-width: calc(50% - 8px);
   max-width: calc(50% - 8px);
   flex: 1;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    min-width: 100%;
+    max-width: 100%;
+  }
 }
 
 .cancel-button {

@@ -3,47 +3,45 @@ import { UserRole } from '@prisma/client';
 
 import classes from './invite-new-user-form.module.css';
 
-export interface InviteNewUserFormProps {}
-
 export default function InviteNewUserForm() {
   return (
     <Stack gap={32} className={classes.root}>
       <Stack component="section">
-        <Title order={3}>User details</Title>
+        <Title order={4}>User details</Title>
 
         <Group wrap="wrap">
           <TextInput
             className={classes.input}
             label="First name"
             placeholder="e.g. John"
-            size="md"
+            size="sm"
             required
           />
-          <TextInput className={classes.input} label="Last name" placeholder="e.g. Doe" size="md" />
+          <TextInput className={classes.input} label="Last name" placeholder="e.g. Doe" size="sm" />
           <TextInput
             className={classes.input}
             label="Email"
             placeholder="e.g. john.doe@example.com"
-            size="md"
+            size="sm"
             required
           />
           <TextInput
             className={classes.input}
             label="Username"
             placeholder="e.g. john.doe@example.com"
-            size="md"
+            size="sm"
           />
         </Group>
       </Stack>
 
       <Stack component="section">
-        <Title order={3}>Role</Title>
+        <Title order={4}>Role</Title>
 
         <Select
           className={classes.input}
           label="User's role"
           placeholder="Select"
-          size="md"
+          size="sm"
           data={[UserRole.ADMIN, UserRole.USER]}
           required
         />

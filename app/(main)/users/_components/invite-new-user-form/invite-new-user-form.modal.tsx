@@ -1,9 +1,10 @@
+'use client';
+
 import { ActionIcon, Box, Button, Group, Modal } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 
-import classes from './invite-new-user-form.module.css';
-
 import InviteNewUserForm from './invite-new-user-form';
+import classes from './invite-new-user-form.module.css';
 
 export interface InviteNewUserFormModalProps {
   opened: boolean;
@@ -18,15 +19,17 @@ export default function InviteNewUserFormModal({ opened, onClose }: InviteNewUse
   const handleSubmit = () => {};
 
   return (
-    <Modal.Root opened={opened} onClose={onClose} radius="lg" size="60%" shadow="lg" centered>
+    <Modal.Root opened={opened} onClose={onClose} radius="lg" size="xl" shadow="lg" centered>
       <Modal.Overlay backgroundOpacity={0.2} color="#000" />
       <Modal.Content>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Modal.Header className={classes['modal-header']}>
-            <Modal.Title>הזמן משתמש חדש</Modal.Title>
+            <Modal.Title fz={16} fw="bold">
+              הזמן משתמש חדש
+            </Modal.Title>
 
             <ActionIcon variant="white" c="gray.6" size="md" className={classes['close-button']}>
-              <IconX />
+              <IconX size={16} />
             </ActionIcon>
           </Modal.Header>
 
