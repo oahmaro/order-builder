@@ -1,6 +1,9 @@
 const { UserRole } = require('@prisma/client');
 
-const users = [{ id: 1, username: 'admin', password: 'admin', role: UserRole.ADMIN }];
+const users = [
+  { id: 1, username: 'admin', password: 'admin', role: UserRole.ADMIN, active: true },
+  { id: 2, username: 'test', password: 'test', role: UserRole.USER, active: false },
+];
 
 const adhesionOptions = [
   'מתיחה על עץ 1.7',

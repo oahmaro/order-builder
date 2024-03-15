@@ -1,11 +1,8 @@
-import { redirect } from 'next/navigation';
-import { UserRole } from '@prisma/client';
 import { Stack } from '@mantine/core';
 import Polyglot from 'node-polyglot';
 
-import { auth } from '@/auth';
-import { PageHeader } from '@/components/page-header';
 import { db } from '@/lib/db';
+import { UsersPageHeader, UsersTable } from './_components';
 
 const polyglot = new Polyglot({
   locale: 'he',
@@ -13,17 +10,12 @@ const polyglot = new Polyglot({
 });
 
 export default async function UsersPage() {
-  const session = await auth();
-
-  if (session?.user?.role !== UserRole.ADMIN) {
-    redirect('/');
-  }
-
   const users = await db.user.findMany();
 
   return (
     <Stack gap={40}>
-      <PageHeader title="משתמשים" subtitle={polyglot.t('users', users.length)} />
+      <UsersPageHeader title="משתמשים" subtitle={polyglot.t('users', users.length)} />
+      <UsersTable users={users} />
     </Stack>
   );
 }
