@@ -21,16 +21,16 @@ async function load() {
     console.log('Deleted records in adhesion table');
 
     // Reset autoincrement
-    await prisma.$queryRaw`ALTER TABLE User AUTO_INCREMENT = 1`;
+    await prisma.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
     console.log('reset user auto increment to 1');
 
-    await prisma.$queryRaw`ALTER TABLE Print AUTO_INCREMENT = 1`;
+    await prisma.$queryRaw`ALTER SEQUENCE "Print_id_seq" RESTART WITH 1`;
     console.log('reset print auto increment to 1');
 
-    await prisma.$queryRaw`ALTER TABLE Description AUTO_INCREMENT = 1`;
+    await prisma.$queryRaw`ALTER SEQUENCE "Description_id_seq" RESTART WITH 1`;
     console.log('reset description auto increment to 1');
 
-    await prisma.$queryRaw`ALTER TABLE Adhesion AUTO_INCREMENT = 1`;
+    await prisma.$queryRaw`ALTER SEQUENCE "Adhesion_id_seq" RESTART WITH 1`;
     console.log('reset adhesion auto increment to 1');
 
     const usersWithHashedPassword = await Promise.all(

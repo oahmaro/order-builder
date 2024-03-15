@@ -18,7 +18,10 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "generate": "plop --plopfile plop/plopfile.js",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:reset": "docker-compose down -v --rmi all"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.0.15",
@@ -33,7 +36,6 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",
     "mantine-form-zod-resolver": "^1.1.0",
-    "mysql2": "^3.7.0",
     "next": "^14.1.0",
     "next-auth": "^5.0.0-beta.5",
     "node-polyglot": "^2.5.0",
