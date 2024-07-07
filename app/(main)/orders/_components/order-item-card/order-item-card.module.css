@@ -1,16 +1,3 @@
 .root {
   padding: 16px 24px;
 }
-
-.frameDimensionRoot {
-  display: flex;
-  align-items: center;
-}
-
-.frameDimensionLabel {
-  margin-left: 8px;
-}
-
-.frameDimensionInput {
-  width: 80px;
-}

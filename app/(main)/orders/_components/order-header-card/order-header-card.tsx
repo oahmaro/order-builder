@@ -1,4 +1,4 @@
-import { Box, Group, NumberFormatter, Paper, Select, Stack } from '@mantine/core';
+import { Box, Group, Image, NumberFormatter, Paper, Select, Stack } from '@mantine/core';
 import classes from './order-header-card.module.css';
 import { StaticField } from '@/components';
 
@@ -52,7 +52,11 @@ export default async function OrderHeaderCard({ orderNumber }: OrderHeaderCardPr
             </Box>
           </Box>
 
-          <Box w={200} h={120} bg="gray.2" />
+          <Image
+            fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+            radius="lg"
+            maw={180}
+          />
         </Stack>
 
         <Stack flex={1} h="100%" gap={0}>

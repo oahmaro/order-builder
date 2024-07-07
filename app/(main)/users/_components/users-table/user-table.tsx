@@ -4,6 +4,7 @@ import { Badge } from '@mantine/core';
 import { User } from '@prisma/client';
 
 import { CustomTable } from '@/components';
+import { UsersTableContentPhrase, usersTableContent } from './users-table.content';
 
 type UserData = Partial<Omit<User, 'password'>>;
 
@@ -15,14 +16,38 @@ export default function UsersTable({ users }: UsersTableProps) {
   return (
     <CustomTable<UserData>
       columns={[
-        { header: 'זהות המשתמש', sortable: true, render: (data) => data.id },
-        { header: 'שם פרטי', sortable: true, render: (data) => data.firstName },
-        { header: 'שם משפחה', sortable: true, render: (data) => data.lastName },
-        { header: 'אימייל', sortable: true, render: (data) => data.email },
-        { header: 'תפקיד משתמש', sortable: true, render: (data) => data.role },
-        { header: 'שם משתמש', sortable: true, render: (data) => data.username },
         {
-          header: 'סטטוס',
+          header: usersTableContent.t(UsersTableContentPhrase.ID),
+          sortable: true,
+          render: (data) => data.id,
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.FIRST_NAME),
+          sortable: true,
+          render: (data) => data.firstName,
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.LAST_NAME),
+          sortable: true,
+          render: (data) => data.lastName,
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.EMAIL),
+          sortable: true,
+          render: (data) => data.email,
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.ROLE),
+          sortable: true,
+          render: (data) => data.role,
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.USERNAME),
+          sortable: true,
+          render: (data) => data.username,
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.ACTIVE),
           sortable: true,
           render: (data) => (
             <Badge color={data.active ? 'green' : 'red'} variant="dot">
@@ -30,8 +55,16 @@ export default function UsersTable({ users }: UsersTableProps) {
             </Badge>
           ),
         },
-        { header: 'נוצר ב', sortable: true, render: (data) => data.createdAt?.toDateString() },
-        { header: 'מעודכן', sortable: true, render: (data) => data.updatedAt?.toDateString() },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.CREATED_AT),
+          sortable: true,
+          render: (data) => data.createdAt?.toDateString(),
+        },
+        {
+          header: usersTableContent.t(UsersTableContentPhrase.UPDATED_AT),
+          sortable: true,
+          render: (data) => data.updatedAt?.toDateString(),
+        },
       ]}
       data={users}
     />
