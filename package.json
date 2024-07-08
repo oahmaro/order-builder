@@ -28,6 +28,7 @@
     "@mantine/core": "7.4.0",
     "@mantine/form": "^7.4.2",
     "@mantine/hooks": "7.4.0",
+    "@mantine/modals": "^7.11.1",
     "@mantine/notifications": "^7.5.0",
     "@mantine/nprogress": "^7.5.0",
     "@next/bundle-analyzer": "^14.0.1",

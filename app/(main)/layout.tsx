@@ -2,6 +2,8 @@ import React, { ReactNode, Suspense } from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { NavigationProgress } from '@mantine/nprogress';
+import { ModalsProvider } from '@mantine/modals';
+
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/nprogress/styles.css';
@@ -40,7 +42,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               <NprogressComplete />
             </Suspense>
             <Header user={session?.user} />
-            <main>{children}</main>
+            <main>
+              <ModalsProvider>{children}</ModalsProvider>
+            </main>
           </MantineProvider>
         </DirectionProvider>
       </body>
