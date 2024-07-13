@@ -95,14 +95,7 @@ export default function MainTable<T>({
         )}
       </Paper>
 
-      {hasData && (
-        <MainTablePagination
-          page={table.getState().pagination.pageIndex + 1}
-          total={Number(table.getPageCount().toLocaleString())}
-          pageSize={table.getState().pagination.pageSize}
-          onPageSizeChange={table.setPageSize}
-        />
-      )}
+      {hasData && <MainTablePagination<T> table={table} />}
     </Stack>
   );
 }
