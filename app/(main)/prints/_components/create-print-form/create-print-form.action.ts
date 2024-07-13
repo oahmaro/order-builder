@@ -11,7 +11,7 @@ export type FormState = {
 };
 
 export async function createPrintFormAction(data: FormData): Promise<FormState> {
-  const formData = Object.entries(data);
+  const formData = Object.fromEntries(data);
   const parsed = createPrintFormSchema.safeParse(formData);
 
   if (!parsed.success) {
@@ -23,7 +23,7 @@ export async function createPrintFormAction(data: FormData): Promise<FormState> 
   const { name } = parsed.data;
 
   try {
-    await db.description.create({ data: { name } });
+    await db.print.create({ data: { name } });
 
     revalidatePath('/prints');
 

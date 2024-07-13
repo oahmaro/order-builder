@@ -1,8 +1,8 @@
 const { UserRole } = require('@prisma/client');
 
 const users = [
-  { id: 1, username: 'admin', password: 'admin', role: UserRole.ADMIN, active: true },
-  { id: 2, username: 'test', password: 'test', role: UserRole.USER, active: false },
+  { username: 'admin', password: 'admin', role: UserRole.ADMIN, active: true },
+  { username: 'test', password: 'test', role: UserRole.USER, active: false },
 ];
 
 const adhesionOptions = [
@@ -18,8 +18,7 @@ const adhesionOptions = [
   'בלי הדבקה על קרטון ביצוע',
 ];
 
-const adhesions = adhesionOptions.map((adhesion, index) => ({
-  id: index + 1,
+const adhesions = adhesionOptions.map((adhesion) => ({
   name: adhesion,
   createdAt: new Date(),
   updatedAt: null,
@@ -36,8 +35,7 @@ const printOptions = [
   'סריק תמונה',
 ];
 
-const prints = printOptions.map((print, index) => ({
-  id: index + 1,
+const prints = printOptions.map((print) => ({
   name: print,
   createdAt: new Date(),
   updatedAt: null,
@@ -53,7 +51,7 @@ const descriptionOptions = [
   'הדבקה תמונה על פספרטו',
 ];
 
-const descriptions = descriptionOptions.map((description, index) => ({
+const descriptions = descriptionOptions.map((description) => ({
   name: description,
   createdAt: new Date(),
   updatedAt: null,
