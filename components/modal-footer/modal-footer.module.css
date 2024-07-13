@@ -1,0 +1,14 @@
+.root {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px 20px;
+  background-color: var(--mantine-color-gray-0);
+  border-top: 1px solid var(--mantine-color-gray-3);
+  justify-content: space-between;
+}
+
+.cancelButton {
+  border: 1px solid var(--mantine-color-gray-4);
+}

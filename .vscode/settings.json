@@ -3,12 +3,14 @@
     "autodocs",
     "autoincrement",
     "datasource",
+    "libphonenumber",
     "mantine",
     "nextjs",
     "nprogress",
     "plopfile",
     "stylelint",
     "tabler",
+    "tanstack",
     "typecheck"
   ]
 }

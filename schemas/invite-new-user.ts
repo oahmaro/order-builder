@@ -1,7 +1,7 @@
 import * as z from 'zod';
-import { UserRole } from '@prisma/client';
 
-import errorMessages from '@/utils/error-messages';
+import { UserRole } from '@prisma/client';
+import { errorMessages } from '@/utils';
 
 export const InviteNewUserSchema = z.object({
   firstName: z

@@ -41,7 +41,7 @@ model Customer {
   firstName   String
   lastName    String
   phone       String  @unique
-  email       String? @unique
+  email       String?
   dateOfBirth String?
 
   createdBy   User? @relation("CreatedByCustomer", fields: [createdById], references: [id])

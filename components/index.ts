@@ -7,3 +7,4 @@ export * from './link';
 export * from './nprogress-complete';
 export * from './page-header';
 export * from './custom-table';
+export * from './modal-footer';

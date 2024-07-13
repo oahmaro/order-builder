@@ -6,8 +6,8 @@ import { User } from '@prisma/client';
 
 import { ProfileFormSchema } from '@/schemas';
 import { db } from '@/lib/db';
-import errorMessages from '@/utils/error-messages';
 import { getUserById } from '@/utils/user';
+import { errorMessages } from '@/utils';
 
 export async function updateProfile(
   userId: number,

@@ -3,3 +3,24 @@
     outline: 1px solid black;
   }
 }
+
+.modalClose {
+  background-color: white;
+  color: var(--mantine-color-gray-6);
+  border: 1px solid var(--mantine-color-gray-4);
+}
+
+.modalHeader {
+  padding: 24px 20px;
+  background-color: var(--mantine-color-gray-0);
+  border-bottom: 1px solid var(--mantine-color-gray-3);
+}
+
+.modalTitle {
+  font-size: var(--mantine-font-size-md);
+  font-weight: bold;
+}
+
+.modalBody {
+  padding: var(--mantine-spacing-xl);
+}

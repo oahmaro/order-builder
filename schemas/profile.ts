@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
-import errorMessages from '@/utils/error-messages';
 import { OptionalPasswordSchema } from './password';
+import { errorMessages } from '@/utils';
 
 export const ProfileSchema = z.object({
   firstName: z

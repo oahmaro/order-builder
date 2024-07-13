@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import errorMessages from '@/utils/error-messages';
+import { errorMessages } from '@/utils';
 
 export const RegisterSchema = z
   .object({

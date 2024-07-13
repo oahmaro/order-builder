@@ -1,0 +1,38 @@
+.root {
+  justify-content: space-between;
+}
+
+.settings {
+  color: var(--mantine-color-gray-6);
+  border-color: var(--mantine-color-gray-3);
+
+  &:hover {
+    color: var(--mantine-color-gray-7);
+  }
+}
+
+.switchRoot {
+  border-radius: var(--mantine-radius-sm);
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--mantine-color-gray-1);
+  }
+}
+
+.switchBody {
+  cursor: pointer;
+  padding: var(--mantine-spacing-xs);
+  gap: rem(40);
+  justify-content: space-between;
+}
+
+.switchLabel {
+  cursor: pointer;
+  user-select: none;
+}
+
+.switchTrack {
+  cursor: pointer;
+}

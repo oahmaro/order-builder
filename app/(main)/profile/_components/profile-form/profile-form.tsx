@@ -14,7 +14,7 @@ import { ChangePasswordCard } from '../change-password-card';
 import { FormValues, ProfileFormProvider, useProfileForm } from '../../_context/profile.context';
 import { ProfileFormSchema } from '@/schemas';
 import { StrictPasswordSchema } from '@/schemas/password';
-import errorMessages from '@/utils/error-messages';
+import { errorMessages } from '@/utils';
 
 interface ProfileFormProps {
   user: User;
