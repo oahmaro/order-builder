@@ -22,6 +22,7 @@ export default function UsersPageHeader({ numberOfUsers }: UsersPageHeaderProps)
           label: usersPageHeaderContent.t(UsersPageHeaderPhrase.ACTION),
           onClick: handlers.open,
         }}
+        backPath="/"
       />
 
       <InviteNewUserFormModal opened={opened} onClose={handlers.close} />

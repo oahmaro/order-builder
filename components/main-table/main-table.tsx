@@ -9,7 +9,8 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 import classes from './main-table.module.css';
 import { MainTablePagination } from './main-table-pagination';
@@ -17,18 +18,26 @@ import { MainTableHeader } from './main-table-header';
 import { MainTableEmptyState } from './main-table-empty-state';
 import { mainTableContent, MainTableContentPhrases } from './main-table.content';
 
-export interface MainTableProps<T> extends Omit<TableProps, 'data'> {
+interface Identifiable {
+  id?: number;
+}
+
+export interface MainTableProps<T extends Identifiable> extends Omit<TableProps, 'data'> {
   data: T[];
   columns: ColumnDef<T, any>[];
   initialColumnsVisibility?: Record<string, boolean>;
+  navigateOnRowClick?: boolean;
 }
 
-export default function MainTable<T>({
+export default function MainTable<T extends Identifiable>({
   data = [],
   columns = [],
   initialColumnsVisibility = { createdAt: false, updatedAt: false },
+  navigateOnRowClick,
   ...tableProps
 }: MainTableProps<T>) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [columnVisibility, setColumnVisibility] = useState(initialColumnsVisibility);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
 
@@ -43,6 +52,14 @@ export default function MainTable<T>({
   });
 
   const hasData = data?.length !== 0;
+
+  const handleNavigation = useCallback(
+    (segment: string) => {
+      const newPath = `${pathname}/${segment}`;
+      router.push(newPath);
+    },
+    [router, pathname]
+  );
 
   return (
     <Stack>
@@ -76,11 +93,16 @@ export default function MainTable<T>({
                 <Table.Tr
                   key={row.id}
                   className={classes.tr}
-                  mod={{ selected: row.getIsSelected() }}
+                  mod={{ selected: row.getIsSelected(), clickable: navigateOnRowClick }}
+                  {...(navigateOnRowClick
+                    ? { onClick: () => handleNavigation(`/${row.original.id}`) }
+                    : {})}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <Table.Td key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {cell.getValue()
+                        ? flexRender(cell.column.columnDef.cell, cell.getContext())
+                        : '-'}
                     </Table.Td>
                   ))}
                 </Table.Tr>

@@ -2,7 +2,7 @@ import { Card, Group, Skeleton, Stack } from '@mantine/core';
 
 export default function LoadingPage() {
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <Group h={42} justify="space-between" align="center">
         <Skeleton h={32} w={172} />
         <Skeleton h={32} w={84} />

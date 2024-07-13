@@ -38,7 +38,7 @@ export default function CreateCustomerForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <Stack gap="xl">
+      <Stack gap="lg">
         <Stack component="section">
           <Title order={4}>Customer details</Title>
 

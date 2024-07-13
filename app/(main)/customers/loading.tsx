@@ -4,7 +4,7 @@ import { PageHeader } from '@/components';
 
 export default function LoadingPage() {
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <PageHeader isLoading />
     </Stack>
   );

@@ -11,5 +11,5 @@ export interface AdhesionsTableProps {
 }
 
 export default function AdhesionsTable({ adhesions }: AdhesionsTableProps) {
-  return <MainTable<AdhesionDataType> columns={columns} data={adhesions} />;
+  return <MainTable<AdhesionDataType> columns={columns} data={adhesions} navigateOnRowClick />;
 }

@@ -3,3 +3,9 @@
   box-shadow: var(--mantine-shadow-sm);
   padding: 24px;
 }
+
+.tr {
+  &[data-clickable] {
+    cursor: pointer;
+  }
+}

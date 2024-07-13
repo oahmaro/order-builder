@@ -20,11 +20,12 @@ export default async function OrderPage() {
   }
 
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <PageHeader
         title="הזמנות"
         subtitle={polyglot.t('orders', orders.length)}
         action={{ label: 'צור ערך חדש', link: '/orders/create' }}
+        backPath="/"
       />
 
       <Stack gap={16}>

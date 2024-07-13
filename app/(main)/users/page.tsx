@@ -7,7 +7,7 @@ export default async function UsersPage() {
   const users = await db.user.findMany();
 
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <UsersPageHeader numberOfUsers={users.length} />
       <UsersTable users={users} />
     </Stack>

@@ -7,7 +7,7 @@ export default async function AdhesionsPage() {
   const adhesions = await db.adhesion.findMany();
 
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <AdhesionsPageHeader numberOfAdhesions={adhesions.length} />
       <AdhesionsTable adhesions={adhesions} />
     </Stack>

@@ -85,7 +85,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   return (
     <ProfileFormProvider form={form}>
       <Box component="form" onSubmit={form.onSubmit(handleSubmit)} noValidate>
-        <Stack gap={40}>
+        <Stack gap="lg">
           <ProfileHeader title={title} isSaveDisabled={form.isDirty()} isLoading={isPending} />
 
           <Stack pos="relative">

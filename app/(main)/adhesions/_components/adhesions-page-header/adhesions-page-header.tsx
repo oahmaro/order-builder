@@ -22,6 +22,7 @@ export default function AdhesionsPageHeader({ numberOfAdhesions }: AdhesionsPage
         AdhesionsPageHeaderPhrases.SUBTITLE,
         numberOfAdhesions
       )}
+      backPath="/"
       action={{
         label: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.ACTION),
         onClick: () =>

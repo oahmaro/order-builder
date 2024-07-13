@@ -24,6 +24,7 @@ export default function DescriptionsPageHeader({
         DescriptionsPageHeaderPhrases.SUBTITLE,
         numberOfDescriptions
       )}
+      backPath="/"
       action={{
         label: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.ACTION),
         onClick: () =>

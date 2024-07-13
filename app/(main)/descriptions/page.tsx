@@ -7,7 +7,7 @@ export default async function DescriptionsPage() {
   const descriptions = await db.description.findMany();
 
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <DescriptionsPageHeader numberOfDescriptions={descriptions.length} />
       <DescriptionsTable descriptions={descriptions} />
     </Stack>

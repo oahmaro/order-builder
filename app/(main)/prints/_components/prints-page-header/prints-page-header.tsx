@@ -16,6 +16,7 @@ export default function PrintsPageHeader({ numberOfPrints }: PrintsPageHeaderPro
     <PageHeader
       title={printsPageHeaderContent.t(PrintsPageHeaderPhrases.TITLE)}
       subtitle={printsPageHeaderContent.t(PrintsPageHeaderPhrases.SUBTITLE, numberOfPrints)}
+      backPath="/"
       action={{
         label: printsPageHeaderContent.t(PrintsPageHeaderPhrases.ACTION),
         onClick: () =>

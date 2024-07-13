@@ -7,7 +7,7 @@ export default async function PrintsPage() {
   const prints = await db.print.findMany();
 
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <PrintsPageHeader numberOfPrints={prints.length} />
       <PrintsTable prints={prints} />
     </Stack>

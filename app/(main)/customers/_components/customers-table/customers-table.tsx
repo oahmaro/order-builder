@@ -11,5 +11,5 @@ export interface CustomersTableProps {
 }
 
 export default function CustomersTable({ customers }: CustomersTableProps) {
-  return <MainTable<CustomerDataType> columns={columns} data={customers} />;
+  return <MainTable<CustomerDataType> columns={columns} data={customers} navigateOnRowClick />;
 }

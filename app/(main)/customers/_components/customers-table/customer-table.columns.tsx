@@ -32,21 +32,21 @@ export const columns = [
   columnHelper.accessor('email', {
     header: customersTableContent.t(CustomersTableContentPhrases.EMAIL),
     enableHiding: true,
-    cell: (info) => info.getValue() || 'N/A',
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('dateOfBirth', {
     header: customersTableContent.t(CustomersTableContentPhrases.DATE_OF_BIRTH),
     enableHiding: true,
-    cell: (info) => info.getValue() || 'N/A',
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('createdAt', {
     header: customersTableContent.t(CustomersTableContentPhrases.CREATED_AT),
     enableHiding: true,
-    cell: (info) => dayjs(info.getValue()).format('MMMM D, YYYY h:mm A') || 'N/A',
+    cell: (info) => info.getValue() ?? dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
   columnHelper.accessor('updatedAt', {
     header: customersTableContent.t(CustomersTableContentPhrases.UPDATED_AT),
     enableHiding: true,
-    cell: (info) => dayjs(info.getValue()).format('MMMM D, YYYY h:mm A') || 'N/A',
+    cell: (info) => info.getValue() ?? dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 ];

@@ -28,7 +28,7 @@ export default function CreateDescriptionForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <Stack gap="xl">
+      <Stack gap="lg">
         <Title order={4}>Description details</Title>
 
         <TextInput

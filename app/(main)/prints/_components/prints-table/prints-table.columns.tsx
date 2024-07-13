@@ -24,12 +24,12 @@ export const columns = [
   columnHelper.accessor('createdAt', {
     header: printsTableContent.t(PrintsTableContentPhrases.CREATED_AT),
     enableHiding: true,
-    cell: (info) => dayjs(info.getValue()).format('MMMM D, YYYY h:mm A') || 'N/A',
+    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 
   columnHelper.accessor('updatedAt', {
     header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_AT),
     enableHiding: true,
-    cell: (info) => dayjs(info.getValue()).format('MMMM D, YYYY h:mm A') || 'N/A',
+    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 ];

@@ -22,12 +22,13 @@ export default function CustomersPageHeader({ numberOfCustomers }: CustomersPage
         CustomersPageHeaderPhrases.SUBTITLE,
         numberOfCustomers
       )}
+      backPath="/"
       action={{
         label: customersPageHeaderContent.t(CustomersPageHeaderPhrases.ACTION),
         onClick: () =>
           modals.open({
             title: customersPageHeaderContent.t(CustomersPageHeaderPhrases.MODAL_TITLE),
-            size: 'lg',
+            size: 'xl',
             children: (
               <CreateCustomerFormContainer>
                 <CreateCustomerForm />

@@ -13,8 +13,8 @@ export default async function FramesPage() {
   const frames = await db.frame.findMany();
 
   return (
-    <Stack gap={40}>
-      <PageHeader title="תיאורים" subtitle={polyglot.t('frames', frames.length)} />
+    <Stack gap="lg">
+      <PageHeader title="תיאורים" subtitle={polyglot.t('frames', frames.length)} backPath="/" />
     </Stack>
   );
 }

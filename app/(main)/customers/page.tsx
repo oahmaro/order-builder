@@ -7,7 +7,7 @@ export default async function CustomersPage() {
   const customers = await db.customer.findMany();
 
   return (
-    <Stack gap={40}>
+    <Stack gap="lg">
       <CustomersPageHeader numberOfCustomers={customers.length} />
       <CustomersTable customers={customers} />
     </Stack>

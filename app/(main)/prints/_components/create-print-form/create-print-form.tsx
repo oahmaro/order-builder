@@ -22,7 +22,7 @@ export default function CreatePrintForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <Stack gap="xl">
+      <Stack gap="lg">
         <Title order={4}>Print details</Title>
 
         <TextInput
