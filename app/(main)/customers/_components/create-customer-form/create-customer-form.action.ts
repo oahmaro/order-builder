@@ -36,10 +36,10 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
 
     revalidatePath('/customers');
 
-    return { message: 'נוצר לקוח חדש' }; // "Created new customer" in Hebrew
+    return { message: 'נוצר לקוח חדש' };
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error creating customer:', error);
-    return { message: 'אירעה שגיאה ביצירת הלקוח' }; // "Error creating customer" in Hebrew
+    return { message: 'אירעה שגיאה ביצירת הלקוח' };
   }
 }

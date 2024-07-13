@@ -54,7 +54,6 @@ const descriptionOptions = [
 ];
 
 const descriptions = descriptionOptions.map((description, index) => ({
-  id: index + 1,
   name: description,
   createdAt: new Date(),
   updatedAt: null,

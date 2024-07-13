@@ -1,3 +1,5 @@
+// spell-checker: disable
+
 import Polyglot from 'node-polyglot';
 
 export enum CustomersTableContentPhrases {

@@ -3,7 +3,6 @@
 import { Group, Stack, TextInput, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 
-import classes from './create-customer-form.module.css';
 import { ModalFooter } from '@/components';
 import {
   createCustomerFormContent,
@@ -14,8 +13,6 @@ import {
   CreateCustomerFormValues,
   useCreateCustomerFormContext,
 } from './create-customer-form.container';
-
-export interface CreateCustomerFormProps {}
 
 export default function CreateCustomerForm() {
   const form = useCreateCustomerFormContext();
@@ -40,14 +37,13 @@ export default function CreateCustomerForm() {
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)} className={classes.root} noValidate>
+    <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
       <Stack gap="xl">
         <Stack component="section">
           <Title order={4}>Customer details</Title>
 
           <Group grow wrap="nowrap" align="flex-start">
             <TextInput
-              classNames={{ input: classes.input, error: classes.error }}
               label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.FIRST_NAME_LABEL)}
               placeholder={createCustomerFormContent.t(
                 CreateCustomerFormContentPhrases.FIRST_NAME_LABEL
@@ -57,7 +53,6 @@ export default function CreateCustomerForm() {
             />
 
             <TextInput
-              classNames={{ input: classes.input, error: classes.error }}
               label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.LAST_NAME_LABEL)}
               placeholder={createCustomerFormContent.t(
                 CreateCustomerFormContentPhrases.LAST_NAME_LABEL
@@ -69,7 +64,6 @@ export default function CreateCustomerForm() {
 
           <TextInput
             maw="calc(50% - 8px)"
-            classNames={{ input: classes.input, error: classes.error }}
             label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL)}
             placeholder={createCustomerFormContent.t(
               CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL
@@ -84,7 +78,6 @@ export default function CreateCustomerForm() {
 
           <Group grow wrap="nowrap" align="flex-start">
             <TextInput
-              classNames={{ input: classes.input, error: classes.error }}
               label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.EMAIL_LABEL)}
               placeholder={createCustomerFormContent.t(
                 CreateCustomerFormContentPhrases.EMAIL_LABEL
@@ -94,7 +87,6 @@ export default function CreateCustomerForm() {
             />
 
             <TextInput
-              classNames={{ input: classes.input, error: classes.error }}
               label={createCustomerFormContent.t(
                 CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
               )}

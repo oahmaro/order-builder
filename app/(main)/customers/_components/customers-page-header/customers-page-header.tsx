@@ -26,7 +26,7 @@ export default function CustomersPageHeader({ numberOfCustomers }: CustomersPage
         label: customersPageHeaderContent.t(CustomersPageHeaderPhrases.ACTION),
         onClick: () =>
           modals.open({
-            title: 'הוסף לקוח חדש',
+            title: customersPageHeaderContent.t(CustomersPageHeaderPhrases.MODAL_TITLE),
             size: 'lg',
             children: (
               <CreateCustomerFormContainer>
