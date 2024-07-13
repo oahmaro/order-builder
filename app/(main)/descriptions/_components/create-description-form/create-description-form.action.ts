@@ -30,7 +30,7 @@ export async function createDescriptionFormAction(data: FormData): Promise<FormS
   try {
     await db.description.create({ data: { name } });
 
-    revalidatePath('/description');
+    revalidatePath('/descriptions');
 
     return {
       message: createDescriptionFormContent.t(CreateDescriptionFormContentPhrases.RECORD_CREATED),
