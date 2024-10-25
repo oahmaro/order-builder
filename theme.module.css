@@ -11,7 +11,7 @@
 }
 
 .modalHeader {
-  padding: 24px 20px;
+  padding: rem(24px);
   background-color: var(--mantine-color-gray-0);
   border-bottom: 1px solid var(--mantine-color-gray-3);
 }

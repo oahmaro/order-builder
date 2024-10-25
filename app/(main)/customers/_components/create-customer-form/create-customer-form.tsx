@@ -1,39 +1,92 @@
 'use client';
 
-import { Group, Stack, TextInput, Title } from '@mantine/core';
+import { z } from 'zod';
 import { modals } from '@mantine/modals';
+import { DateInput } from '@mantine/dates';
+import { notifications } from '@mantine/notifications';
+import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
+
+import { Group, Stack, TextInput, Title, Button, Select, Alert } from '@mantine/core';
 
 import { ModalFooter } from '@/components';
+import { createCustomerFormAction } from './create-customer-form.action';
+import { createCustomerFormSchema } from './create-customer-form.schema';
+
 import {
   createCustomerFormContent,
   CreateCustomerFormContentPhrases,
 } from './create-customer-form.content';
-import { createCustomerFormAction } from './create-customer-form.action';
+
 import {
   CreateCustomerFormValues,
   useCreateCustomerFormContext,
 } from './create-customer-form.container';
 
+const countryCodes = getCountries().map((country) => ({
+  value: `${country}:+${getCountryCallingCode(country)}`,
+  label: `${country} (+${getCountryCallingCode(country)})`,
+}));
+
 export default function CreateCustomerForm() {
   const form = useCreateCustomerFormContext();
 
   const handleSubmit = async (data: CreateCustomerFormValues) => {
-    const formData = new FormData();
-    formData.append('firstName', data.firstName);
-    formData.append('lastName', data.lastName);
-    formData.append('phoneNumber', data.phoneNumber);
+    try {
+      const validatedData = createCustomerFormSchema.parse(data);
+      const formData = new FormData();
+      formData.append('firstName', validatedData.firstName);
+      formData.append('lastName', validatedData.lastName);
 
-    if (data.email) {
-      formData.append('email', data.email);
+      const modifiedPhones = validatedData.phones.map((phone) => ({
+        ...phone,
+        countryCode: phone.countryCode,
+      }));
+
+      formData.append('phones', JSON.stringify(modifiedPhones));
+
+      if (validatedData.email) {
+        formData.append('email', validatedData.email);
+      }
+
+      if (validatedData.dateOfBirth) {
+        formData.append('dateOfBirth', validatedData.dateOfBirth);
+      }
+
+      const response = await createCustomerFormAction(formData);
+
+      if (
+        response.message ===
+        createCustomerFormContent.t(CreateCustomerFormContentPhrases.CUSTOMER_CREATED)
+      ) {
+        modals.closeAll();
+        notifications.show({
+          title: 'Success',
+          message: response.message,
+          color: 'green',
+        });
+      } else {
+        notifications.show({
+          title: 'Error',
+          message: response.message,
+          color: 'red',
+        });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          const fieldName = err.path.join('.');
+          form.setFieldError(fieldName, err.message);
+        });
+      } else {
+        notifications.show({
+          title: 'Error',
+          message: createCustomerFormContent.t(
+            CreateCustomerFormContentPhrases.ERROR_WHILE_CREATING
+          ),
+          color: 'red',
+        });
+      }
     }
-
-    if (data.dateOfBirth) {
-      formData.append('dateOfBirth', data.dateOfBirth);
-    }
-
-    await createCustomerFormAction(formData);
-
-    modals.closeAll();
   };
 
   return (
@@ -62,15 +115,90 @@ export default function CreateCustomerForm() {
             />
           </Group>
 
-          <TextInput
-            maw="calc(50% - 8px)"
-            label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL)}
-            placeholder={createCustomerFormContent.t(
-              CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL
-            )}
-            required
-            {...form.getInputProps('phoneNumber')}
-          />
+          {form.values.phones.map((_, index) => (
+            <Group key={index} grow align="flex-start">
+              <Select
+                label={createCustomerFormContent.t(
+                  CreateCustomerFormContentPhrases.COUNTRY_CODE_LABEL
+                )}
+                placeholder="+972"
+                required
+                data={countryCodes}
+                searchable
+                defaultValue="IL:+972"
+                {...form.getInputProps(`phones.${index}.countryCode`)}
+              />
+
+              <TextInput
+                label={createCustomerFormContent.t(
+                  CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL
+                )}
+                placeholder={createCustomerFormContent.t(
+                  CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL
+                )}
+                required
+                {...form.getInputProps(`phones.${index}.number`)}
+              />
+
+              <Select
+                label={createCustomerFormContent.t(
+                  CreateCustomerFormContentPhrases.PHONE_TYPE_LABEL
+                )}
+                data={[
+                  {
+                    value: 'MOBILE',
+                    label: createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.MOBILE_LABEL
+                    ),
+                  },
+                  {
+                    value: 'HOME',
+                    label: createCustomerFormContent.t(CreateCustomerFormContentPhrases.HOME_LABEL),
+                  },
+                  {
+                    value: 'WORK',
+                    label: createCustomerFormContent.t(CreateCustomerFormContentPhrases.WORK_LABEL),
+                  },
+                  {
+                    value: 'OTHER',
+                    label: createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.OTHER_LABEL
+                    ),
+                  },
+                ]}
+                {...form.getInputProps(`phones.${index}.type`)}
+              />
+
+              {form.values.phones.length > 1 && (
+                <Button
+                  mt={24}
+                  variant="outline"
+                  color="red"
+                  onClick={() => form.removeListItem('phones', index)}
+                >
+                  {createCustomerFormContent.t(CreateCustomerFormContentPhrases.REMOVE_PHONE)}
+                </Button>
+              )}
+
+              {form.values.phones.length === 1 && (
+                <div style={{ marginTop: '24px', height: '36px' }} /> // Placeholder for spacing
+              )}
+            </Group>
+          ))}
+
+          <Button
+            variant="light"
+            onClick={() =>
+              form.insertListItem('phones', {
+                countryCode: '',
+                number: '',
+                type: 'MOBILE',
+                isPrimary: false,
+              })
+            }
+          >
+            {createCustomerFormContent.t(CreateCustomerFormContentPhrases.ADD_PHONE)}
+          </Button>
         </Stack>
 
         <Stack component="section">
@@ -86,18 +214,25 @@ export default function CreateCustomerForm() {
               {...form.getInputProps('email')}
             />
 
-            <TextInput
+            <DateInput
               label={createCustomerFormContent.t(
                 CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
               )}
               placeholder={createCustomerFormContent.t(
                 CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
               )}
+              clearable
               {...form.getInputProps('dateOfBirth')}
             />
           </Group>
         </Stack>
       </Stack>
+
+      {form.errors.root && (
+        <Alert color="red" title="Error" mt="md">
+          {form.errors.root}
+        </Alert>
+      )}
 
       <ModalFooter />
     </form>

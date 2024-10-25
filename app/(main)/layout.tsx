@@ -1,18 +1,20 @@
+import { ModalsProvider } from '@mantine/modals';
 import React, { ReactNode, Suspense } from 'react';
 import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/core';
+
 import { Notifications } from '@mantine/notifications';
 import { NavigationProgress } from '@mantine/nprogress';
-import { ModalsProvider } from '@mantine/modals';
 
-import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
 import '@mantine/nprogress/styles.css';
+import '@mantine/core/styles.layer.css';
+import '@mantine/dates/styles.layer.css';
+import '@mantine/notifications/styles.css';
 
-import { theme } from '../../theme';
 import './global.css';
+import { auth } from '@/auth';
+import { theme } from '../../theme';
 import { Header } from '@/components/header';
 import { NprogressComplete } from '@/components';
-import { auth } from '@/auth';
 
 export const metadata = {
   title: 'בונה מסדר עומנו',

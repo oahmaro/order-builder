@@ -22,7 +22,7 @@ export default function MainTableHeader<T>({ columns }: MainTableHeaderProps<T>)
     <Group className={classes.root}>
       <Popover shadow="lg" radius="lg">
         <PopoverTarget>
-          <ActionIcon className={classes.settings} size="lg" variant="white">
+          <ActionIcon className={classes.settings} size="md" variant="white">
             <IconSettings size={16} />
           </ActionIcon>
         </PopoverTarget>

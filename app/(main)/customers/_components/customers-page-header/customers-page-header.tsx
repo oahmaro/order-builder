@@ -3,12 +3,13 @@
 import { modals } from '@mantine/modals';
 
 import { PageHeader } from '@/components';
+import { CreateCustomerForm } from '../create-customer-form';
+import CreateCustomerFormContainer from '../create-customer-form/create-customer-form.container';
+
 import {
   customersPageHeaderContent,
   CustomersPageHeaderPhrases,
 } from './customer-page-header.content';
-import CreateCustomerFormContainer from '../create-customer-form/create-customer-form.container';
-import { CreateCustomerForm } from '../create-customer-form';
 
 export interface CustomersPageHeaderProps {
   numberOfCustomers: number;

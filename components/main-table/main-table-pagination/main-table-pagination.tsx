@@ -13,6 +13,7 @@ export default function MainTablePagination<T>({ table }: MainTablePaginationPro
     <Group className={classes.root}>
       <Box>
         <Pagination
+          size="sm"
           defaultValue={table.getState().pagination.pageIndex + 1}
           total={Number(table.getPageCount().toLocaleString())}
           onNextPage={table.nextPage}
@@ -32,6 +33,7 @@ export default function MainTablePagination<T>({ table }: MainTablePaginationPro
         </Text>
 
         <Select
+          size="xs"
           value={String(table.getState().pagination.pageSize)}
           classNames={{ option: classes.option }}
           data={['10', '20', '50', '100']}

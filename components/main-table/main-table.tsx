@@ -62,7 +62,7 @@ export default function MainTable<T extends Identifiable>({
   );
 
   return (
-    <Stack>
+    <Stack gap="xs">
       {hasData && <MainTableHeader columns={table.getAllLeafColumns()} />}
 
       <Paper className={classes.card}>

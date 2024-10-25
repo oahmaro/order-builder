@@ -19,7 +19,13 @@ export default function CreateCustomerFormContainer({
   children,
 }: CreateCustomerFormContainerProps) {
   const form = useCreateCustomerForm({
-    initialValues: { email: '', firstName: '', lastName: '', phoneNumber: '' },
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      phones: [{ countryCode: '+972', number: '', type: 'MOBILE', isPrimary: false }],
+      email: '',
+      dateOfBirth: '',
+    },
     validate: zodResolver(createCustomerFormSchema),
   });
 
