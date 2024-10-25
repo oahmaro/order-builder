@@ -5,7 +5,6 @@ import { modals } from '@mantine/modals';
 import { DateInput } from '@mantine/dates';
 import { notifications } from '@mantine/notifications';
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
-
 import { Group, Stack, TextInput, Title, Button, Select, Alert } from '@mantine/core';
 
 import { ModalFooter } from '@/components';
@@ -33,14 +32,22 @@ export default function CreateCustomerForm() {
   const handleSubmit = async (data: CreateCustomerFormValues) => {
     try {
       const validatedData = createCustomerFormSchema.parse(data);
+
       const formData = new FormData();
       formData.append('firstName', validatedData.firstName);
       formData.append('lastName', validatedData.lastName);
 
-      const modifiedPhones = validatedData.phones.map((phone) => ({
-        ...phone,
-        countryCode: phone.countryCode,
-      }));
+      const modifiedPhones = validatedData.phones.map((phone) => {
+        if (!phone.countryCode) {
+          return phone;
+        }
+        const [, code] = phone.countryCode.split(':');
+
+        return {
+          ...phone,
+          countryCode: code || phone.countryCode,
+        };
+      });
 
       formData.append('phones', JSON.stringify(modifiedPhones));
 
@@ -125,8 +132,10 @@ export default function CreateCustomerForm() {
                 required
                 data={countryCodes}
                 searchable
-                defaultValue="IL:+972"
-                {...form.getInputProps(`phones.${index}.countryCode`)}
+                value={form.values.phones[index].countryCode}
+                onChange={(value) => {
+                  form.setFieldValue(`phones.${index}.countryCode`, value || '');
+                }}
               />
 
               <TextInput

@@ -13,30 +13,39 @@ import {
 
 export type FormState = {
   message: string;
+  errors?: any[];
 };
 
 export async function createCustomerFormAction(data: FormData): Promise<FormState> {
   const formData = Object.fromEntries(data);
-  console.log('Received form data:', JSON.stringify(formData, null, 2));
-
   const parsedPhones = JSON.parse(formData.phones as string);
-  console.log('Parsed phones:', JSON.stringify(parsedPhones, null, 2));
 
   const parsed = createCustomerFormSchema.safeParse({
     ...formData,
-    phones: parsedPhones,
+    phones: parsedPhones.map((phone: any) => ({
+      ...phone,
+      countryCode: phone.countryCode.startsWith('+') ? phone.countryCode : `+${phone.countryCode}`,
+    })),
   });
 
   if (!parsed.success) {
-    console.error('Form validation failed:', JSON.stringify(parsed.error.errors, null, 2));
     return {
       message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.FORM_DATA_INVALID),
+      errors: parsed.error.errors,
     };
   }
 
-  console.log('Validated data:', JSON.stringify(parsed.data, null, 2));
-
   const { firstName, lastName, phones, email, dateOfBirth } = parsed.data;
+
+  // Remove the filter for valid phone numbers, as they should all be valid at this point
+  // const validPhones = phones.filter((phone: any) => phone.isValid);
+
+  // if (validPhones.length === 0) {
+  //   return {
+  //     message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.NO_VALID_PHONE),
+  //     errors: [{ path: ['phones'], message: 'At least one valid phone number is required' }],
+  //   };
+  // }
 
   try {
     await db.customer.create({
@@ -70,7 +79,6 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
         message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.PHONE_NUMBER_IN_USE),
       };
     }
-    console.error('Error creating customer:', error);
     return {
       message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.ERROR_WHILE_CREATING),
     };

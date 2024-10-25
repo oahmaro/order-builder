@@ -13,7 +13,9 @@ export const createCustomerFormSchema = z.object({
   lastName: z.string().min(1, {
     message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.LAST_NAME_REQUIRED),
   }),
-  phones: z.array(phoneSchema).min(1),
+  phones: z.array(phoneSchema).min(1, {
+    message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.NO_VALID_PHONE),
+  }),
   email: z
     .string()
     .email({

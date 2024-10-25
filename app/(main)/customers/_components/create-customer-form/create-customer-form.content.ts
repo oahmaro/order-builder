@@ -15,7 +15,6 @@ export enum CreateCustomerFormContentPhrases {
 
   COUNTRY_CODE_LABEL = 'קוד מדינה',
   COUNTRY_CODE_REQUIRED = 'קוד מדינה נדרש',
-  COUNTRY_CODE_INVALID = 'קוד מדינה לא חוקי',
 
   EMAIL_LABEL = 'email-label',
   EMAIL_INVALID = 'email-invalid',
@@ -36,6 +35,7 @@ export enum CreateCustomerFormContentPhrases {
   ERROR_WHILE_CREATING = 'error-while-creating',
   CUSTOMER_CREATED = 'customer-created',
   PHONE_NUMBER_IN_USE = 'phone-number-in-use',
+  NO_VALID_PHONE = 'no-valid-phone',
 }
 
 export const createCustomerFormContent = new Polyglot({
@@ -53,7 +53,6 @@ export const createCustomerFormContent = new Polyglot({
 
     [CreateCustomerFormContentPhrases.COUNTRY_CODE_LABEL]: 'קוד מדינה',
     [CreateCustomerFormContentPhrases.COUNTRY_CODE_REQUIRED]: 'קוד מדינה נדרש',
-    [CreateCustomerFormContentPhrases.COUNTRY_CODE_INVALID]: 'קוד מדינה לא חוקי',
 
     [CreateCustomerFormContentPhrases.EMAIL_LABEL]: 'דוא"ל',
     [CreateCustomerFormContentPhrases.EMAIL_INVALID]: 'כתובת דוא"ל לא חוקית',
@@ -73,5 +72,7 @@ export const createCustomerFormContent = new Polyglot({
     [CreateCustomerFormContentPhrases.ERROR_WHILE_CREATING]: 'אירעה שגיאה ביצירת הלקוח',
     [CreateCustomerFormContentPhrases.CUSTOMER_CREATED]: 'נוצר לקוח חדש',
     [CreateCustomerFormContentPhrases.PHONE_NUMBER_IN_USE]: 'מספר הטלפון כבר בשימוש',
+
+    [CreateCustomerFormContentPhrases.NO_VALID_PHONE]: 'נדרש לפחות מספר טלפון אחד תקין',
   },
 });

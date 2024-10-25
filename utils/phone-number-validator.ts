@@ -2,9 +2,9 @@ import parsePhoneNumber from 'libphonenumber-js';
 
 export const phoneNumberValidator = (countryCode: string, value: string): boolean => {
   try {
-    const [, code] = countryCode.split(':');
-    const normalizedValue = value.startsWith('0') ? value.slice(1) : value;
-    const fullNumber = `${code}${normalizedValue}`;
+    const fullNumber = countryCode.startsWith('+')
+      ? `${countryCode}${value}`
+      : `+${countryCode}${value}`;
     const phoneNumber = parsePhoneNumber(fullNumber);
 
     if (!phoneNumber) {
