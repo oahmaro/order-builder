@@ -18,6 +18,7 @@ interface CustomerFormContainerProps {
 }
 
 export default function CustomerFormContainer({ children, customer }: CustomerFormContainerProps) {
+  console.log('customer', customer);
   const form = useCustomerForm({
     initialValues: {
       firstName: customer?.firstName || '',

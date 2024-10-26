@@ -25,7 +25,7 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
     ...formData,
     phones: parsedPhones.map((phone: any, index: number) => ({
       ...phone,
-      countryCode: phone.countryCode.startsWith('+') ? phone.countryCode : `+${phone.countryCode}`,
+      countryCode: phone.countryCode,
       isPrimary: index === 0,
     })),
     address: parsedAddress,

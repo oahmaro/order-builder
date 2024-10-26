@@ -51,6 +51,7 @@ export default function CustomerForm() {
                 searchable
                 value={`${form.values.phones[index].countryCode}:${form.values.phones[index].dialingCode}`}
                 onChange={(value) => {
+                  console.log('value', value);
                   if (value) {
                     const [countryCode, dialingCode] = value.split(':');
                     form.setFieldValue(`phones.${index}.countryCode`, countryCode);
@@ -67,6 +68,7 @@ export default function CustomerForm() {
               />
 
               <Select
+                allowDeselect={false}
                 label={customerFormContent.t(CustomerFormContentPhrases.PHONE_TYPE_LABEL)}
                 data={[
                   {
@@ -110,7 +112,8 @@ export default function CustomerForm() {
             variant="light"
             onClick={() =>
               form.insertListItem('phones', {
-                countryCode: 'IL:+972',
+                countryCode: 'IL',
+                dialingCode: '+972',
                 number: '',
                 type: 'MOBILE',
                 isPrimary: false,
