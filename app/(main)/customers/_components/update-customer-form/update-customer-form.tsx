@@ -77,6 +77,7 @@ export default function UpdateCustomerForm({
           message: response.message,
           color: 'green',
         });
+        form.resetDirty();
       } else {
         notifications.show({
           title: 'Error',
