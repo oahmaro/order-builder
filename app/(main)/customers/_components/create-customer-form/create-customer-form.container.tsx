@@ -22,7 +22,7 @@ export default function CreateCustomerFormContainer({
     initialValues: {
       firstName: '',
       lastName: '',
-      phones: [{ countryCode: 'IL:+972', number: '', type: 'MOBILE', isPrimary: false }],
+      phones: [{ countryCode: 'IL:+972', number: '', type: 'MOBILE', isPrimary: true }],
       email: '',
       dateOfBirth: '',
       address: {

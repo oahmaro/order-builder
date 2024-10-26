@@ -4,7 +4,11 @@ import { db } from '@/lib/db';
 import { CustomersPageHeader, CustomersTable } from './_components';
 
 export default async function CustomersPage() {
-  const customers = await db.customer.findMany();
+  const customers = await db.customer.findMany({
+    include: {
+      phones: true,
+    },
+  });
 
   return (
     <Stack gap="lg">

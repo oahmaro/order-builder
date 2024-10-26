@@ -23,9 +23,10 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
 
   const parsed = createCustomerFormSchema.safeParse({
     ...formData,
-    phones: parsedPhones.map((phone: any) => ({
+    phones: parsedPhones.map((phone: any, index: number) => ({
       ...phone,
       countryCode: phone.countryCode.startsWith('+') ? phone.countryCode : `+${phone.countryCode}`,
+      isPrimary: index === 0, // Ensure the first phone is primary
     })),
     address: parsedAddress,
   });
@@ -64,11 +65,11 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
         updatedById: null,
         addressId,
         phones: {
-          create: phones.map((phone: any) => ({
+          create: phones.map((phone: any, index: number) => ({
             countryCode: phone.countryCode,
             number: phone.number,
             type: phone.type,
-            isPrimary: phone.isPrimary,
+            isPrimary: index === 0, // Ensure the first phone is primary
           })),
         },
       },

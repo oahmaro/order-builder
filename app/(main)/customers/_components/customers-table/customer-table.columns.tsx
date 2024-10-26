@@ -1,12 +1,22 @@
 import dayjs from 'dayjs';
-import { Customer } from '@prisma/client';
+import { Customer, Phone } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { customersTableContent, CustomersTableContentPhrases } from './customers-table.content';
 
-type CustomerDataType = Partial<Customer>;
+type CustomerDataType = Partial<Customer> & { phones: Phone[] };
 
 const columnHelper = createColumnHelper<CustomerDataType>();
+
+const formatPhoneNumber = (countryCode: string, number: string): string => {
+  const cleanCountryCode = countryCode.replace(/\D/g, '');
+  const cleanNumber = number.replace(/\D/g, '');
+
+  return `(+${cleanCountryCode}) ${cleanNumber.slice(0, 4)}-${cleanNumber.slice(
+    4,
+    7
+  )}-${cleanNumber.slice(7)}`;
+};
 
 export const columns = [
   columnHelper.accessor('id', {
@@ -24,11 +34,22 @@ export const columns = [
     enableHiding: true,
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('phone', {
-    header: customersTableContent.t(CustomersTableContentPhrases.PHONE),
-    enableHiding: true,
-    cell: (info) => info.getValue(),
-  }),
+  columnHelper.accessor(
+    (row) => {
+      const primaryPhone = row.phones.find((phone) => phone.isPrimary);
+      return primaryPhone ? formatPhoneNumber(primaryPhone.countryCode, primaryPhone.number) : '';
+    },
+    {
+      id: 'primaryPhone',
+      header: customersTableContent.t(CustomersTableContentPhrases.PHONE),
+      enableHiding: true,
+      cell: (info) => (
+        <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
+          {info.getValue()}
+        </span>
+      ),
+    }
+  ),
   columnHelper.accessor('email', {
     header: customersTableContent.t(CustomersTableContentPhrases.EMAIL),
     enableHiding: true,
@@ -37,16 +58,16 @@ export const columns = [
   columnHelper.accessor('dateOfBirth', {
     header: customersTableContent.t(CustomersTableContentPhrases.DATE_OF_BIRTH),
     enableHiding: true,
-    cell: (info) => info.getValue(),
+    cell: (info) => (info.getValue() ? dayjs(info.getValue()).format('DD/MM/YYYY') : ''),
   }),
   columnHelper.accessor('createdAt', {
     header: customersTableContent.t(CustomersTableContentPhrases.CREATED_AT),
     enableHiding: true,
-    cell: (info) => info.getValue() ?? dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
+    cell: (info) => (info.getValue() ? dayjs(info.getValue()).format('DD/MM/YYYY HH:mm') : ''),
   }),
   columnHelper.accessor('updatedAt', {
     header: customersTableContent.t(CustomersTableContentPhrases.UPDATED_AT),
     enableHiding: true,
-    cell: (info) => info.getValue() ?? dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
+    cell: (info) => (info.getValue() ? dayjs(info.getValue()).format('DD/MM/YYYY HH:mm') : ''),
   }),
 ];

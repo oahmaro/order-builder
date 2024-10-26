@@ -53,7 +53,7 @@ export default function CreateCustomerForm() {
       formData.append('firstName', validatedData.firstName);
       formData.append('lastName', validatedData.lastName);
 
-      const modifiedPhones = validatedData.phones.map((phone) => {
+      const modifiedPhones = validatedData.phones.map((phone, index) => {
         if (!phone.countryCode) {
           return phone;
         }
@@ -62,6 +62,7 @@ export default function CreateCustomerForm() {
         return {
           ...phone,
           countryCode: code || phone.countryCode,
+          isPrimary: index === 0,
         };
       });
 
