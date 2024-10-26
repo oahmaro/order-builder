@@ -49,10 +49,13 @@ export default function CustomerForm() {
                 required
                 data={countryCodes}
                 searchable
-                value={form.values.phones[index].countryCode}
+                value={`${form.values.phones[index].countryCode}:${form.values.phones[index].dialingCode}`}
                 onChange={(value) => {
-                  console.log('value', value);
-                  form.setFieldValue(`phones.${index}.countryCode`, value || '');
+                  if (value) {
+                    const [countryCode, dialingCode] = value.split(':');
+                    form.setFieldValue(`phones.${index}.countryCode`, countryCode);
+                    form.setFieldValue(`phones.${index}.dialingCode`, dialingCode);
+                  }
                 }}
               />
 

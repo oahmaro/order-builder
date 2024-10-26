@@ -85,6 +85,7 @@ export async function updateCustomerFormAction(data: FormData): Promise<FormStat
             number: phone.number,
             type: phone.type,
             isPrimary: index === 0,
+            dialingCode: phone.dialingCode,
           })),
         },
       },

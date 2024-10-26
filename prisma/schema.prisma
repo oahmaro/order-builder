@@ -65,13 +65,13 @@ model Customer {
 model Phone {
   id          Int      @id @default(autoincrement())
   countryCode String
+  dialingCode String
   number      String
   type        PhoneType @default(MOBILE)
-  isPrimary   Boolean   @default(false)
-  customer    Customer @relation(fields: [customerId], references: [id])
+  isPrimary   Boolean  @default(false)
   customerId  Int
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
-  @@unique([countryCode, number])
   @@index([customerId])
 }
 

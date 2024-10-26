@@ -7,6 +7,7 @@ export enum PhoneContentPhrases {
   COUNTRY_CODE_INVALID = 'country-code-invalid',
   PHONE_NUMBER_REQUIRED = 'phone-number-required',
   PHONE_NUMBER_INVALID = 'phone-number-invalid',
+  DIALING_CODE_REQUIRED = 'DIALING_CODE_REQUIRED',
 }
 
 export const phoneContent = new Polyglot({
@@ -14,6 +15,7 @@ export const phoneContent = new Polyglot({
   phrases: {
     [PhoneContentPhrases.COUNTRY_CODE_REQUIRED]: 'קוד מדינה נדרש',
     [PhoneContentPhrases.COUNTRY_CODE_INVALID]: 'קוד מדינה לא חוקי',
+    [PhoneContentPhrases.DIALING_CODE_REQUIRED]: 'קוד ניתוק נדרש',
     [PhoneContentPhrases.PHONE_NUMBER_REQUIRED]: 'מספר טלפון נדרש',
     [PhoneContentPhrases.PHONE_NUMBER_INVALID]: 'מספר טלפון לא חוקי',
   },

@@ -1,17 +1,23 @@
 import parsePhoneNumber from 'libphonenumber-js';
 
-export const phoneNumberValidator = (countryCode: string, value: string): boolean => {
+export const phoneNumberValidator = (dialingCode: string, value: string): boolean => {
   try {
-    const fullNumber = countryCode.startsWith('+')
-      ? `${countryCode}${value}`
-      : `+${countryCode}${value}`;
+    let cleanNumber = value.replace(/\D/g, '');
+
+    if (cleanNumber.startsWith('0')) {
+      cleanNumber = cleanNumber.slice(1);
+    }
+
+    const fullNumber = `${dialingCode}${cleanNumber}`;
     const phoneNumber = parsePhoneNumber(fullNumber);
 
     if (!phoneNumber) {
       return false;
     }
 
-    return phoneNumber.isValid();
+    const isValid = phoneNumber.isValid();
+
+    return isValid;
   } catch (error) {
     return false;
   }

@@ -65,11 +65,12 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
         updatedById: null,
         addressId,
         phones: {
-          create: phones.map((phone: any, index: number) => ({
+          create: phones.map((phone: any) => ({
             countryCode: phone.countryCode,
             number: phone.number,
+            isPrimary: phone.isPrimary,
+            dialingCode: phone.dialingCode,
             type: phone.type,
-            isPrimary: index === 0,
           })),
         },
       },

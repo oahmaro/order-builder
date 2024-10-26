@@ -18,17 +18,19 @@ interface CustomerFormContainerProps {
 }
 
 export default function CustomerFormContainer({ children, customer }: CustomerFormContainerProps) {
-  console.log('customer', customer);
   const form = useCustomerForm({
     initialValues: {
       firstName: customer?.firstName || '',
       lastName: customer?.lastName || '',
       phones: customer?.phones.map((phone) => ({
         countryCode: phone.countryCode,
+        dialingCode: phone.dialingCode,
         number: phone.number,
-        type: phone.type,
         isPrimary: phone.isPrimary,
-      })) || [{ countryCode: 'IL:+972', number: '', type: 'MOBILE', isPrimary: true }],
+        type: phone.type,
+      })) || [
+        { countryCode: 'IL', dialingCode: '+972', number: '', isPrimary: true, type: 'MOBILE' },
+      ],
       email: customer?.email || '',
       dateOfBirth: customer?.dateOfBirth
         ? new Date(customer.dateOfBirth).toISOString().split('T')[0]

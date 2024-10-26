@@ -10,20 +10,13 @@ export const phoneSchema = z
       .trim()
       .min(1, {
         message: phoneContent.t(PhoneContentPhrases.COUNTRY_CODE_REQUIRED),
-      })
-      .transform((value) => {
-        const parts = value.split(':');
-        return parts.length > 1 ? parts[1] : value;
-      })
-      .refine(
-        (value) => {
-          const isValid = /^\+?\d{1,4}$/.test(value);
-          return isValid;
-        },
-        {
-          message: phoneContent.t(PhoneContentPhrases.COUNTRY_CODE_INVALID),
-        }
-      ),
+      }),
+    dialingCode: z
+      .string()
+      .trim()
+      .min(1, {
+        message: phoneContent.t(PhoneContentPhrases.DIALING_CODE_REQUIRED),
+      }),
     number: z
       .string()
       .trim()
@@ -38,7 +31,8 @@ export const phoneSchema = z
   })
   .refine(
     (data) => {
-      const isValid = phoneNumberValidator(data.countryCode, data.number);
+      const fullDialingCode = data.dialingCode;
+      const isValid = phoneNumberValidator(fullDialingCode, data.number);
       return isValid;
     },
     {
