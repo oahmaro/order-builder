@@ -38,6 +38,7 @@ export const customerFormSchema = z.object({
     .transform((val) => (val instanceof Date ? val.toISOString().split('T')[0] : val)),
   address: z
     .object({
+      id: z.number().optional(),
       country: z.string().optional(),
       streetAddress: z.string().optional(),
       aptSuite: z.string().optional(),

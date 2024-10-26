@@ -51,6 +51,7 @@ export default function CustomerForm() {
                 searchable
                 value={form.values.phones[index].countryCode}
                 onChange={(value) => {
+                  console.log('value', value);
                   form.setFieldValue(`phones.${index}.countryCode`, value || '');
                 }}
               />
@@ -143,12 +144,11 @@ export default function CustomerForm() {
                       )}
                       clearable
                       valueFormat="YYYY-MM-DD"
-                      {...form.getInputProps('dateOfBirth', {
-                        onChange: (value: Date | null) => {
-                          const formattedDate = value ? value.toISOString().split('T')[0] : '';
-                          return formattedDate;
-                        },
-                      })}
+                      value={form.values.dateOfBirth ? new Date(form.values.dateOfBirth) : null}
+                      onChange={(value) => {
+                        const formattedDate = value ? value.toISOString().split('T')[0] : '';
+                        form.setFieldValue('dateOfBirth', formattedDate);
+                      }}
                     />
                   </Group>
                 </Stack>

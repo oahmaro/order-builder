@@ -11,7 +11,7 @@ import {
   CustomerFormContentPhrases,
 } from '../_components/customer-form/customer-form.content';
 
-export type FormState = {
+type FormState = {
   message: string;
   errors?: any[];
 };

@@ -8,18 +8,18 @@ import { ModalFooter } from '@/components';
 import { formatDateToISOString } from '@/utils';
 import { commonContent, CommonPhrases } from '@/content';
 import { createCustomerFormAction } from '../../_actions';
+import { customerFormSchema } from '../customer-form/customer-form.schema';
 
-import {
-  CustomerForm,
-  customerFormContent,
-  CustomerFormContentPhrases,
-  customerFormSchema,
-} from '../customer-form';
+import { CustomerForm } from '../customer-form';
 
 import {
   CustomerFormValues,
   useCustomerFormContext,
 } from '../customer-form/customer-form.container';
+import {
+  customerFormContent,
+  CustomerFormContentPhrases,
+} from '../customer-form/customer-form.content';
 
 export default function CreateCustomerForm() {
   const form = useCustomerFormContext();
