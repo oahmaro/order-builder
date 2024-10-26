@@ -37,16 +37,6 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
 
   const { firstName, lastName, phones, email, dateOfBirth } = parsed.data;
 
-  // Remove the filter for valid phone numbers, as they should all be valid at this point
-  // const validPhones = phones.filter((phone: any) => phone.isValid);
-
-  // if (validPhones.length === 0) {
-  //   return {
-  //     message: createCustomerFormContent.t(CreateCustomerFormContentPhrases.NO_VALID_PHONE),
-  //     errors: [{ path: ['phones'], message: 'At least one valid phone number is required' }],
-  //   };
-  // }
-
   try {
     await db.customer.create({
       data: {

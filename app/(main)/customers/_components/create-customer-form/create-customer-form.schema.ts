@@ -5,6 +5,7 @@ import {
   CreateCustomerFormContentPhrases,
 } from './create-customer-form.content';
 import { phoneSchema } from '@/schemas/phone';
+import { dateValidator } from '@/utils/date-validator';
 
 export const createCustomerFormSchema = z.object({
   firstName: z.string().min(1, {
@@ -23,5 +24,21 @@ export const createCustomerFormSchema = z.object({
     })
     .optional()
     .or(z.literal('')),
-  dateOfBirth: z.string().optional().or(z.literal('')),
+  dateOfBirth: z
+    .union([z.string(), z.date()])
+    .optional()
+    .refine(
+      (value) => {
+        if (value instanceof Date) {
+          return !Number.isNaN(value.getTime());
+        }
+        return value === '' || dateValidator(value);
+      },
+      {
+        message: createCustomerFormContent.t(
+          CreateCustomerFormContentPhrases.DATE_OF_BIRTH_INVALID
+        ),
+      }
+    )
+    .transform((val) => (val instanceof Date ? val.toISOString().split('T')[0] : val)),
 });

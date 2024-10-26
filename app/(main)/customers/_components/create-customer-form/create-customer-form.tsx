@@ -26,12 +26,22 @@ const countryCodes = getCountries().map((country) => ({
   label: `${country} (+${getCountryCallingCode(country)})`,
 }));
 
+const formatDate = (date: unknown): string => {
+  if (date instanceof Date) {
+    return date.toISOString().split('T')[0];
+  }
+  return String(date || '');
+};
+
 export default function CreateCustomerForm() {
   const form = useCreateCustomerFormContext();
 
   const handleSubmit = async (data: CreateCustomerFormValues) => {
     try {
-      const validatedData = createCustomerFormSchema.parse(data);
+      const validatedData = createCustomerFormSchema.parse({
+        ...data,
+        dateOfBirth: formatDate(data.dateOfBirth),
+      });
 
       const formData = new FormData();
       formData.append('firstName', validatedData.firstName);
@@ -199,7 +209,7 @@ export default function CreateCustomerForm() {
             variant="light"
             onClick={() =>
               form.insertListItem('phones', {
-                countryCode: '',
+                countryCode: 'IL:+972',
                 number: '',
                 type: 'MOBILE',
                 isPrimary: false,
@@ -231,7 +241,13 @@ export default function CreateCustomerForm() {
                 CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
               )}
               clearable
-              {...form.getInputProps('dateOfBirth')}
+              valueFormat="YYYY-MM-DD"
+              {...form.getInputProps('dateOfBirth', {
+                onChange: (value: Date | null) => {
+                  const formattedDate = value ? value.toISOString().split('T')[0] : '';
+                  return formattedDate;
+                },
+              })}
             />
           </Group>
         </Stack>
