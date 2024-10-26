@@ -4,12 +4,12 @@ import { modals } from '@mantine/modals';
 
 import { PageHeader } from '@/components';
 import { CreateCustomerForm } from '../create-customer-form';
-import CreateCustomerFormContainer from '../create-customer-form/create-customer-form.container';
+import CustomerFormContainer from '../customer-form/customer-form.container';
 
 import {
   customersPageHeaderContent,
   CustomersPageHeaderPhrases,
-} from './customer-page-header.content';
+} from './customers-page-header.content';
 
 export interface CustomersPageHeaderProps {
   numberOfCustomers: number;
@@ -31,9 +31,9 @@ export default function CustomersPageHeader({ numberOfCustomers }: CustomersPage
             title: customersPageHeaderContent.t(CustomersPageHeaderPhrases.MODAL_TITLE),
             size: 'xl',
             children: (
-              <CreateCustomerFormContainer>
+              <CustomerFormContainer>
                 <CreateCustomerForm />
-              </CreateCustomerFormContainer>
+              </CustomerFormContainer>
             ),
           }),
       }}

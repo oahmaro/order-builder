@@ -48,6 +48,7 @@ export default function PageHeader({
 
         {action && (
           <Button
+            type="submit"
             {...(action?.link ? { component: Link, href: action.link! } : { href: '' })}
             onClick={action?.onClick}
           >

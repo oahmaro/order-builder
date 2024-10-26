@@ -2,51 +2,33 @@
 
 import { z } from 'zod';
 import { modals } from '@mantine/modals';
-import { DateInput } from '@mantine/dates';
 import { notifications } from '@mantine/notifications';
-import { countries as countryNames } from 'countries-list';
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js/max';
-import { Group, Stack, TextInput, Title, Button, Select, Alert, Accordion } from '@mantine/core';
 
 import { ModalFooter } from '@/components';
-import { createCustomerFormAction } from './create-customer-form.action';
-import { createCustomerFormSchema } from './create-customer-form.schema';
+import { formatDateToISOString } from '@/utils';
+import { commonContent, CommonPhrases } from '@/content';
+import { createCustomerFormAction } from '../../_actions';
 
 import {
-  createCustomerFormContent,
-  CreateCustomerFormContentPhrases,
-} from './create-customer-form.content';
+  CustomerForm,
+  customerFormContent,
+  CustomerFormContentPhrases,
+  customerFormSchema,
+} from '../customer-form';
 
 import {
-  CreateCustomerFormValues,
-  useCreateCustomerFormContext,
-} from './create-customer-form.container';
-
-const countryCodes = getCountries().map((country) => ({
-  value: `${country}:+${getCountryCallingCode(country)}`,
-  label: `${country} (+${getCountryCallingCode(country)})`,
-}));
-
-const formatDate = (date: unknown): string => {
-  if (date instanceof Date) {
-    return date.toISOString().split('T')[0];
-  }
-  return String(date || '');
-};
-
-const countries = getCountries().map((country) => ({
-  value: country,
-  label: (countryNames as Record<string, { name: string }>)[country]?.name || country,
-}));
+  CustomerFormValues,
+  useCustomerFormContext,
+} from '../customer-form/customer-form.container';
 
 export default function CreateCustomerForm() {
-  const form = useCreateCustomerFormContext();
+  const form = useCustomerFormContext();
 
-  const handleSubmit = async (data: CreateCustomerFormValues) => {
+  const handleSubmit = async (data: CustomerFormValues) => {
     try {
-      const validatedData = createCustomerFormSchema.parse({
+      const validatedData = customerFormSchema.parse({
         ...data,
-        dateOfBirth: formatDate(data.dateOfBirth),
+        dateOfBirth: formatDateToISOString(data.dateOfBirth),
       });
 
       const formData = new FormData();
@@ -82,10 +64,7 @@ export default function CreateCustomerForm() {
 
       const response = await createCustomerFormAction(formData);
 
-      if (
-        response.message ===
-        createCustomerFormContent.t(CreateCustomerFormContentPhrases.CUSTOMER_CREATED)
-      ) {
+      if (response.message === customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_CREATED)) {
         modals.closeAll();
         notifications.show({
           title: 'Success',
@@ -108,9 +87,7 @@ export default function CreateCustomerForm() {
       } else {
         notifications.show({
           title: 'Error',
-          message: createCustomerFormContent.t(
-            CreateCustomerFormContentPhrases.ERROR_WHILE_CREATING
-          ),
+          message: customerFormContent.t(CustomerFormContentPhrases.ERROR_WHILE_CREATING),
           color: 'red',
         });
       }
@@ -119,248 +96,12 @@ export default function CreateCustomerForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <Stack gap="lg">
-        <Stack component="section">
-          <Title order={4}>Customer details</Title>
+      <CustomerForm />
 
-          <Group grow wrap="nowrap" align="flex-start">
-            <TextInput
-              label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.FIRST_NAME_LABEL)}
-              placeholder={createCustomerFormContent.t(
-                CreateCustomerFormContentPhrases.FIRST_NAME_LABEL
-              )}
-              required
-              {...form.getInputProps('firstName')}
-            />
-
-            <TextInput
-              label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.LAST_NAME_LABEL)}
-              placeholder={createCustomerFormContent.t(
-                CreateCustomerFormContentPhrases.LAST_NAME_LABEL
-              )}
-              required
-              {...form.getInputProps('lastName')}
-            />
-          </Group>
-
-          {form.values.phones.map((_, index) => (
-            <Group key={index} grow align="flex-start">
-              <Select
-                label={createCustomerFormContent.t(
-                  CreateCustomerFormContentPhrases.COUNTRY_CODE_LABEL
-                )}
-                placeholder="+972"
-                required
-                data={countryCodes}
-                searchable
-                value={form.values.phones[index].countryCode}
-                onChange={(value) => {
-                  form.setFieldValue(`phones.${index}.countryCode`, value || '');
-                }}
-              />
-
-              <TextInput
-                label={createCustomerFormContent.t(
-                  CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL
-                )}
-                placeholder={createCustomerFormContent.t(
-                  CreateCustomerFormContentPhrases.PHONE_NUMBER_LABEL
-                )}
-                required
-                {...form.getInputProps(`phones.${index}.number`)}
-              />
-
-              <Select
-                label={createCustomerFormContent.t(
-                  CreateCustomerFormContentPhrases.PHONE_TYPE_LABEL
-                )}
-                data={[
-                  {
-                    value: 'MOBILE',
-                    label: createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.MOBILE_LABEL
-                    ),
-                  },
-                  {
-                    value: 'HOME',
-                    label: createCustomerFormContent.t(CreateCustomerFormContentPhrases.HOME_LABEL),
-                  },
-                  {
-                    value: 'WORK',
-                    label: createCustomerFormContent.t(CreateCustomerFormContentPhrases.WORK_LABEL),
-                  },
-                  {
-                    value: 'OTHER',
-                    label: createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.OTHER_LABEL
-                    ),
-                  },
-                ]}
-                {...form.getInputProps(`phones.${index}.type`)}
-              />
-
-              {form.values.phones.length > 1 && (
-                <Button
-                  mt={24}
-                  variant="outline"
-                  color="red"
-                  onClick={() => form.removeListItem('phones', index)}
-                >
-                  {createCustomerFormContent.t(CreateCustomerFormContentPhrases.REMOVE_PHONE)}
-                </Button>
-              )}
-
-              {form.values.phones.length === 1 && (
-                <div style={{ marginTop: '24px', height: '36px' }} /> // Placeholder for spacing
-              )}
-            </Group>
-          ))}
-
-          <Button
-            variant="light"
-            onClick={() =>
-              form.insertListItem('phones', {
-                countryCode: 'IL:+972',
-                number: '',
-                type: 'MOBILE',
-                isPrimary: false,
-              })
-            }
-          >
-            {createCustomerFormContent.t(CreateCustomerFormContentPhrases.ADD_PHONE)}
-          </Button>
-        </Stack>
-
-        <Stack component="section">
-          <Accordion variant="contained">
-            <Accordion.Item value="additional-info">
-              <Accordion.Control>
-                <Title order={4}>
-                  {createCustomerFormContent.t(
-                    CreateCustomerFormContentPhrases.ADDITIONAL_INFORMATION_LABEL
-                  )}
-                </Title>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Stack>
-                  <Group grow wrap="nowrap" align="flex-start">
-                    <TextInput
-                      label={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.EMAIL_LABEL
-                      )}
-                      placeholder={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.EMAIL_LABEL
-                      )}
-                      type="email"
-                      {...form.getInputProps('email')}
-                    />
-
-                    <DateInput
-                      label={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
-                      )}
-                      placeholder={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
-                      )}
-                      clearable
-                      valueFormat="YYYY-MM-DD"
-                      {...form.getInputProps('dateOfBirth', {
-                        onChange: (value: Date | null) => {
-                          const formattedDate = value ? value.toISOString().split('T')[0] : '';
-                          return formattedDate;
-                        },
-                      })}
-                    />
-                  </Group>
-                </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-
-            <Accordion.Item value="address">
-              <Accordion.Control>
-                <Title order={4}>
-                  {createCustomerFormContent.t(CreateCustomerFormContentPhrases.ADDRESS_LABEL)}
-                </Title>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Stack>
-                  <Select
-                    label={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.COUNTRY_LABEL
-                    )}
-                    placeholder={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.COUNTRY_PLACEHOLDER
-                    )}
-                    data={countries}
-                    searchable
-                    {...form.getInputProps('address.country')}
-                  />
-
-                  <TextInput
-                    label={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.STREET_ADDRESS_LABEL
-                    )}
-                    placeholder={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.STREET_ADDRESS_PLACEHOLDER
-                    )}
-                    {...form.getInputProps('address.streetAddress')}
-                  />
-
-                  <TextInput
-                    label={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.APT_SUITE_LABEL
-                    )}
-                    placeholder={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.APT_SUITE_PLACEHOLDER
-                    )}
-                    {...form.getInputProps('address.aptSuite')}
-                  />
-
-                  <Group grow>
-                    <TextInput
-                      label={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.CITY_LABEL
-                      )}
-                      placeholder={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.CITY_PLACEHOLDER
-                      )}
-                      {...form.getInputProps('address.city')}
-                    />
-
-                    <TextInput
-                      label={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.STATE_PROVINCE_LABEL
-                      )}
-                      placeholder={createCustomerFormContent.t(
-                        CreateCustomerFormContentPhrases.STATE_PROVINCE_PLACEHOLDER
-                      )}
-                      {...form.getInputProps('address.stateProvince')}
-                    />
-                  </Group>
-
-                  <TextInput
-                    label={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.POSTAL_CODE_LABEL
-                    )}
-                    placeholder={createCustomerFormContent.t(
-                      CreateCustomerFormContentPhrases.POSTAL_CODE_PLACEHOLDER
-                    )}
-                    {...form.getInputProps('address.postalCode')}
-                  />
-                </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
-        </Stack>
-      </Stack>
-
-      {form.errors.root && (
-        <Alert color="red" title="Error" mt="md">
-          {form.errors.root}
-        </Alert>
-      )}
-
-      <ModalFooter />
+      <ModalFooter
+        submitLabel={commonContent.t(CommonPhrases.CREATE)}
+        cancelLabel={commonContent.t(CommonPhrases.CANCEL)}
+      />
     </form>
   );
 }
