@@ -85,6 +85,7 @@ enum PhoneType {
 model Address {
   id            Int     @id @default(autoincrement())
   streetAddress String?
+  aptSuite      String?
   city          String?
   stateProvince String?
   postalCode    String?

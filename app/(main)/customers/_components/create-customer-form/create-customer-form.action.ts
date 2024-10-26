@@ -19,6 +19,7 @@ export type FormState = {
 export async function createCustomerFormAction(data: FormData): Promise<FormState> {
   const formData = Object.fromEntries(data);
   const parsedPhones = JSON.parse(formData.phones as string);
+  const parsedAddress = JSON.parse(formData.address as string);
 
   const parsed = createCustomerFormSchema.safeParse({
     ...formData,
@@ -26,6 +27,7 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
       ...phone,
       countryCode: phone.countryCode.startsWith('+') ? phone.countryCode : `+${phone.countryCode}`,
     })),
+    address: parsedAddress,
   });
 
   if (!parsed.success) {
@@ -35,9 +37,23 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
     };
   }
 
-  const { firstName, lastName, phones, email, dateOfBirth } = parsed.data;
+  const { firstName, lastName, phones, email, dateOfBirth, address } = parsed.data;
 
   try {
+    let addressId = null;
+    if (address && Object.values(address).some(Boolean)) {
+      const filteredAddressData = Object.fromEntries(
+        Object.entries(address).filter(([, value]) => value !== '')
+      );
+
+      if (Object.keys(filteredAddressData).length > 0) {
+        const createdAddress = await db.address.create({
+          data: filteredAddressData,
+        });
+        addressId = createdAddress.id;
+      }
+    }
+
     await db.customer.create({
       data: {
         firstName,
@@ -46,7 +62,7 @@ export async function createCustomerFormAction(data: FormData): Promise<FormStat
         dateOfBirth: dateOfBirth || null,
         createdById: null,
         updatedById: null,
-        addressId: null,
+        addressId,
         phones: {
           create: phones.map((phone: any) => ({
             countryCode: phone.countryCode,

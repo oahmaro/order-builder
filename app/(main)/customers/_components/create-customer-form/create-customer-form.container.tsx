@@ -25,6 +25,14 @@ export default function CreateCustomerFormContainer({
       phones: [{ countryCode: 'IL:+972', number: '', type: 'MOBILE', isPrimary: false }],
       email: '',
       dateOfBirth: '',
+      address: {
+        country: '',
+        streetAddress: '',
+        aptSuite: '',
+        city: '',
+        stateProvince: '',
+        postalCode: '',
+      },
     },
     validate: zodResolver(createCustomerFormSchema),
   });

@@ -36,6 +36,22 @@ export enum CreateCustomerFormContentPhrases {
   CUSTOMER_CREATED = 'customer-created',
   PHONE_NUMBER_IN_USE = 'phone-number-in-use',
   NO_VALID_PHONE = 'no-valid-phone',
+
+  COUNTRY_LABEL = 'מדינה',
+  COUNTRY_PLACEHOLDER = 'בחר מדינה',
+  STREET_ADDRESS_LABEL = 'כתובת רחוב',
+  STREET_ADDRESS_PLACEHOLDER = 'הזן את כתובת הרחוב',
+  APT_SUITE_LABEL = 'דירה/סוויטה (אופציונלי)',
+  APT_SUITE_PLACEHOLDER = 'הזן מספר דירה או סוויטה',
+  CITY_LABEL = 'עיר',
+  CITY_PLACEHOLDER = 'הזן את שם העיר',
+  STATE_PROVINCE_LABEL = 'מדינה / מחוז / אזור',
+  STATE_PROVINCE_PLACEHOLDER = 'הזן מדינה, מחוז או אזור',
+  POSTAL_CODE_LABEL = 'מיקוד',
+  POSTAL_CODE_PLACEHOLDER = 'הזן מיקוד',
+
+  ADDITIONAL_INFORMATION_LABEL = 'מידע נוסף',
+  ADDRESS_LABEL = 'כתובת',
 }
 
 export const createCustomerFormContent = new Polyglot({
@@ -74,5 +90,21 @@ export const createCustomerFormContent = new Polyglot({
     [CreateCustomerFormContentPhrases.PHONE_NUMBER_IN_USE]: 'מספר הטלפון כבר בשימוש',
 
     [CreateCustomerFormContentPhrases.NO_VALID_PHONE]: 'נדרש לפחות מספר טלפון אחד תקין',
+
+    [CreateCustomerFormContentPhrases.COUNTRY_LABEL]: 'מדינה',
+    [CreateCustomerFormContentPhrases.COUNTRY_PLACEHOLDER]: 'בחר מדינה',
+    [CreateCustomerFormContentPhrases.STREET_ADDRESS_LABEL]: 'כתובת רחוב',
+    [CreateCustomerFormContentPhrases.STREET_ADDRESS_PLACEHOLDER]: 'הזן את כתובת הרחוב',
+    [CreateCustomerFormContentPhrases.APT_SUITE_LABEL]: 'דירה/סויטה (אופציונלי)',
+    [CreateCustomerFormContentPhrases.APT_SUITE_PLACEHOLDER]: 'הזן מספר דירה או סויטה',
+    [CreateCustomerFormContentPhrases.CITY_LABEL]: 'עיר',
+    [CreateCustomerFormContentPhrases.CITY_PLACEHOLDER]: 'הזן את שם העיר',
+    [CreateCustomerFormContentPhrases.STATE_PROVINCE_LABEL]: 'מדינה / מחוז / אזור',
+    [CreateCustomerFormContentPhrases.STATE_PROVINCE_PLACEHOLDER]: 'הזן מדינה, מחוז או אזור',
+    [CreateCustomerFormContentPhrases.POSTAL_CODE_LABEL]: 'מיקוד',
+    [CreateCustomerFormContentPhrases.POSTAL_CODE_PLACEHOLDER]: 'הזן מיקוד',
+
+    [CreateCustomerFormContentPhrases.ADDITIONAL_INFORMATION_LABEL]: 'מידע נוסף',
+    [CreateCustomerFormContentPhrases.ADDRESS_LABEL]: 'כתובת',
   },
 });

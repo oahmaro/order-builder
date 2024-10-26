@@ -4,8 +4,9 @@ import { z } from 'zod';
 import { modals } from '@mantine/modals';
 import { DateInput } from '@mantine/dates';
 import { notifications } from '@mantine/notifications';
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
-import { Group, Stack, TextInput, Title, Button, Select, Alert } from '@mantine/core';
+import { countries as countryNames } from 'countries-list';
+import { getCountries, getCountryCallingCode } from 'libphonenumber-js/max';
+import { Group, Stack, TextInput, Title, Button, Select, Alert, Accordion } from '@mantine/core';
 
 import { ModalFooter } from '@/components';
 import { createCustomerFormAction } from './create-customer-form.action';
@@ -32,6 +33,11 @@ const formatDate = (date: unknown): string => {
   }
   return String(date || '');
 };
+
+const countries = getCountries().map((country) => ({
+  value: country,
+  label: (countryNames as Record<string, { name: string }>)[country]?.name || country,
+}));
 
 export default function CreateCustomerForm() {
   const form = useCreateCustomerFormContext();
@@ -67,6 +73,10 @@ export default function CreateCustomerForm() {
 
       if (validatedData.dateOfBirth) {
         formData.append('dateOfBirth', validatedData.dateOfBirth);
+      }
+
+      if (validatedData.address) {
+        formData.append('address', JSON.stringify(validatedData.address));
       }
 
       const response = await createCustomerFormAction(formData);
@@ -221,35 +231,125 @@ export default function CreateCustomerForm() {
         </Stack>
 
         <Stack component="section">
-          <Title order={4}>Additional information</Title>
+          <Accordion variant="contained">
+            <Accordion.Item value="additional-info">
+              <Accordion.Control>
+                <Title order={4}>
+                  {createCustomerFormContent.t(
+                    CreateCustomerFormContentPhrases.ADDITIONAL_INFORMATION_LABEL
+                  )}
+                </Title>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack>
+                  <Group grow wrap="nowrap" align="flex-start">
+                    <TextInput
+                      label={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.EMAIL_LABEL
+                      )}
+                      placeholder={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.EMAIL_LABEL
+                      )}
+                      type="email"
+                      {...form.getInputProps('email')}
+                    />
 
-          <Group grow wrap="nowrap" align="flex-start">
-            <TextInput
-              label={createCustomerFormContent.t(CreateCustomerFormContentPhrases.EMAIL_LABEL)}
-              placeholder={createCustomerFormContent.t(
-                CreateCustomerFormContentPhrases.EMAIL_LABEL
-              )}
-              type="email"
-              {...form.getInputProps('email')}
-            />
+                    <DateInput
+                      label={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
+                      )}
+                      placeholder={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
+                      )}
+                      clearable
+                      valueFormat="YYYY-MM-DD"
+                      {...form.getInputProps('dateOfBirth', {
+                        onChange: (value: Date | null) => {
+                          const formattedDate = value ? value.toISOString().split('T')[0] : '';
+                          return formattedDate;
+                        },
+                      })}
+                    />
+                  </Group>
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
 
-            <DateInput
-              label={createCustomerFormContent.t(
-                CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
-              )}
-              placeholder={createCustomerFormContent.t(
-                CreateCustomerFormContentPhrases.DATE_OF_BIRTH_LABEL
-              )}
-              clearable
-              valueFormat="YYYY-MM-DD"
-              {...form.getInputProps('dateOfBirth', {
-                onChange: (value: Date | null) => {
-                  const formattedDate = value ? value.toISOString().split('T')[0] : '';
-                  return formattedDate;
-                },
-              })}
-            />
-          </Group>
+            <Accordion.Item value="address">
+              <Accordion.Control>
+                <Title order={4}>
+                  {createCustomerFormContent.t(CreateCustomerFormContentPhrases.ADDRESS_LABEL)}
+                </Title>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack>
+                  <Select
+                    label={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.COUNTRY_LABEL
+                    )}
+                    placeholder={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.COUNTRY_PLACEHOLDER
+                    )}
+                    data={countries}
+                    searchable
+                    {...form.getInputProps('address.country')}
+                  />
+
+                  <TextInput
+                    label={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.STREET_ADDRESS_LABEL
+                    )}
+                    placeholder={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.STREET_ADDRESS_PLACEHOLDER
+                    )}
+                    {...form.getInputProps('address.streetAddress')}
+                  />
+
+                  <TextInput
+                    label={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.APT_SUITE_LABEL
+                    )}
+                    placeholder={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.APT_SUITE_PLACEHOLDER
+                    )}
+                    {...form.getInputProps('address.aptSuite')}
+                  />
+
+                  <Group grow>
+                    <TextInput
+                      label={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.CITY_LABEL
+                      )}
+                      placeholder={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.CITY_PLACEHOLDER
+                      )}
+                      {...form.getInputProps('address.city')}
+                    />
+
+                    <TextInput
+                      label={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.STATE_PROVINCE_LABEL
+                      )}
+                      placeholder={createCustomerFormContent.t(
+                        CreateCustomerFormContentPhrases.STATE_PROVINCE_PLACEHOLDER
+                      )}
+                      {...form.getInputProps('address.stateProvince')}
+                    />
+                  </Group>
+
+                  <TextInput
+                    label={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.POSTAL_CODE_LABEL
+                    )}
+                    placeholder={createCustomerFormContent.t(
+                      CreateCustomerFormContentPhrases.POSTAL_CODE_PLACEHOLDER
+                    )}
+                    {...form.getInputProps('address.postalCode')}
+                  />
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
         </Stack>
       </Stack>
 
