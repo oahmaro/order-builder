@@ -24,19 +24,21 @@ export default function CustomersPageHeader({ numberOfCustomers }: CustomersPage
         numberOfCustomers
       )}
       backPath="/"
-      action={{
-        label: customersPageHeaderContent.t(CustomersPageHeaderPhrases.ACTION),
-        onClick: () =>
-          modals.open({
-            title: customersPageHeaderContent.t(CustomersPageHeaderPhrases.MODAL_TITLE),
-            size: 'xl',
-            children: (
-              <CustomerFormContainer>
-                <CreateCustomerForm />
-              </CustomerFormContainer>
-            ),
-          }),
-      }}
+      actions={[
+        {
+          label: customersPageHeaderContent.t(CustomersPageHeaderPhrases.ACTION),
+          onClick: () =>
+            modals.open({
+              title: customersPageHeaderContent.t(CustomersPageHeaderPhrases.MODAL_TITLE),
+              size: 'xl',
+              children: (
+                <CustomerFormContainer>
+                  <CreateCustomerForm />
+                </CustomerFormContainer>
+              ),
+            }),
+        },
+      ]}
     />
   );
 }

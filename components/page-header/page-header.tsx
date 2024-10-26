@@ -9,12 +9,13 @@ interface Action {
   label: string;
   link?: string;
   onClick?(): void;
+  disabled?: boolean;
 }
 
 export interface PageHeaderProps {
   title?: string;
   subtitle?: string;
-  action?: Action;
+  actions?: Action[];
   backPath?: string;
   isLoading?: boolean;
 }
@@ -22,7 +23,7 @@ export interface PageHeaderProps {
 export default function PageHeader({
   title,
   subtitle,
-  action,
+  actions,
   backPath,
   isLoading,
 }: PageHeaderProps) {
@@ -46,13 +47,14 @@ export default function PageHeader({
       <Group justify="space-between" align="flex-start">
         {title && <Title order={1}>{title}</Title>}
 
-        {action && (
+        {actions && (
           <Button
             type="submit"
-            {...(action?.link ? { component: Link, href: action.link! } : { href: '' })}
-            onClick={action?.onClick}
+            {...(actions[0]?.link ? { component: Link, href: actions[0].link! } : { href: '' })}
+            onClick={actions[0]?.onClick}
+            disabled={actions[0]?.disabled}
           >
-            {action.label}
+            {actions[0].label}
           </Button>
         )}
       </Group>
