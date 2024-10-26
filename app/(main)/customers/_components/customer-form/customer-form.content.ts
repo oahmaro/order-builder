@@ -44,6 +44,8 @@ export enum CustomerFormContentPhrases {
   ADDITIONAL_INFORMATION_LABEL = 'additional-information-label',
   ADDRESS_LABEL = 'address-label',
   ERROR_WHILE_UPDATING = 'error-while-updating',
+  CUSTOMER_DELETED = 'customer-deleted',
+  ERROR_WHILE_DELETING = 'error-while-deleting',
 }
 
 export const customerFormContent = new Polyglot({
@@ -88,8 +90,9 @@ export const customerFormContent = new Polyglot({
     [CustomerFormContentPhrases.POSTAL_CODE_PLACEHOLDER]: 'הזן מיקוד',
     [CustomerFormContentPhrases.ADDITIONAL_INFORMATION_LABEL]: 'מידע נוסף',
     [CustomerFormContentPhrases.ADDRESS_LABEL]: 'כתובת',
-    [CustomerFormContentPhrases.CUSTOMER_UPDATED]: 'Customer updated successfully',
-    [CustomerFormContentPhrases.ERROR_WHILE_UPDATING]:
-      'An error occurred while updating the customer',
+    [CustomerFormContentPhrases.CUSTOMER_UPDATED]: 'הלקוח עודכן בהצלחה',
+    [CustomerFormContentPhrases.ERROR_WHILE_UPDATING]: 'אירעה שגיאה בעדכון הלקוח',
+    [CustomerFormContentPhrases.CUSTOMER_DELETED]: 'הלקוח נמחק בהצלחה',
+    [CustomerFormContentPhrases.ERROR_WHILE_DELETING]: 'אירעה שגיאה במחיקת הלקוח',
   },
 });

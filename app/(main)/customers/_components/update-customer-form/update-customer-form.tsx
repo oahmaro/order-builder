@@ -20,7 +20,13 @@ import {
   CustomerFormContentPhrases,
 } from '../customer-form/customer-form.content';
 
-export default function UpdateCustomerForm({ customer }: { customer: Customer }) {
+export default function UpdateCustomerForm({
+  customer,
+  hasOrders,
+}: {
+  customer: Customer;
+  hasOrders: boolean;
+}) {
   const form = useCustomerFormContext();
 
   const handleSubmit = async (data: CustomerFormValues) => {
@@ -97,7 +103,11 @@ export default function UpdateCustomerForm({ customer }: { customer: Customer })
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
       <Stack gap="lg">
-        <CustomerPageHeader name={`${customer?.firstName} ${customer?.lastName}`} />
+        <CustomerPageHeader
+          name={`${customer?.firstName} ${customer?.lastName}`}
+          hasOrders={hasOrders}
+          customerId={customer.id}
+        />
 
         <Card shadow="sm" radius="md" padding="xl">
           <CustomerForm />

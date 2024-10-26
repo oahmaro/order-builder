@@ -67,13 +67,13 @@ export default function CreateCustomerForm() {
       if (response.message === customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_CREATED)) {
         modals.closeAll();
         notifications.show({
-          title: 'Success',
+          title: commonContent.t(CommonPhrases.SUCCESS),
           message: response.message,
           color: 'green',
         });
       } else {
         notifications.show({
-          title: 'Error',
+          title: commonContent.t(CommonPhrases.ERROR),
           message: response.message,
           color: 'red',
         });

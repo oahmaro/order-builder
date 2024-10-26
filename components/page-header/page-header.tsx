@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { IconChevronRight } from '@tabler/icons-react';
-import { Anchor, Button, Group, Text, Title } from '@mantine/core';
+import { Anchor, Button, Group, Text, Title, Tooltip } from '@mantine/core';
 
 import classes from './page-header.module.css';
 import PageHeaderLoading from './page-header-loading';
@@ -10,6 +10,10 @@ interface Action {
   link?: string;
   onClick?(): void;
   disabled?: boolean;
+  tooltipLabel?: string;
+  color?: string;
+  variant?: string;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export interface PageHeaderProps {
@@ -34,8 +38,13 @@ export default function PageHeader({
   return (
     <div className={classes.root}>
       {backPath && (
-        <Anchor component={Link} href={backPath} fw="bold">
-          <Group gap={2}>
+        <Anchor
+          component={Link}
+          href={backPath}
+          style={{ display: 'block', width: 'fit-content' }}
+          fw="bold"
+        >
+          <Group gap={2} pe="xl">
             <IconChevronRight />
             <Text fw="bold" fz="lg">
               חזור
@@ -47,16 +56,23 @@ export default function PageHeader({
       <Group justify="space-between" align="flex-start">
         {title && <Title order={1}>{title}</Title>}
 
-        {actions && (
-          <Button
-            type="submit"
-            {...(actions[0]?.link ? { component: Link, href: actions[0].link! } : { href: '' })}
-            onClick={actions[0]?.onClick}
-            disabled={actions[0]?.disabled}
-          >
-            {actions[0].label}
-          </Button>
-        )}
+        <Group>
+          {actions &&
+            actions.map((action, index) => (
+              <Tooltip key={index} label={action.tooltipLabel} disabled={!action.tooltipLabel}>
+                <Button
+                  type={action.type || 'button'}
+                  {...(action.link ? { component: Link, href: action.link } : { href: '' })}
+                  onClick={action.onClick}
+                  disabled={action.disabled}
+                  color={action.color}
+                  variant={action.variant}
+                >
+                  {action.label}
+                </Button>
+              </Tooltip>
+            ))}
+        </Group>
       </Group>
 
       {subtitle && <Text c="dimmed">{subtitle}</Text>}
