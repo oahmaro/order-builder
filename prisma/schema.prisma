@@ -100,8 +100,9 @@ model Address {
 }
 
 model Frame {
-  id   Int    @id @default(autoincrement())
-  code String @unique // Unique code for each frame
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String?
 
   orderItems OrderItem[]
   createdAt  DateTime?   @default(now())
@@ -109,8 +110,9 @@ model Frame {
 }
 
 model Adhesion {
-  id   Int    @id @default(autoincrement())
-  name String
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String?
 
   orderItems OrderItem[]
   createdAt  DateTime?   @default(now())
@@ -118,8 +120,9 @@ model Adhesion {
 }
 
 model Print {
-  id   Int    @id @default(autoincrement())
-  name String
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String?
 
   orderItems OrderItem[]
   createdAt  DateTime?   @default(now())
@@ -127,8 +130,9 @@ model Print {
 }
 
 model Description {
-  id   Int    @id @default(autoincrement())
-  name String
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String?
 
   orderItems OrderItem[]
   createdAt  DateTime?   @default(now())
