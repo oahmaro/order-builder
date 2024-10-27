@@ -30,12 +30,14 @@ export default function StatCardList({
       subtitle: statCardListContent.t(StatCardListPhrases.ALL_CUSTOMERS),
       icon: <PiUsers className={classes.icon} />,
       value: customers,
+      href: '/customers?page=1&pageSize=10&sort=name:ASC',
     },
     {
       title: statCardListContent.t(StatCardListPhrases.ORDERS),
       subtitle: statCardListContent.t(StatCardListPhrases.ALL_ORDERS),
       icon: <PiReceipt className={classes.icon} />,
       value: orders,
+      href: '/orders?page=1&pageSize=10&sort=createdAt:DESC',
     },
   ] as const;
 
@@ -72,6 +74,7 @@ export default function StatCardList({
             value={stat.value}
             subtitle={stat.subtitle}
             icon={stat.icon}
+            href={stat.href}
           />
         ))}
       </SimpleGrid>

@@ -1,22 +1,33 @@
+import Link from 'next/link';
 import { ReactNode, forwardRef } from 'react';
-import { Box, Group, NumberFormatter, Paper, Text } from '@mantine/core';
+import { Anchor, Box, Group, NumberFormatter, Paper, Text } from '@mantine/core';
 
 import classes from './stat-card.module.css';
+import { statCardContent, StatCardPhrases } from './stat-card.content';
 
 export interface StatCardProps {
   title: string;
   value: number;
   subtitle?: string;
   icon?: ReactNode;
+  href?: string;
 }
 
 const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
-  ({ title, value = '—', subtitle, icon }, ref) => (
+  ({ title, value = '—', subtitle, icon, href }, ref) => (
     <Paper key={title} ref={ref} className={classes.card}>
       <Group justify="space-between">
-        <Text size="xs" c="dimmed" className={classes.title}>
-          {title}
-        </Text>
+        <Group>
+          <Text size="xs" c="dimmed" className={classes.title}>
+            {title}
+          </Text>
+
+          {href && (
+            <Anchor size="sm" component={Link} href={href} underline="always" fw="bold">
+              {statCardContent.t(StatCardPhrases.VIEW_ALL)}{' '}
+            </Anchor>
+          )}
+        </Group>
 
         {icon || <Box w={16} h={16} />}
       </Group>
