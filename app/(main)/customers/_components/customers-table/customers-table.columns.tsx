@@ -37,7 +37,7 @@ export const columns = [
   columnHelper.accessor(
     (row) => {
       const primaryPhone = row.phones.find((phone) => phone.isPrimary);
-      return primaryPhone ? formatPhoneNumber(primaryPhone.countryCode, primaryPhone.number) : '';
+      return primaryPhone ? formatPhoneNumber(primaryPhone.dialingCode, primaryPhone.number) : '';
     },
     {
       id: 'primaryPhone',
