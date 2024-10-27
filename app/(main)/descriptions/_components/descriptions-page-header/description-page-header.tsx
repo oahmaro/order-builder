@@ -3,12 +3,13 @@
 import { modals } from '@mantine/modals';
 
 import { PageHeader } from '@/components';
+import { CreateDescriptionForm } from '../create-description-form';
+import DescriptionFormContainer from '../description-form/description-form.container';
+
 import {
   DescriptionsPageHeaderPhrases,
   descriptionsPageHeaderContent,
 } from './description-page-header.content';
-import CreateDescriptionFormContainer from '../create-description-form/create-description-form.container';
-import { CreateDescriptionForm } from '../create-description-form';
 
 export interface DescriptionsPageHeaderProps {
   numberOfDescriptions: number;
@@ -31,11 +32,11 @@ export default function DescriptionsPageHeader({
           onClick: () =>
             modals.open({
               title: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.MODAL_TITLE),
-              size: 'lg',
+              size: 'xl',
               children: (
-                <CreateDescriptionFormContainer>
+                <DescriptionFormContainer>
                   <CreateDescriptionForm />
-                </CreateDescriptionFormContainer>
+                </DescriptionFormContainer>
               ),
             }),
         },

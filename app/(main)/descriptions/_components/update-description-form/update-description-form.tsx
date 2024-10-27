@@ -1,13 +1,14 @@
 'use client';
 
-import { z } from 'zod';
-import { modals } from '@mantine/modals';
+import { Description } from '@prisma/client';
 import { notifications } from '@mantine/notifications';
+import { z } from 'zod';
+import { Card, Stack } from '@mantine/core';
 
-import { ModalFooter } from '@/components';
 import { DescriptionForm } from '../description-form';
 import { commonContent, CommonPhrases } from '@/content';
-import { createDescriptionAction } from '../../_actions/create-description.action';
+import { updateDescriptionAction } from '../../_actions';
+import { DescriptionPageHeader } from '../description-page-header';
 import { descriptionFormSchema } from '../description-form/description-form.schema';
 
 import {
@@ -20,7 +21,13 @@ import {
   DescriptionFormContentPhrases,
 } from '../description-form/description-form.content';
 
-export default function CreateDescriptionForm() {
+export default function UpdateDescriptionForm({
+  description,
+  hasOrderItems,
+}: {
+  description: Description;
+  hasOrderItems: boolean;
+}) {
   const form = useDescriptionFormContext();
 
   const handleSubmit = async (data: DescriptionFormValues) => {
@@ -28,26 +35,23 @@ export default function CreateDescriptionForm() {
       const validatedData = descriptionFormSchema.parse(data);
 
       const formData = new FormData();
-
+      formData.append('descriptionId', description.id.toString());
       formData.append('name', validatedData.name);
+      formData.append('description', validatedData.description || '');
 
-      if (validatedData.description) {
-        formData.append('description', validatedData.description);
-      }
-
-      const response = await createDescriptionAction(formData);
+      const response = await updateDescriptionAction(formData);
 
       if (
         response.message ===
-        descriptionFormContent.t(DescriptionFormContentPhrases.DESCRIPTION_CREATED)
+        descriptionFormContent.t(DescriptionFormContentPhrases.DESCRIPTION_UPDATED)
       ) {
-        modals.closeAll();
-
         notifications.show({
           title: commonContent.t(CommonPhrases.SUCCESS),
           message: response.message,
           color: 'green',
         });
+
+        form.resetDirty();
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
@@ -64,7 +68,7 @@ export default function CreateDescriptionForm() {
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
-          message: descriptionFormContent.t(DescriptionFormContentPhrases.ERROR_WHILE_CREATING),
+          message: descriptionFormContent.t(DescriptionFormContentPhrases.ERROR_WHILE_UPDATING),
           color: 'red',
         });
       }
@@ -73,12 +77,17 @@ export default function CreateDescriptionForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <DescriptionForm />
+      <Stack gap="lg">
+        <DescriptionPageHeader
+          name={description.name}
+          descriptionId={description.id}
+          hasOrderItems={hasOrderItems}
+        />
 
-      <ModalFooter
-        submitLabel={commonContent.t(CommonPhrases.CREATE)}
-        cancelLabel={commonContent.t(CommonPhrases.CANCEL)}
-      />
+        <Card shadow="sm" radius="md" padding="xl">
+          <DescriptionForm />
+        </Card>
+      </Stack>
     </form>
   );
 }
