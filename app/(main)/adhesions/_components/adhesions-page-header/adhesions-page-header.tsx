@@ -3,12 +3,14 @@
 import { modals } from '@mantine/modals';
 
 import { PageHeader } from '@/components';
+
+import { CreateAdhesionForm } from '../create-adhesion-form';
+
 import {
   adhesionsPageHeaderContent,
   AdhesionsPageHeaderPhrases,
 } from './adhesions-page-header.content';
-import CreateAdhesionFormContainer from '../create-adhesion-form/create-adhesion-form.container';
-import { CreateAdhesionForm } from '../create-adhesion-form';
+import AdhesionFormContainer from '../adhesion-form/adhesion-form.container';
 
 export interface AdhesionsPageHeaderProps {
   numberOfAdhesions: number;
@@ -29,11 +31,11 @@ export default function AdhesionsPageHeader({ numberOfAdhesions }: AdhesionsPage
           onClick: () =>
             modals.open({
               title: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.MODAL_TITLE),
-              size: 'lg',
+              size: 'xl',
               children: (
-                <CreateAdhesionFormContainer>
+                <AdhesionFormContainer>
                   <CreateAdhesionForm />
-                </CreateAdhesionFormContainer>
+                </AdhesionFormContainer>
               ),
             }),
         },

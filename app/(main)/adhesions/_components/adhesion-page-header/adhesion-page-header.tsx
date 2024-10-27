@@ -6,37 +6,43 @@ import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
 
 import { PageHeader } from '@/components';
-import { deleteFrameAction } from '../../_actions';
-import { commonContent, CommonPhrases } from '@/content';
-import { useFrameFormContext } from '../frame-form/frame-form.container';
-import { framePageHeaderContent, FramePageHeaderPhrases } from './frame-page-header.content';
 
-export default function FramePageHeader({
+import {
+  adhesionPageHeaderContent,
+  AdhesionPageHeaderPhrases,
+} from './adhesion-page-header.content';
+import { useAdhesionFormContext } from '../adhesion-form/adhesion-form.container';
+import { deleteAdhesionAction } from '../../_actions';
+import { commonContent, CommonPhrases } from '@/content';
+
+export default function AdhesionPageHeader({
   name,
-  frameId,
+  adhesionId,
   hasOrderItems,
 }: {
   name: string;
-  frameId: number;
+  adhesionId: number;
   hasOrderItems: boolean;
 }) {
-  const form = useFrameFormContext();
+  const form = useAdhesionFormContext();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    const response = await deleteFrameAction(frameId);
+    const response = await deleteAdhesionAction(adhesionId);
     setIsDeleting(false);
 
-    if (response.message === framePageHeaderContent.t(FramePageHeaderPhrases.FRAME_DELETED)) {
+    if (
+      response.message === adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.ADHESION_DELETED)
+    ) {
       notifications.show({
         title: commonContent.t(CommonPhrases.SUCCESS),
         message: response.message,
         color: 'green',
       });
 
-      router.push('/frames?page=1&pageSize=10&sort=name:ASC');
+      router.push('/adhesions?page=1&pageSize=10&sort=name:ASC');
     } else {
       notifications.show({
         title: commonContent.t(CommonPhrases.ERROR),
@@ -48,12 +54,12 @@ export default function FramePageHeader({
 
   const openDeleteModal = () =>
     modals.openConfirmModal({
-      title: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_MODAL_TITLE),
+      title: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_MODAL_TITLE),
       centered: true,
-      children: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_MODAL_CONTENT),
+      children: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_MODAL_CONTENT),
       labels: {
-        confirm: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_MODAL_CONFIRM),
-        cancel: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_MODAL_CANCEL),
+        confirm: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_MODAL_CONFIRM),
+        cancel: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_MODAL_CANCEL),
       },
       confirmProps: { color: 'red' },
       onConfirm: handleDelete,
@@ -62,25 +68,25 @@ export default function FramePageHeader({
   return (
     <PageHeader
       title={name}
-      backPath="/frames?page=1&pageSize=10&sort=name:ASC"
+      backPath="/adhesions?page=1&pageSize=10&sort=name:ASC"
       actions={[
         {
-          label: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_ACTION),
+          label: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_ACTION),
           onClick: openDeleteModal,
           disabled: hasOrderItems || isDeleting,
           variant: 'outline',
           color: 'red',
           tooltipLabel: hasOrderItems
-            ? framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_DISABLED_TOOLTIP)
+            ? adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_DISABLED_TOOLTIP)
             : undefined,
         },
         {
-          label: framePageHeaderContent.t(FramePageHeaderPhrases.SAVE_ACTION),
+          label: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.SAVE_ACTION),
           onClick: () => {},
           disabled: !form.isDirty(),
           type: 'submit',
           tooltipLabel: !form.isDirty()
-            ? framePageHeaderContent.t(FramePageHeaderPhrases.SAVE_DISABLED_TOOLTIP)
+            ? adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.SAVE_DISABLED_TOOLTIP)
             : undefined,
         },
       ]}

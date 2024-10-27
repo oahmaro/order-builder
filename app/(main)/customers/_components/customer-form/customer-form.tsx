@@ -55,7 +55,6 @@ export default function CustomerForm() {
                 searchable
                 value={`${form.values.phones[index].countryCode}:${form.values.phones[index].dialingCode}`}
                 onChange={(value) => {
-                  console.log('value', value);
                   if (value) {
                     const [countryCode, dialingCode] = value.split(':');
                     form.setFieldValue(`phones.${index}.countryCode`, countryCode);

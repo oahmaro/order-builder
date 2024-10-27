@@ -23,6 +23,7 @@ export default function FrameFormContainer({ children, frame }: FrameFormContain
       name: frame?.name || '',
       description: frame?.description || '',
     },
+
     validate: zodResolver(frameFormSchema),
   });
 
