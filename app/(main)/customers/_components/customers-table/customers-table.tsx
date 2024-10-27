@@ -2,7 +2,7 @@
 
 import { Customer, Phone } from '@prisma/client';
 
-import { columns } from './customer-table.columns';
+import { columns } from './customers-table.columns';
 import { MainTable } from '@/components/main-table';
 
 type CustomerDataType = Partial<Customer> & { phones: Phone[] };

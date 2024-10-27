@@ -19,6 +19,7 @@ export default function ModalFooter({
   return (
     <Group className={classes.root}>
       <Button
+        px="xl"
         className={classes.cancelButton}
         variant="white"
         onClick={() => {
@@ -29,7 +30,7 @@ export default function ModalFooter({
         {cancelLabel}
       </Button>
 
-      <Button type="submit" onClick={onSubmit}>
+      <Button type="submit" onClick={onSubmit} px="xl">
         {submitLabel}
       </Button>
     </Group>

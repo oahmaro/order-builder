@@ -45,6 +45,7 @@ export default function CustomerPageHeader({
         message: response.message,
         color: 'green',
       });
+
       router.push('/customers?page=1&pageSize=10&sort=name:ASC');
     } else {
       notifications.show({

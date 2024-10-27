@@ -1,31 +1,37 @@
 'use client';
 
-import { useDisclosure } from '@mantine/hooks';
-
+import { modals } from '@mantine/modals';
 import { PageHeader } from '@/components';
-import InviteNewUserFormModal from '../invite-new-user-form/invite-new-user-form.modal';
-import { UsersPageHeaderPhrase, usersPageHeaderContent } from './users-page-header.content';
+
+import { CreateUserForm } from '../create-user-form';
+import UserFormContainer from '../user-form/user-form.container';
+import { usersPageHeaderContent, UsersPageHeaderPhrases } from './users-page-header.content';
 
 export interface UsersPageHeaderProps {
   numberOfUsers: number;
 }
 
 export default function UsersPageHeader({ numberOfUsers }: UsersPageHeaderProps) {
-  const [opened, handlers] = useDisclosure(false);
-
   return (
-    <>
-      <PageHeader
-        title={usersPageHeaderContent.t(UsersPageHeaderPhrase.TITLE)}
-        subtitle={usersPageHeaderContent.t(UsersPageHeaderPhrase.SUBTITLE, numberOfUsers)}
-        action={{
-          label: usersPageHeaderContent.t(UsersPageHeaderPhrase.ACTION),
-          onClick: handlers.open,
-        }}
-        backPath="/"
-      />
-
-      <InviteNewUserFormModal opened={opened} onClose={handlers.close} />
-    </>
+    <PageHeader
+      title={usersPageHeaderContent.t(UsersPageHeaderPhrases.TITLE)}
+      subtitle={usersPageHeaderContent.t(UsersPageHeaderPhrases.SUBTITLE, numberOfUsers)}
+      backPath="/"
+      actions={[
+        {
+          label: usersPageHeaderContent.t(UsersPageHeaderPhrases.ACTION),
+          onClick: () =>
+            modals.open({
+              title: usersPageHeaderContent.t(UsersPageHeaderPhrases.MODAL_TITLE),
+              size: 'xl',
+              children: (
+                <UserFormContainer>
+                  <CreateUserForm />
+                </UserFormContainer>
+              ),
+            }),
+        },
+      ]}
+    />
   );
 }

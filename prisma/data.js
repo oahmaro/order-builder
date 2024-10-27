@@ -1,3 +1,5 @@
+// spell-checker: disable
+
 const { UserRole } = require('@prisma/client');
 
 const users = [
