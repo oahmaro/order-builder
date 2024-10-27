@@ -6,8 +6,8 @@ import { notifications } from '@mantine/notifications';
 
 import { ModalFooter } from '@/components';
 import { formatDateToISOString } from '@/utils';
+import { createCustomerAction } from '../../_actions';
 import { commonContent, CommonPhrases } from '@/content';
-import { createCustomerFormAction } from '../../_actions';
 import { customerFormSchema } from '../customer-form/customer-form.schema';
 
 import { CustomerForm } from '../customer-form';
@@ -62,10 +62,11 @@ export default function CreateCustomerForm() {
         formData.append('address', JSON.stringify(validatedData.address));
       }
 
-      const response = await createCustomerFormAction(formData);
+      const response = await createCustomerAction(formData);
 
       if (response.message === customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_CREATED)) {
         modals.closeAll();
+
         notifications.show({
           title: commonContent.t(CommonPhrases.SUCCESS),
           message: response.message,

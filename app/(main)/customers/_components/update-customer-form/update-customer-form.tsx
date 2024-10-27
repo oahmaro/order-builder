@@ -7,7 +7,7 @@ import { notifications } from '@mantine/notifications';
 
 import { CustomerForm } from '../customer-form';
 import { formatDateToISOString } from '@/utils';
-import { updateCustomerFormAction } from '../../_actions';
+import { updateCustomerAction } from '../../_actions';
 import { CustomerPageHeader } from '../customer-page-header';
 import { customerFormSchema } from '../customer-form/customer-form.schema';
 
@@ -69,7 +69,7 @@ export default function UpdateCustomerForm({
         formData.append('address', JSON.stringify(validatedData.address));
       }
 
-      const response = await updateCustomerFormAction(formData);
+      const response = await updateCustomerAction(formData);
 
       if (response.message === customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_UPDATED)) {
         notifications.show({

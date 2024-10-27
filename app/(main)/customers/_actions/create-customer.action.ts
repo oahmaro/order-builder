@@ -16,11 +16,10 @@ type FormState = {
   errors?: any[];
 };
 
-export async function updateCustomerFormAction(data: FormData): Promise<FormState> {
+export async function createCustomerAction(data: FormData): Promise<FormState> {
   const formData = Object.fromEntries(data);
   const parsedPhones = JSON.parse(formData.phones as string);
   const parsedAddress = JSON.parse(formData.address as string);
-  const customerId = parseInt(formData.customerId as string, 10);
 
   const parsed = customerFormSchema.safeParse({
     ...formData,
@@ -49,43 +48,29 @@ export async function updateCustomerFormAction(data: FormData): Promise<FormStat
       );
 
       if (Object.keys(filteredAddressData).length > 0) {
-        const existingCustomer = await db.customer.findUnique({
-          where: { id: customerId },
-          include: { address: true },
+        const createdAddress = await db.address.create({
+          data: filteredAddressData,
         });
-
-        if (existingCustomer?.address) {
-          await db.address.update({
-            where: { id: existingCustomer.address.id },
-            data: filteredAddressData,
-          });
-          addressId = existingCustomer.address.id;
-        } else {
-          const createdAddress = await db.address.create({
-            data: filteredAddressData,
-          });
-          addressId = createdAddress.id;
-        }
+        addressId = createdAddress.id;
       }
     }
 
-    await db.customer.update({
-      where: { id: customerId },
+    await db.customer.create({
       data: {
         firstName,
         lastName,
         email: email || null,
         dateOfBirth: dateOfBirth || null,
+        createdById: null,
         updatedById: null,
         addressId,
         phones: {
-          deleteMany: {},
-          create: phones.map((phone: any, index: number) => ({
+          create: phones.map((phone: any) => ({
             countryCode: phone.countryCode,
             number: phone.number,
-            type: phone.type,
-            isPrimary: index === 0,
+            isPrimary: phone.isPrimary,
             dialingCode: phone.dialingCode,
+            type: phone.type,
           })),
         },
       },
@@ -94,7 +79,7 @@ export async function updateCustomerFormAction(data: FormData): Promise<FormStat
     revalidatePath('/customers');
 
     return {
-      message: customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_UPDATED),
+      message: customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_CREATED),
     };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -104,7 +89,7 @@ export async function updateCustomerFormAction(data: FormData): Promise<FormStat
     }
 
     return {
-      message: customerFormContent.t(CustomerFormContentPhrases.ERROR_WHILE_UPDATING),
+      message: customerFormContent.t(CustomerFormContentPhrases.ERROR_WHILE_CREATING),
     };
   }
 }

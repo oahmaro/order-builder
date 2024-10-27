@@ -23,7 +23,6 @@ export async function deleteCustomerAction(customerId: number): Promise<DeleteCu
       message: customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_DELETED),
     };
   } catch (error) {
-    console.error('Error deleting customer', error);
     return {
       message: customerFormContent.t(CustomerFormContentPhrases.ERROR_WHILE_DELETING),
     };

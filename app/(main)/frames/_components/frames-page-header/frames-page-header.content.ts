@@ -5,6 +5,8 @@ import Polyglot from 'node-polyglot';
 export enum FramesPageHeaderPhrases {
   TITLE = 'title',
   SUBTITLE = 'subtitle',
+  ACTION = 'action',
+  MODAL_TITLE = 'modal-title',
 }
 
 export const framesPageHeaderContent = new Polyglot({
@@ -12,5 +14,7 @@ export const framesPageHeaderContent = new Polyglot({
   phrases: {
     [FramesPageHeaderPhrases.TITLE]: 'מסגרות',
     [FramesPageHeaderPhrases.SUBTITLE]: '%{smart_count} מסגרת |||| %{smart_count} מסגרות',
+    [FramesPageHeaderPhrases.ACTION]: 'הוספת מסגרת',
+    [FramesPageHeaderPhrases.MODAL_TITLE]: 'צור מסגרת',
   },
 });

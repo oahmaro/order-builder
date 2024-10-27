@@ -1,7 +1,7 @@
 import { Stack } from '@mantine/core';
 
 import { db } from '@/lib/db';
-import { FramesPageHeader } from './_components';
+import { FramesPageHeader, FramesTable } from './_components';
 
 export default async function FramesPage() {
   const frames = await db.frame.findMany();
@@ -9,6 +9,7 @@ export default async function FramesPage() {
   return (
     <Stack gap="lg">
       <FramesPageHeader numberOfFrames={frames.length} />
+      <FramesTable frames={frames} />
     </Stack>
   );
 }

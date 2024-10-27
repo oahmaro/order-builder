@@ -1,3 +1,5 @@
+'use client';
+
 import { DateInput } from '@mantine/dates';
 import { countries as countryNames } from 'countries-list';
 import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
@@ -23,7 +25,9 @@ export default function CustomerForm() {
     <>
       <Stack gap="xl">
         <Stack component="section">
-          <Title order={4}>Customer details</Title>
+          <Title order={4}>
+            {customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_DETAILS)}
+          </Title>
 
           <Group grow wrap="nowrap" align="flex-start">
             <TextInput

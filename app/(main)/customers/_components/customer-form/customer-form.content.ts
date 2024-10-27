@@ -3,6 +3,7 @@
 import Polyglot from 'node-polyglot';
 
 export enum CustomerFormContentPhrases {
+  CUSTOMER_DETAILS = 'customer-details',
   FIRST_NAME_LABEL = 'first-name-label',
   FIRST_NAME_REQUIRED = 'first-name-required',
   LAST_NAME_LABEL = 'last-name-label',
@@ -51,6 +52,7 @@ export enum CustomerFormContentPhrases {
 export const customerFormContent = new Polyglot({
   locale: 'he',
   phrases: {
+    [CustomerFormContentPhrases.CUSTOMER_DETAILS]: 'פרטי לקוח',
     [CustomerFormContentPhrases.FIRST_NAME_LABEL]: 'שם פרטי',
     [CustomerFormContentPhrases.FIRST_NAME_REQUIRED]: 'השם נדרש',
     [CustomerFormContentPhrases.LAST_NAME_LABEL]: 'שם משפחה',
