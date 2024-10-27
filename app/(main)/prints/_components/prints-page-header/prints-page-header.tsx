@@ -3,9 +3,9 @@
 import { modals } from '@mantine/modals';
 
 import { PageHeader } from '@/components';
-import { printsPageHeaderContent, PrintsPageHeaderPhrases } from './prints-page-header.content';
-import CreatePrintFormContainer from '../create-print-form/create-print-form.container';
 import { CreatePrintForm } from '../create-print-form';
+import PrintFormContainer from '../print-form/print-form.container';
+import { printsPageHeaderContent, PrintsPageHeaderPhrases } from './prints-page-header.content';
 
 export interface PrintsPageHeaderProps {
   numberOfPrints: number;
@@ -17,19 +17,21 @@ export default function PrintsPageHeader({ numberOfPrints }: PrintsPageHeaderPro
       title={printsPageHeaderContent.t(PrintsPageHeaderPhrases.TITLE)}
       subtitle={printsPageHeaderContent.t(PrintsPageHeaderPhrases.SUBTITLE, numberOfPrints)}
       backPath="/"
-      action={{
-        label: printsPageHeaderContent.t(PrintsPageHeaderPhrases.ACTION),
-        onClick: () =>
-          modals.open({
-            title: printsPageHeaderContent.t(PrintsPageHeaderPhrases.MODAL_TITLE),
-            size: 'lg',
-            children: (
-              <CreatePrintFormContainer>
-                <CreatePrintForm />
-              </CreatePrintFormContainer>
-            ),
-          }),
-      }}
+      actions={[
+        {
+          label: printsPageHeaderContent.t(PrintsPageHeaderPhrases.ACTION),
+          onClick: () =>
+            modals.open({
+              title: printsPageHeaderContent.t(PrintsPageHeaderPhrases.MODAL_TITLE),
+              size: 'lg',
+              children: (
+                <PrintFormContainer>
+                  <CreatePrintForm />
+                </PrintFormContainer>
+              ),
+            }),
+        },
+      ]}
     />
   );
 }
