@@ -1,9 +1,10 @@
 'use client';
 
-import { Button, Stack, Title } from '@mantine/core';
 import Image from 'next/image';
+import { Button, Stack, Title } from '@mantine/core';
 
 import { Link } from '@/components';
+import { notFoundPageContent, NotFoundPagePhrases } from './_content';
 
 export default function PageNotFound() {
   return (
@@ -11,9 +12,9 @@ export default function PageNotFound() {
       <Image src="/page-not-found.svg" width={500} height={300} alt="Page not found illustration" />
 
       <Stack mt={-32}>
-        <Title order={3}>הדף הזה לא נמצא.</Title>
+        <Title order={3}>{notFoundPageContent.t(NotFoundPagePhrases.TITLE)}</Title>
         <Button component={Link} href="/">
-          עבור לעמוד הבית
+          {notFoundPageContent.t(NotFoundPagePhrases.GO_HOME)}
         </Button>
       </Stack>
     </Stack>

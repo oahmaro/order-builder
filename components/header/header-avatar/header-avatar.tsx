@@ -1,14 +1,15 @@
 'use client';
 
+import { PiUser } from 'react-icons/pi';
+import { signOut } from 'next-auth/react';
+import { FiLogOut } from 'react-icons/fi';
+import { nprogress } from '@mantine/nprogress';
 import { useEffect, useTransition } from 'react';
 import { Avatar, Box, Group, Menu, Stack, Text, rem } from '@mantine/core';
-import { nprogress } from '@mantine/nprogress';
-import { signOut } from 'next-auth/react';
-import { PiUser } from 'react-icons/pi';
-import { FiLogOut } from 'react-icons/fi';
 
-import classes from './header-avatar.module.css';
 import { Link } from '@/components';
+import classes from './header-avatar.module.css';
+import { headerAvatarContent, HeaderAvatarPhrases } from './header-avatar.content';
 
 interface HeaderAvatarProps {
   title?: string;
@@ -65,7 +66,7 @@ export default function HeaderAvatar({ initials, title, subtitle }: HeaderAvatar
             href="/profile"
             rightSection={<PiUser style={{ width: rem(16), height: rem(16) }} />}
           >
-            פרופיל
+            {headerAvatarContent.t(HeaderAvatarPhrases.PROFILE)}
           </Menu.Item>
 
           <Menu.Divider />
@@ -79,7 +80,7 @@ export default function HeaderAvatar({ initials, title, subtitle }: HeaderAvatar
             }
             rightSection={<FiLogOut style={{ width: rem(16), height: rem(16) }} />}
           >
-            להתנתק
+            {headerAvatarContent.t(HeaderAvatarPhrases.LOGOUT)}
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

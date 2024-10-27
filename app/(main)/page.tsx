@@ -1,7 +1,8 @@
 import { Stack, Text, Title } from '@mantine/core';
 
-import { StatCardList } from './_components';
 import { db } from '@/lib/db';
+import { StatCardList } from './_components';
+import { homePageContent, HomePagePhrases } from './_content';
 
 export default async function HomePage() {
   const totalCustomers = await db.customer.count();
@@ -33,13 +34,10 @@ export default async function HomePage() {
 
   return (
     <Stack m="0 auto">
-      <Title order={1}>ברוך הבא 👋</Title>
+      <Title order={1}>{homePageContent.t(HomePagePhrases.WELCOME_TITLE)}</Title>
 
       <Stack gap={0}>
-        <Text c="dimmed">
-          אפליקציה זו פותרת את ניהול, יצירה ומעקב הזמנות בקלות, ומציעה יכולת להדפיסן בקלות. פשוט את
-          התהליכים שלך ושמור על סדר בצורה יעילה.
-        </Text>
+        <Text c="dimmed">{homePageContent.t(HomePagePhrases.APP_DESCRIPTION)}</Text>
 
         <StatCardList
           customers={totalCustomers}

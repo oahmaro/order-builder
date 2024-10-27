@@ -1,11 +1,9 @@
 import { addBasePath } from 'next/dist/client/add-base-path';
 
 function getURL(href: string): URL {
-  // eslint-disable-next-line no-restricted-globals
-  return new URL(addBasePath(href), location.href);
+  return new URL(addBasePath(href), window.location.href);
 }
 
-// https://github.com/vercel/next.js/blob/400ccf7b1c802c94127d8d8e0d5e9bdf9aab270c/packages/next/src/client/link.tsx#L169
 function isModifiedEvent(event: React.MouseEvent): boolean {
   const eventTarget = event.currentTarget as HTMLAnchorElement | SVGAElement;
   const target = eventTarget.getAttribute('target');
@@ -14,7 +12,7 @@ function isModifiedEvent(event: React.MouseEvent): boolean {
     event.metaKey ||
     event.ctrlKey ||
     event.shiftKey ||
-    event.altKey || // triggers resource download
+    event.altKey ||
     (event.nativeEvent && event.nativeEvent.button === 1)
   );
 }
@@ -23,9 +21,9 @@ export function shouldTriggerStartEvent(href: string, clickEvent?: React.MouseEv
   const current = window.location;
   const target = getURL(href);
 
-  if (clickEvent && isModifiedEvent(clickEvent)) return false; // modified events: fallback to browser behaviour
-  if (current.origin !== target.origin) return false; // external URL
-  if (current.pathname === target.pathname && current.search === target.search) return false; // same URL
+  if (clickEvent && isModifiedEvent(clickEvent)) return false;
+  if (current.origin !== target.origin) return false;
+  if (current.pathname === target.pathname && current.search === target.search) return false;
 
   return true;
 }

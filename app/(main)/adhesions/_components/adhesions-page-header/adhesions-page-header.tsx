@@ -23,19 +23,21 @@ export default function AdhesionsPageHeader({ numberOfAdhesions }: AdhesionsPage
         numberOfAdhesions
       )}
       backPath="/"
-      action={{
-        label: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.ACTION),
-        onClick: () =>
-          modals.open({
-            title: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.MODAL_TITLE),
-            size: 'lg',
-            children: (
-              <CreateAdhesionFormContainer>
-                <CreateAdhesionForm />
-              </CreateAdhesionFormContainer>
-            ),
-          }),
-      }}
+      actions={[
+        {
+          label: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.ACTION),
+          onClick: () =>
+            modals.open({
+              title: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.MODAL_TITLE),
+              size: 'lg',
+              children: (
+                <CreateAdhesionFormContainer>
+                  <CreateAdhesionForm />
+                </CreateAdhesionFormContainer>
+              ),
+            }),
+        },
+      ]}
     />
   );
 }

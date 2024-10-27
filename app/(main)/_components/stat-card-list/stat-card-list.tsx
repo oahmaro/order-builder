@@ -3,8 +3,9 @@
 import { Divider, SimpleGrid, Stack, Title } from '@mantine/core';
 import { PiReceipt, PiUsers, PiTruck, PiHandshake, PiPause, PiTimer } from 'react-icons/pi';
 
-import classes from './stat-card-list.module.css';
 import StatCard from '../stat-card/stat-card';
+import classes from './stat-card-list.module.css';
+import { statCardListContent, StatCardListPhrases } from './stat-card-list.content';
 
 export interface StatCardListProps {
   customers: number;
@@ -25,24 +26,40 @@ export default function StatCardList({
 }: StatCardListProps) {
   const generalStats = [
     {
-      title: 'לקוחות',
-      subtitle: 'כל הלקוחות',
+      title: statCardListContent.t(StatCardListPhrases.CUSTOMERS),
+      subtitle: statCardListContent.t(StatCardListPhrases.ALL_CUSTOMERS),
       icon: <PiUsers className={classes.icon} />,
       value: customers,
     },
     {
-      title: 'הזמנות',
-      subtitle: 'כל ההזמנות',
+      title: statCardListContent.t(StatCardListPhrases.ORDERS),
+      subtitle: statCardListContent.t(StatCardListPhrases.ALL_ORDERS),
       icon: <PiReceipt className={classes.icon} />,
       value: orders,
     },
   ] as const;
 
   const orderStats = [
-    { title: 'ממתין ל', icon: <PiPause className={classes.icon} />, value: pendingOrders },
-    { title: 'מעבד', icon: <PiTimer className={classes.icon} />, value: processingOrders },
-    { title: 'נשלח', icon: <PiTruck className={classes.icon} />, value: shippedOrders },
-    { title: 'נמסר', icon: <PiHandshake className={classes.icon} />, value: deliveredOrders },
+    {
+      title: statCardListContent.t(StatCardListPhrases.PENDING),
+      icon: <PiPause className={classes.icon} />,
+      value: pendingOrders,
+    },
+    {
+      title: statCardListContent.t(StatCardListPhrases.PROCESSING),
+      icon: <PiTimer className={classes.icon} />,
+      value: processingOrders,
+    },
+    {
+      title: statCardListContent.t(StatCardListPhrases.SHIPPED),
+      icon: <PiTruck className={classes.icon} />,
+      value: shippedOrders,
+    },
+    {
+      title: statCardListContent.t(StatCardListPhrases.DELIVERED),
+      icon: <PiHandshake className={classes.icon} />,
+      value: deliveredOrders,
+    },
   ] as const;
 
   return (
@@ -62,7 +79,7 @@ export default function StatCardList({
       <Stack gap={8}>
         <Divider />
         <Title size="h6" tt="uppercase" c="dimmed">
-          מעקב אחר הזמנות
+          {statCardListContent.t(StatCardListPhrases.ORDER_TRACKING)}
         </Title>
       </Stack>
 

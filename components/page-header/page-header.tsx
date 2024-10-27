@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { IconChevronRight } from '@tabler/icons-react';
 import { Anchor, Button, Group, Text, Title, Tooltip } from '@mantine/core';
 
-import classes from './page-header.module.css';
 import PageHeaderLoading from './page-header-loading';
+import { pageHeaderContent, PageHeaderPhrases } from './page-header.content';
 
 interface Action {
   label: string;
@@ -36,7 +36,7 @@ export default function PageHeader({
   }
 
   return (
-    <div className={classes.root}>
+    <div>
       {backPath && (
         <Anchor
           component={Link}
@@ -47,7 +47,7 @@ export default function PageHeader({
           <Group gap={2} pe="xl">
             <IconChevronRight />
             <Text fw="bold" fz="lg">
-              חזור
+              {pageHeaderContent.t(PageHeaderPhrases.BACK)}
             </Text>
           </Group>
         </Anchor>

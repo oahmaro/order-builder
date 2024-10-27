@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Button, Stack, Text } from '@mantine/core';
 
 import { Link } from '@/components';
+import { ordersTableContent, OrdersTableContentPhrases } from '../orders-table.content';
 
 export interface OrdersTableEmptyStateProps {}
 
@@ -13,16 +14,16 @@ export default function OrdersTableEmptyState() {
 
         <Stack align="center" justify="center" gap={0} maw={320} ta="center">
           <Text fw={600} fz="xl" c="gray.7">
-            לא נמצאו הזמנות
+            {ordersTableContent.t(OrdersTableContentPhrases.NO_ORDERS_FOUND)}
           </Text>
 
           <Text c="dimmed">
-            לא נמצאו הזמנות, עדכן את שאילתת החיפוש והסינונים שלך, או צור הזמנה חדשה.
+            {ordersTableContent.t(OrdersTableContentPhrases.NO_ORDERS_FOUND_DESCRIPTION)}
           </Text>
         </Stack>
 
         <Button variant="light" component={Link} href="/orders/create">
-          צור ערך חדש
+          {ordersTableContent.t(OrdersTableContentPhrases.CREATE_ORDER)}
         </Button>
       </Stack>
     </Stack>

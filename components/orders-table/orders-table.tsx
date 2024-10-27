@@ -5,6 +5,7 @@ import { Badge, Paper, Table } from '@mantine/core';
 import { Order, OrderStatus } from '@prisma/client';
 import classes from './orders-table.module.css';
 import { OrdersTableEmptyState } from './orders-table-empty-state';
+import { ordersTableContent, OrdersTableContentPhrases } from './orders-table.content';
 
 export interface OrdersTableProps {
   orders?: Order[];
@@ -51,13 +52,41 @@ const exampleOrders: Order[] = [
 
 const getOrderStatusMapping = (status: OrderStatus) => {
   const statusMapping = {
-    [OrderStatus.DELIVERED]: { label: 'נמסר', value: 'delivered', color: 'green' },
-    [OrderStatus.CANCELLED]: { label: 'מבוטל', value: 'canceled', color: 'red' },
-    [OrderStatus.ON_HOLD]: { label: 'בהמתנה', value: 'on-hold', color: 'pink' },
-    [OrderStatus.PENDING]: { label: 'ממתין ל', value: 'pending', color: 'orange' },
-    [OrderStatus.PROCESSING]: { label: 'מעבד', value: 'processing', color: 'orange' },
-    [OrderStatus.REFUNDED]: { label: 'הוחזר', value: 'refunded', color: 'cyan' },
-    [OrderStatus.SHIPPED]: { label: 'נשלח', value: 'shipped', color: 'blue' },
+    [OrderStatus.DELIVERED]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.DELIVERED),
+      value: 'delivered',
+      color: 'green',
+    },
+    [OrderStatus.CANCELLED]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.CANCELED),
+      value: 'canceled',
+      color: 'red',
+    },
+    [OrderStatus.ON_HOLD]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.ON_HOLD),
+      value: 'on-hold',
+      color: 'pink',
+    },
+    [OrderStatus.PENDING]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.PENDING),
+      value: 'pending',
+      color: 'orange',
+    },
+    [OrderStatus.PROCESSING]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.PROCESSING),
+      value: 'processing',
+      color: 'orange',
+    },
+    [OrderStatus.REFUNDED]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.REFUNDED),
+      value: 'refunded',
+      color: 'cyan',
+    },
+    [OrderStatus.SHIPPED]: {
+      label: ordersTableContent.t(OrdersTableContentPhrases.SHIPPED),
+      value: 'shipped',
+      color: 'blue',
+    },
   };
 
   return statusMapping[status];
@@ -88,15 +117,20 @@ const OrdersTable = forwardRef<HTMLDivElement, OrdersTableProps>(({ orders = [] 
           <Table striped highlightOnHover stickyHeader>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>מספר הזמנה</Table.Th>
-                <Table.Th>סטטוס</Table.Th>
-                <Table.Th>לקוח</Table.Th>
-                <Table.Th>כמות</Table.Th>
+                <Table.Th>{ordersTableContent.t(OrdersTableContentPhrases.ORDER_NUMBER)}</Table.Th>
+                <Table.Th>{ordersTableContent.t(OrdersTableContentPhrases.STATUS)}</Table.Th>
+                <Table.Th>{ordersTableContent.t(OrdersTableContentPhrases.CUSTOMER)}</Table.Th>
+                <Table.Th>{ordersTableContent.t(OrdersTableContentPhrases.AMOUNT)}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
 
-            <Table.Caption>viewing 10 - 112 orders</Table.Caption>
+            <Table.Caption>
+              {ordersTableContent.t(OrdersTableContentPhrases.VIEWING_ORDERS, {
+                start: 10,
+                end: 112,
+              })}
+            </Table.Caption>
           </Table>
         </Table.ScrollContainer>
       )}

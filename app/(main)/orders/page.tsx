@@ -24,7 +24,7 @@ export default async function OrderPage() {
       <PageHeader
         title="הזמנות"
         subtitle={polyglot.t('orders', orders.length)}
-        action={{ label: 'צור ערך חדש', link: '/orders/create' }}
+        actions={[{ label: 'צור ערך חדש', link: '/orders/create' }]}
         backPath="/"
       />
 

@@ -1,3 +1,5 @@
+// spell-checker: disable
+
 export const errorMessages = {
   'field-required': 'דרושה שדה נדרש',
   'fields-invalid': 'שדות לא חוקיים!',

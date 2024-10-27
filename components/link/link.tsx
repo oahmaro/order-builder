@@ -5,10 +5,16 @@ import { nprogress } from '@mantine/nprogress';
 import { shouldTriggerStartEvent } from './should-trigger-start-event';
 
 const Link = forwardRef<HTMLAnchorElement, React.ComponentProps<'a'>>(
-  ({ href, onClick, ...rest }, ref) => {
+  ({ href, onClick, children, ...rest }, ref) => {
     const useLink = href && href.startsWith('/');
-    // eslint-disable-next-line jsx-a11y/anchor-has-content
-    if (!useLink) return <a href={href} onClick={onClick} {...rest} />;
+
+    if (!useLink) {
+      return (
+        <a href={href} onClick={onClick} {...rest}>
+          {children}
+        </a>
+      );
+    }
 
     return (
       <NextLink
@@ -19,7 +25,9 @@ const Link = forwardRef<HTMLAnchorElement, React.ComponentProps<'a'>>(
         }}
         {...rest}
         ref={ref}
-      />
+      >
+        {children}
+      </NextLink>
     );
   }
 );

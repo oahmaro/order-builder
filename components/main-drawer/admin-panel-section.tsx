@@ -1,11 +1,12 @@
-import { Button, Divider, Group, Stack, Text, rem } from '@mantine/core';
 import { RiAdminLine } from 'react-icons/ri';
+import { Button, Divider, Group, Stack, Text, rem } from '@mantine/core';
 
 import { Link } from '../link';
+import { mainDrawerContent, MainDrawerPhrases } from './main-drawer.content';
 
 const menus = [
   {
-    label: 'משתמשים',
+    label: mainDrawerContent.t(MainDrawerPhrases.USERS),
     value: 'users',
     url: '/users?page=1&pageSize=10&sort=firstName:ASC',
     icon: <RiAdminLine style={{ width: rem(16), height: rem(16) }} />,
@@ -23,7 +24,7 @@ export default function AdminPanelSection({ onClose }: AdminPanelSectionProps) {
 
       <Group justify="space-between" pr={16}>
         <Text size="xs" fw={500} c="dimmed">
-          פאנל הניהול
+          {mainDrawerContent.t(MainDrawerPhrases.TITLE)}
         </Text>
       </Group>
 

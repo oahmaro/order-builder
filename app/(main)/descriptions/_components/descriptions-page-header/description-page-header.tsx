@@ -25,19 +25,21 @@ export default function DescriptionsPageHeader({
         numberOfDescriptions
       )}
       backPath="/"
-      action={{
-        label: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.ACTION),
-        onClick: () =>
-          modals.open({
-            title: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.MODAL_TITLE),
-            size: 'lg',
-            children: (
-              <CreateDescriptionFormContainer>
-                <CreateDescriptionForm />
-              </CreateDescriptionFormContainer>
-            ),
-          }),
-      }}
+      actions={[
+        {
+          label: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.ACTION),
+          onClick: () =>
+            modals.open({
+              title: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.MODAL_TITLE),
+              size: 'lg',
+              children: (
+                <CreateDescriptionFormContainer>
+                  <CreateDescriptionForm />
+                </CreateDescriptionFormContainer>
+              ),
+            }),
+        },
+      ]}
     />
   );
 }
