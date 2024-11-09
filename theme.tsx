@@ -6,6 +6,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  ScrollArea,
   Select,
   TextInput,
   createTheme,
@@ -28,6 +29,7 @@ export const theme = createTheme({
         size: 'xl',
         shadow: 'lg',
         radius: 'lg',
+        scrollAreaComponent: ScrollArea.Autosize,
         transitionProps: { transition: 'pop' },
       },
       classNames: {
