@@ -172,7 +172,7 @@ export default function CustomerForm() {
               </Accordion.Control>
 
               <Accordion.Panel>
-                <Stack>
+                <Stack maw={500}>
                   <Select
                     label={customerFormContent.t(CustomerFormContentPhrases.COUNTRY_LABEL)}
                     placeholder={customerFormContent.t(
