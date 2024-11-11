@@ -8,11 +8,11 @@ import { pageHeaderContent, PageHeaderPhrases } from './page-header.content';
 interface Action {
   label: string;
   link?: string;
+  color?: string;
   onClick?(): void;
+  variant?: string;
   disabled?: boolean;
   tooltipLabel?: string;
-  color?: string;
-  variant?: string;
   type?: 'button' | 'submit' | 'reset';
 }
 

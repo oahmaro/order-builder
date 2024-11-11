@@ -23,6 +23,7 @@ export enum OrderItemCardContentPhrases {
   UNIT_PRICE = 'unit-price',
   PRICE = 'price',
   DIMENSIONS_REQUIRED = 'dimensions-required',
+  NOTHING_FOUND = 'nothing-found',
 }
 
 export const orderItemCardContent = new Polyglot({
@@ -48,5 +49,6 @@ export const orderItemCardContent = new Polyglot({
     [OrderItemCardContentPhrases.UNIT_PRICE]: 'מחיר יחידה',
     [OrderItemCardContentPhrases.PRICE]: 'מחיר',
     [OrderItemCardContentPhrases.DIMENSIONS_REQUIRED]: 'רוחב וגובה נדרשים',
+    [OrderItemCardContentPhrases.NOTHING_FOUND]: 'לא נמצאו תוצאות',
   },
 });

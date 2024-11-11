@@ -108,20 +108,29 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                   label: { marginLeft: '8px' },
                   input: { width: 200 },
                 }}
+                nothingFoundMessage={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.NOTHING_FOUND
+                )}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.FRAME_NUMBER)}
                 data={frames.map((frame) => ({ value: frame.id.toString(), label: frame.name }))}
                 {...form.getInputProps(`orderItems.${index}.frameId`)}
               />
 
               <Group>
+                <Stack justify="center" h={36}>
+                  <Text fz="sm">
+                    {orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH)}
+                  </Text>
+                </Stack>
+
                 <NumberInput
-                  styles={{
-                    root: { display: 'flex', alignItems: 'center' },
-                    label: { marginLeft: '8px' },
-                    input: { width: 200 },
-                  }}
-                  label={orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH)}
+                  w={120}
+                  min={1}
+                  max={999}
+                  size="sm"
+                  prefix="cm "
                   hideControls
+                  clampBehavior="strict"
                   {...form.getInputProps(`orderItems.${index}.passepartoutWidth`)}
                 />
 
@@ -131,6 +140,9 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                     label: { marginLeft: '8px' },
                     input: { width: 200 },
                   }}
+                  nothingFoundMessage={orderItemCardContent.t(
+                    OrderItemCardContentPhrases.NOTHING_FOUND
+                  )}
                   label={orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER)}
                   {...form.getInputProps(`orderItems.${index}.passepartoutNum`)}
                 />
@@ -176,6 +188,9 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                   input: { width: 400 },
                 }}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.ADHESIONS)}
+                nothingFoundMessage={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.NOTHING_FOUND
+                )}
                 data={adhesions.map((adhesion) => ({
                   value: adhesion.id.toString(),
                   label: adhesion.name,
@@ -189,6 +204,9 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                   label: { marginLeft: '8px', minWidth: 56 },
                   input: { width: 400 },
                 }}
+                nothingFoundMessage={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.NOTHING_FOUND
+                )}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS)}
                 data={prints.map((print) => ({ value: print.id.toString(), label: print.name }))}
                 {...form.getInputProps(`orderItems.${index}.printId`)}
@@ -200,6 +218,9 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                   label: { marginLeft: '8px', minWidth: 56 },
                   input: { width: 400 },
                 }}
+                nothingFoundMessage={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.NOTHING_FOUND
+                )}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.DESCRIPTION)}
                 data={descriptions.map((description) => ({
                   value: description.id.toString(),

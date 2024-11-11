@@ -17,8 +17,6 @@ const exampleOrders: Order[] = [
     createdAt: new Date(),
     amountPaid: 200,
     status: OrderStatus.DELIVERED,
-    totalAmount: 800,
-    remainingAmount: 600,
     updatedAt: null,
     createdById: 1,
     customerId: 1,
@@ -29,8 +27,6 @@ const exampleOrders: Order[] = [
     createdAt: new Date(),
     amountPaid: 300,
     status: OrderStatus.DELIVERED,
-    totalAmount: 500,
-    remainingAmount: 200,
     updatedAt: null,
     createdById: 1,
     customerId: 1,
@@ -41,8 +37,6 @@ const exampleOrders: Order[] = [
     createdAt: new Date(),
     amountPaid: 800,
     status: OrderStatus.DELIVERED,
-    totalAmount: 1200,
-    remainingAmount: 400,
     updatedAt: null,
     createdById: 1,
     customerId: 1,
@@ -103,7 +97,7 @@ const OrdersTable = forwardRef<HTMLDivElement, OrdersTableProps>(({ orders = [] 
           <Badge color={status.color}>{status.label}</Badge>
         </Table.Td>
         <Table.Td>{order.customerId}</Table.Td>
-        <Table.Td>{order.totalAmount}</Table.Td>
+        <Table.Td>{order.amountPaid}</Table.Td>
       </Table.Tr>
     );
   });

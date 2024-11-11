@@ -90,7 +90,6 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
               spellCheck="false"
               data={customerItems}
               nothingFoundMessage={orderHeaderContent.t(OrderHeaderContentPhrases.NOTHING_FOUND)}
-              // classNames={{ root: classes.inputRoot, label: classes.inputLabel }}
               {...form.getInputProps('customerId')}
             />
           </Group>
