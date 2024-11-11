@@ -2,10 +2,7 @@
 
 const { UserRole } = require('@prisma/client');
 
-const users = [
-  { username: 'admin', password: 'admin', role: UserRole.ADMIN, active: true },
-  { username: 'test', password: 'test', role: UserRole.USER, active: false },
-];
+const users = [{ username: 'admin', password: 'admin', role: UserRole.ADMIN, active: true }];
 
 const adhesionOptions = [
   'מתיחה על עץ 1.7',
@@ -59,9 +56,29 @@ const descriptions = descriptionOptions.map((description) => ({
   updatedAt: null,
 }));
 
+const company = {
+  name: 'אומנות המסגור',
+  email: 'omanut.hm@gmail.com',
+  address: {
+    streetAddress: 'שילת בנין מגה אור',
+    city: 'ירושלים',
+    country: 'ישראל',
+    stateProvince: 'ירושלים',
+    postalCode: null,
+  },
+  phone: {
+    countryCode: 'IL',
+    dialingCode: '+972',
+    number: '522039315',
+    type: 'WORK',
+    isPrimary: true,
+  },
+};
+
 module.exports = {
   users,
   adhesions,
   prints,
   descriptions,
+  company,
 };

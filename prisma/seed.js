@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
-const { adhesions, descriptions, prints, users } = require('./data.js');
+const { adhesions, descriptions, prints, users, company } = require('./data.js');
 
 const prisma = new PrismaClient();
 
@@ -20,6 +20,9 @@ async function load() {
     await prisma.adhesion.deleteMany();
     console.log('Deleted records in adhesion table');
 
+    await prisma.company.deleteMany();
+    console.log('Deleted records in company table');
+
     // Reset autoincrement
     await prisma.$queryRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
     console.log('reset user auto increment to 1');
@@ -33,12 +36,36 @@ async function load() {
     await prisma.$queryRaw`ALTER SEQUENCE "Adhesion_id_seq" RESTART WITH 1`;
     console.log('reset adhesion auto increment to 1');
 
+    await prisma.$queryRaw`ALTER SEQUENCE "Company_id_seq" RESTART WITH 1`;
+    console.log('reset company auto increment to 1');
+
     const usersWithHashedPassword = await Promise.all(
       users.map(async (user) => ({
         ...user,
         password: await bcrypt.hash(user.password, 10),
       }))
     );
+
+    // Create address first for company
+    const address = await prisma.address.create({
+      data: company.address,
+    });
+
+    // Create phone record
+    const phone = await prisma.phone.create({
+      data: company.phone,
+    });
+
+    // Create company with address and phone references
+    await prisma.company.create({
+      data: {
+        name: company.name,
+        email: company.email,
+        addressId: address.id,
+        phoneId: phone.id,
+      },
+    });
+    console.log('Added company data');
 
     await prisma.user.createMany({
       data: await usersWithHashedPassword,

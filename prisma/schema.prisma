@@ -69,8 +69,11 @@ model Phone {
   number      String
   type        PhoneType @default(MOBILE)
   isPrimary   Boolean  @default(false)
-  customerId  Int
-  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  customerId  Int?
+  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  company     Company?
 
   @@index([customerId])
 }
@@ -93,10 +96,26 @@ model Address {
   latitude      Float?
   longitude     Float?
 
+  company   Company?
   customers Customer[]
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+}
+
+model Company {
+  id      Int     @id @default(autoincrement())
+  name    String
+  email   String
+
+  phoneId Int?    @unique
+  phone   Phone?  @relation(fields: [phoneId], references: [id])
+
+  addressId Int     @unique
+  address   Address @relation(fields: [addressId], references: [id])
+
+  @@index([addressId])
+  @@index([phoneId])
 }
 
 model Frame {
