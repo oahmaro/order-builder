@@ -1,42 +1,130 @@
-import { Box, Group, Image, NumberFormatter, Paper, Select, Stack } from '@mantine/core';
-import classes from './order-header-card.module.css';
+'use client';
+
+import { Customer, Order, Phone } from '@prisma/client';
+import {
+  Box,
+  Text,
+  Group,
+  Image,
+  Paper,
+  Stack,
+  Select,
+  NumberInput,
+  NumberFormatter,
+} from '@mantine/core';
+import { useEffect } from 'react';
+
 import { StaticField } from '@/components';
+import classes from './order-header-card.module.css';
+import { useOrderFormContext } from '../order-form/order-form.container';
+import { orderHeaderContent, OrderHeaderContentPhrases } from './order-header-card.content';
 
 export interface OrderHeaderCardProps {
-  orderNumber: number;
+  order?: Order;
+  customers?: (Customer & { phones: Phone[] })[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function OrderHeaderCard({ orderNumber }: OrderHeaderCardProps) {
+const formatPhoneNumber = (dialingCode: string, number: string): string => {
+  if (!number) return '—';
+
+  const cleanNumber = number.replace(/\D/g, '');
+  if (cleanNumber.length < 4) return `(${dialingCode}) ${cleanNumber}`;
+
+  if (cleanNumber.length < 7) {
+    return `(${dialingCode}) ${cleanNumber.slice(0, 4)}-${cleanNumber.slice(4)}`;
+  }
+  return `(${dialingCode}) ${cleanNumber.slice(0, 4)}-${cleanNumber.slice(
+    4,
+    7
+  )}-${cleanNumber.slice(7)}`;
+};
+
+export default function OrderHeaderCard({ order, customers }: OrderHeaderCardProps) {
+  const form = useOrderFormContext();
+
+  const customerItems = customers
+    ? customers.map((customer) => ({
+        label: `${customer.firstName} ${customer.lastName}`,
+        value: String(customer.id),
+      }))
+    : [];
+
+  const selectedCustomer = customers?.find(
+    (customer) => customer.id === Number(form.values.customerId)
+  );
+
+  const primaryPhone = selectedCustomer?.phones?.find((phone) => phone.isPrimary);
+  const formattedPhone = primaryPhone
+    ? formatPhoneNumber(primaryPhone.dialingCode, primaryPhone.number)
+    : '—';
+
+  // Calculate total
+  const total = form.values.orderItems.reduce((sum, item) => {
+    const itemTotal = (item.unitPrice || 0) * (item.quantity || 1);
+    return sum + itemTotal;
+  }, 0);
+
+  // Update prices in effect
+  useEffect(() => {
+    form.values.orderItems.forEach((item, index) => {
+      const itemTotal = (item.unitPrice || 0) * (item.quantity || 1);
+      form.setFieldValue(`orderItems.${index}.price`, itemTotal);
+    });
+  }, [form.values.orderItems]);
+
+  const amountPaid = form.values.amountPaid || 0;
+  const remainingToPay = total - amountPaid;
+
   return (
-    <Paper className={classes.root} shadow="xs" radius="md">
+    <Paper className={classes.root} shadow="xs" radius="sm">
       <Group>
         <Stack flex={1} h="100%" gap={4}>
-          <Select
-            size="sm"
-            label="שם"
-            data={[]}
-            searchable
-            nothingFoundMessage="Nothing found..."
-            classNames={{ root: classes.inputRoot, label: classes.inputLabel }}
-          />
+          <Group align="flex-start">
+            <Stack justify="center" h={36}>
+              <Text fz="sm">{orderHeaderContent.t(OrderHeaderContentPhrases.NAME)}</Text>
+            </Stack>
 
-          <StaticField label="טלפון" value="0522039315" separator=": " />
+            <Select
+              size="sm"
+              searchable
+              spellCheck="false"
+              data={customerItems}
+              nothingFoundMessage={orderHeaderContent.t(OrderHeaderContentPhrases.NOTHING_FOUND)}
+              // classNames={{ root: classes.inputRoot, label: classes.inputLabel }}
+              {...form.getInputProps('customerId')}
+            />
+          </Group>
+
           <StaticField
-            label="מקדמה"
-            value={<NumberFormatter prefix="₪" value={600} thousandSeparator />}
             separator=": "
+            value={
+              <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
+                {formattedPhone}
+              </span>
+            }
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE_NUMBER)}
+          />
+          <NumberInput
+            styles={{
+              root: { display: 'flex', alignItems: 'center' },
+              label: { marginLeft: '8px' },
+              input: { width: 160 },
+            }}
+            hideControls
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}
+            prefix="₪"
+            {...form.getInputProps('amountPaid')}
           />
           <StaticField
-            label="סה״כ"
-            value={<NumberFormatter prefix="₪" value={600} thousandSeparator />}
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL)}
+            value={<NumberFormatter prefix="₪" value={total} thousandSeparator />}
             separator=": "
           />
 
           <Box c="dimmed">-----------------------</Box>
           <StaticField
-            label="סה״כ לתשלום"
-            value={<NumberFormatter prefix="₪" value={1200} thousandSeparator />}
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL_TO_PAY)}
+            value={<NumberFormatter prefix="₪" value={remainingToPay} thousandSeparator />}
             separator=": "
           />
         </Stack>
@@ -44,25 +132,42 @@ export default async function OrderHeaderCard({ orderNumber }: OrderHeaderCardPr
         <Stack flex={2} h="100%" align="center">
           <Box fw="bold">
             <Box component="span" fw="bold">
-              הזמנה מס׳
+              {orderHeaderContent.t(OrderHeaderContentPhrases.ORDER_NUMBER)}
             </Box>{' '}
             <Box component="span" c="red.8">
-              {12345678 || '—'}
+              {order?.id ?? '—'}
             </Box>
           </Box>
 
           <Image
             fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+            src="/logo.png"
             radius="lg"
             maw={180}
           />
         </Stack>
 
         <Stack flex={1} h="100%" gap={0}>
-          <StaticField label="שעה" value="Sat 9 Dec - 9:00" separator=": " />
-          <StaticField label="כתובת" value="שילת בנין מגה אור" separator=": " />
-          <StaticField label="אימייל" value="omanut.hm@gmail.com" separator=": " />
-          <StaticField label="טלפון" value="0522039315" separator=": " />
+          {/* <StaticField
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.TIME)}
+            value="Sat 9 Dec - 9:00"
+            separator=": "
+          /> */}
+          <StaticField
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.ADDRESS)}
+            value={orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_ADDRESS)}
+            separator=": "
+          />
+          <StaticField
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.EMAIL)}
+            value={orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_EMAIL)}
+            separator=": "
+          />
+          <StaticField
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE)}
+            value={orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_PHONE)}
+            separator=": "
+          />
         </Stack>
       </Group>
     </Paper>

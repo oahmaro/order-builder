@@ -1,0 +1,40 @@
+// spell-checker: disable
+
+import Polyglot from 'node-polyglot';
+
+export enum OrderHeaderContentPhrases {
+  PHONE_NUMBER = 'phone-number',
+  ADVANCE_PAYMENT = 'advance-payment',
+  TOTAL = 'total',
+  TOTAL_TO_PAY = 'total-to-pay',
+  ORDER_NUMBER = 'order-number',
+  TIME = 'time',
+  ADDRESS = 'address',
+  EMAIL = 'email',
+  PHONE = 'phone',
+  NAME = 'name',
+  NOTHING_FOUND = 'nothing-found',
+  PLACEHOLDER_ADDRESS = 'placeholder-address',
+  PLACEHOLDER_PHONE = 'placeholder-phone',
+  PLACEHOLDER_EMAIL = 'placeholder-email',
+}
+
+export const orderHeaderContent = new Polyglot({
+  locale: 'he',
+  phrases: {
+    [OrderHeaderContentPhrases.PHONE_NUMBER]: 'טלפון',
+    [OrderHeaderContentPhrases.ADVANCE_PAYMENT]: 'מקדמה',
+    [OrderHeaderContentPhrases.TOTAL]: 'סה״כ',
+    [OrderHeaderContentPhrases.TOTAL_TO_PAY]: 'סה״כ לתשלום',
+    [OrderHeaderContentPhrases.ORDER_NUMBER]: 'הזמנה מס׳',
+    [OrderHeaderContentPhrases.TIME]: 'שעה',
+    [OrderHeaderContentPhrases.ADDRESS]: 'כתובת',
+    [OrderHeaderContentPhrases.EMAIL]: 'אימייל',
+    [OrderHeaderContentPhrases.PHONE]: 'טלפון',
+    [OrderHeaderContentPhrases.NAME]: 'שם',
+    [OrderHeaderContentPhrases.NOTHING_FOUND]: 'לא נמצאו תוצאות...',
+    [OrderHeaderContentPhrases.PLACEHOLDER_ADDRESS]: 'שילת בנין מגה אור',
+    [OrderHeaderContentPhrases.PLACEHOLDER_PHONE]: '0522039315',
+    [OrderHeaderContentPhrases.PLACEHOLDER_EMAIL]: 'omanut.hm@gmail.com',
+  },
+});

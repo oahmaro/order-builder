@@ -46,6 +46,11 @@ export const theme = createTheme({
     }),
 
     Select: Select.extend({
+      defaultProps: {
+        comboboxProps: {
+          shadow: 'xs',
+        },
+      },
       classNames: {
         input: classes.input,
       },

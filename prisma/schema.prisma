@@ -152,23 +152,20 @@ enum OrderStatus {
 model Order {
   id Int @id @default(autoincrement())
 
-  // Reference to the customer placing the order
   customerId Int
   customer   Customer @relation(fields: [customerId], references: [id])
+
+  amountPaid Float
+
+  status OrderStatus
+
+  orderItems OrderItem[]
 
   createdBy   User? @relation("CreatedByOrder", fields: [createdById], references: [id])
   createdById Int?
 
   updatedBy   User? @relation("UpdatedByOrder", fields: [updatedById], references: [id])
   updatedById Int?
-
-  totalAmount     Float
-  amountPaid      Float
-  remainingAmount Float
-
-  status OrderStatus
-
-  orderItems OrderItem[]
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
