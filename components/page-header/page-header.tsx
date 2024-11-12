@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { IconChevronRight } from '@tabler/icons-react';
 import { Anchor, Button, Group, Text, Title, Tooltip } from '@mantine/core';

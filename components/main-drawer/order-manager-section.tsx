@@ -1,6 +1,15 @@
 import { Button, rem } from '@mantine/core';
 import { LiaImages } from 'react-icons/lia';
-import { PiHouse, PiReceipt, PiUsers, PiSticker, PiImages, PiFrameCorners } from 'react-icons/pi';
+
+import {
+  PiHouse,
+  PiReceipt,
+  PiUsers,
+  PiSticker,
+  PiImages,
+  PiFrameCorners,
+  PiSquareHalf,
+} from 'react-icons/pi';
 
 import { Link } from '../link';
 import { mainDrawerContent, MainDrawerPhrases } from './main-drawer.content';
@@ -47,6 +56,12 @@ const menus = [
     value: 'descriptions',
     url: '/descriptions?page=1&pageSize=10&sort=name:ASC',
     icon: <PiFrameCorners style={{ width: rem(16), height: rem(16) }} />,
+  },
+  {
+    label: mainDrawerContent.t(MainDrawerPhrases.PASSEPARTOUT),
+    value: 'passepartouts',
+    url: '/passepartouts?page=1&pageSize=10&sort=name:ASC',
+    icon: <PiSquareHalf style={{ width: rem(16), height: rem(16) }} />,
   },
 ];
 

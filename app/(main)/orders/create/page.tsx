@@ -11,6 +11,7 @@ export default async function CreateOrderPage() {
   });
   const adhesions = await db.adhesion.findMany();
   const descriptions = await db.description.findMany();
+  const passepartouts = await db.passepartout.findMany();
 
   return (
     <OrderFormContainer>
@@ -20,6 +21,7 @@ export default async function CreateOrderPage() {
         prints={prints}
         adhesions={adhesions}
         descriptions={descriptions}
+        passepartouts={passepartouts}
       />
     </OrderFormContainer>
   );

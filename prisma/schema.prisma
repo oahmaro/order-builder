@@ -158,6 +158,16 @@ model Description {
   updatedAt  DateTime?   @updatedAt
 }
 
+model Passepartout {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String?
+
+  orderItems OrderItem[]
+  createdAt  DateTime?   @default(now())
+  updatedAt  DateTime?   @updatedAt
+}
+
 enum OrderStatus {
   PENDING // The order has been placed but not yet processed.
   PROCESSING // The order is being handled, items are being picked, and it's in the process of being fulfilled.
@@ -217,6 +227,9 @@ model OrderItem {
   descriptionId Int?
   description   Description? @relation(fields: [descriptionId], references: [id])
 
+  passepartoutId Int?
+  passepartout   Passepartout? @relation(fields: [passepartoutId], references: [id])
+
   height            Float
   width             Float
   passepartoutNum   Int
@@ -238,4 +251,5 @@ model OrderItem {
   @@index([adhesionId])
   @@index([printId])
   @@index([descriptionId])
+  @@index([passepartoutId])
 }

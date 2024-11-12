@@ -1,7 +1,7 @@
 'use client';
 
 import { Stack, Button, Group, Divider } from '@mantine/core';
-import { Customer, Frame, Print, Adhesion, Description, Phone } from '@prisma/client';
+import { Customer, Frame, Print, Adhesion, Description, Phone, Passepartout } from '@prisma/client';
 import { notifications } from '@mantine/notifications';
 
 import { OrderItemCard } from '../order-item-card';
@@ -18,6 +18,7 @@ interface OrderFormProps {
   prints: Print[];
   adhesions: Adhesion[];
   descriptions: Description[];
+  passepartouts: Passepartout[];
 }
 
 export default function OrderForm({
@@ -26,6 +27,7 @@ export default function OrderForm({
   prints,
   adhesions,
   descriptions,
+  passepartouts,
 }: OrderFormProps) {
   const form = useOrderFormContext();
 
@@ -89,6 +91,7 @@ export default function OrderForm({
             prints={prints}
             adhesions={adhesions}
             descriptions={descriptions}
+            passepartouts={passepartouts}
             onRemove={() => form.removeListItem('orderItems', index)}
             isRemoveDisabled={form.values.orderItems.length === 1}
           />

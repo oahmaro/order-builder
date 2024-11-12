@@ -13,13 +13,12 @@ import { printFormSchema } from '../print-form/print-form.schema';
 import { PrintFormValues, usePrintFormContext } from '../print-form/print-form.container';
 import { printFormContent, PrintFormContentPhrases } from '../print-form/print-form.content';
 
-export default function UpdatePrintForm({
-  print,
-  hasOrderItems,
-}: {
+interface UpdatePrintFormProps {
   print: Print;
   hasOrderItems: boolean;
-}) {
+}
+
+export default function UpdatePrintForm({ print, hasOrderItems }: UpdatePrintFormProps) {
   const form = usePrintFormContext();
 
   const handleSubmit = async (data: PrintFormValues) => {

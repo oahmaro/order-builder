@@ -15,15 +15,13 @@ import {
   PrintsPageHeaderPhrases,
 } from '../prints-page-header/prints-page-header.content';
 
-export default function PrintPageHeader({
-  name,
-  printId,
-  hasOrderItems,
-}: {
+interface PrintPageHeaderProps {
   name: string;
   printId: number;
   hasOrderItems: boolean;
-}) {
+}
+
+export default function PrintPageHeader({ name, printId, hasOrderItems }: PrintPageHeaderProps) {
   const form = usePrintFormContext();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);

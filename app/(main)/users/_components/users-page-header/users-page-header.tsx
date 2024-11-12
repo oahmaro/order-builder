@@ -2,7 +2,6 @@
 
 import { modals } from '@mantine/modals';
 import { PageHeader } from '@/components';
-
 import { CreateUserForm } from '../create-user-form';
 import UserFormContainer from '../user-form/user-form.container';
 import { usersPageHeaderContent, UsersPageHeaderPhrases } from './users-page-header.content';

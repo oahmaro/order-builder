@@ -1,5 +1,7 @@
+'use client';
+
 import { forwardRef } from 'react';
-import { Adhesion, Description, Frame, Print } from '@prisma/client';
+import { Adhesion, Description, Frame, Passepartout, Print } from '@prisma/client';
 
 import {
   Box,
@@ -28,12 +30,16 @@ export interface OrderItemCardProps {
   prints: Print[];
   adhesions: Adhesion[];
   descriptions: Description[];
+  passepartouts: Passepartout[];
   onRemove: () => void;
   isRemoveDisabled?: boolean;
 }
 
 const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
-  ({ index, frames, prints, adhesions, descriptions, onRemove, isRemoveDisabled }, ref) => {
+  (
+    { index, frames, prints, adhesions, descriptions, passepartouts, onRemove, isRemoveDisabled },
+    ref
+  ) => {
     const form = useOrderFormContext();
 
     return (
@@ -144,6 +150,10 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                     OrderItemCardContentPhrases.NOTHING_FOUND
                   )}
                   label={orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER)}
+                  data={passepartouts.map((passepartout) => ({
+                    value: passepartout.id.toString(),
+                    label: passepartout.name,
+                  }))}
                   {...form.getInputProps(`orderItems.${index}.passepartoutNum`)}
                 />
               </Group>

@@ -10,6 +10,7 @@ export enum MainDrawerPhrases {
   ADHESIONS = 'adhesions',
   PRINTS = 'prints',
   DESCRIPTIONS = 'descriptions',
+  PASSEPARTOUT = 'passepartout',
 
   TITLE = 'title',
   USERS = 'users',
@@ -26,6 +27,7 @@ export const mainDrawerContent = new Polyglot({
     [MainDrawerPhrases.ADHESIONS]: 'הידבקויות',
     [MainDrawerPhrases.PRINTS]: 'הדפסים',
     [MainDrawerPhrases.DESCRIPTIONS]: 'תיאורים',
+    [MainDrawerPhrases.PASSEPARTOUT]: 'פסים פרטוקט',
 
     [MainDrawerPhrases.TITLE]: 'פאנל הניהול',
     [MainDrawerPhrases.USERS]: 'משתמשים',

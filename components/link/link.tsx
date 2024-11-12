@@ -1,5 +1,5 @@
-import { forwardRef } from 'react';
 import NextLink from 'next/link';
+import { forwardRef } from 'react';
 import { nprogress } from '@mantine/nprogress';
 
 import { shouldTriggerStartEvent } from './should-trigger-start-event';
