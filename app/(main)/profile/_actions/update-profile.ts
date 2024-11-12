@@ -1,19 +1,24 @@
 'use server';
 
-import bcrypt from 'bcryptjs';
 import * as z from 'zod';
+import bcrypt from 'bcryptjs';
 import { User } from '@prisma/client';
 
-import { ProfileFormSchema } from '@/schemas';
 import { db } from '@/lib/db';
-import { getUserById } from '@/utils/user';
 import { errorMessages } from '@/utils';
+import { getUserById } from '@/utils/user';
+import { profileFormSchema } from '@/app/(main)/profile/_components/profile-form/profile-form.schema';
+
+import {
+  profileFormContent,
+  ProfileFormPhrases,
+} from '@/app/(main)/profile/_components/profile-form/profile-form.content';
 
 export async function updateProfile(
   userId: number,
-  values: z.infer<typeof ProfileFormSchema>
+  values: z.infer<typeof profileFormSchema>
 ): Promise<{ message: string; status: number; updatedUser: User | null }> {
-  const validatedFields = ProfileFormSchema.safeParse(values);
+  const validatedFields = profileFormSchema.safeParse(values);
   const haveRequestedToChangePassword = !!values.password.password;
   let user;
   let shouldUpdatePassword;
@@ -44,5 +49,9 @@ export async function updateProfile(
     },
   });
 
-  return { message: 'שמור', updatedUser, status: 200 };
+  return {
+    message: profileFormContent.t(ProfileFormPhrases.SAVE_SUCCESS),
+    updatedUser,
+    status: 200,
+  };
 }

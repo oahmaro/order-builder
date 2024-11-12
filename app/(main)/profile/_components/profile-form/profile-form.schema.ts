@@ -1,9 +1,9 @@
-import * as z from 'zod';
+import { z } from 'zod';
 
-import { OptionalPasswordSchema } from './password';
 import { errorMessages } from '@/utils';
+import { OptionalPasswordSchema } from '@/schemas/password';
 
-export const ProfileSchema = z.object({
+const profileSchema = z.object({
   firstName: z
     .string({ required_error: errorMessages['field-required'] })
     .min(3, { message: errorMessages['min-3'] }),
@@ -14,7 +14,7 @@ export const ProfileSchema = z.object({
   username: z.string().optional(),
 });
 
-export const ProfileFormSchema = z.object({
-  profile: ProfileSchema,
+export const profileFormSchema = z.object({
+  profile: profileSchema,
   password: OptionalPasswordSchema,
 });

@@ -3,6 +3,7 @@ import { phoneSchema } from '@/schemas/phone';
 import { dateValidator } from '@/utils/date-validator';
 
 import { customerFormContent, CustomerFormContentPhrases } from './customer-form.content';
+import { addressSchema } from '@/schemas';
 
 export const customerFormSchema = z.object({
   firstName: z.string().min(1, {
@@ -36,15 +37,5 @@ export const customerFormSchema = z.object({
       }
     )
     .transform((val) => (val instanceof Date ? val.toISOString().split('T')[0] : val)),
-  address: z
-    .object({
-      id: z.number().optional(),
-      country: z.string().optional(),
-      streetAddress: z.string().optional(),
-      aptSuite: z.string().optional(),
-      city: z.string().optional(),
-      stateProvince: z.string().optional(),
-      postalCode: z.string().optional(),
-    })
-    .optional(),
+  address: addressSchema.optional(),
 });
