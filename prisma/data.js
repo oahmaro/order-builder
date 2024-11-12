@@ -66,13 +66,15 @@ const company = {
     stateProvince: 'ירושלים',
     postalCode: null,
   },
-  phone: {
-    countryCode: 'IL',
-    dialingCode: '+972',
-    number: '522039315',
-    type: 'WORK',
-    isPrimary: true,
-  },
+  phones: [
+    {
+      countryCode: 'IL',
+      dialingCode: '+972',
+      number: '522039315',
+      type: 'WORK',
+      isPrimary: true,
+    },
+  ],
 };
 
 module.exports = {

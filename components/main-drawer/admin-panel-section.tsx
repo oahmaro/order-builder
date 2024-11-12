@@ -1,4 +1,5 @@
 import { RiAdminLine } from 'react-icons/ri';
+import { PiBuildings } from 'react-icons/pi';
 import { Button, Divider, Group, Stack, Text, rem } from '@mantine/core';
 
 import { Link } from '../link';
@@ -10,6 +11,12 @@ const menus = [
     value: 'users',
     url: '/users?page=1&pageSize=10&sort=firstName:ASC',
     icon: <RiAdminLine style={{ width: rem(16), height: rem(16) }} />,
+  },
+  {
+    label: mainDrawerContent.t(MainDrawerPhrases.COMPANY),
+    value: 'company',
+    url: '/company',
+    icon: <PiBuildings style={{ width: rem(16), height: rem(16) }} />,
   },
 ];
 
@@ -28,7 +35,7 @@ export default function AdminPanelSection({ onClose }: AdminPanelSectionProps) {
         </Text>
       </Group>
 
-      <Stack>
+      <Stack gap={0}>
         {menus.map((menu) => (
           <Button
             key={menu.value}

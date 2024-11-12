@@ -51,18 +51,25 @@ async function load() {
       data: company.address,
     });
 
-    // Create phone record
-    const phone = await prisma.phone.create({
-      data: company.phone,
-    });
-
-    // Create company with address and phone references
+    // Create company with address and phones
     await prisma.company.create({
       data: {
         name: company.name,
         email: company.email,
-        addressId: address.id,
-        phoneId: phone.id,
+        address: {
+          connect: {
+            id: address.id,
+          },
+        },
+        phones: {
+          create: company.phones.map((phone) => ({
+            countryCode: phone.countryCode,
+            dialingCode: phone.dialingCode,
+            number: phone.number,
+            type: phone.type,
+            isPrimary: phone.isPrimary,
+          })),
+        },
       },
     });
     console.log('Added company data');

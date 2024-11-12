@@ -13,6 +13,7 @@ export enum MainDrawerPhrases {
 
   TITLE = 'title',
   USERS = 'users',
+  COMPANY = 'company',
 }
 
 export const mainDrawerContent = new Polyglot({
@@ -28,5 +29,6 @@ export const mainDrawerContent = new Polyglot({
 
     [MainDrawerPhrases.TITLE]: 'פאנל הניהול',
     [MainDrawerPhrases.USERS]: 'משתמשים',
+    [MainDrawerPhrases.COMPANY]: 'חברה',
   },
 });

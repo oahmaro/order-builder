@@ -1,22 +1,11 @@
 'use client';
 
 import { DateInput } from '@mantine/dates';
-import { countries as countryNames } from 'countries-list';
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
-import { Accordion, Alert, Button, Group, Select, Stack, TextInput, Title } from '@mantine/core';
+import { Accordion, Alert, Group, Stack, TextInput, Title } from '@mantine/core';
 
-import { customerFormContent, CustomerFormContentPhrases } from './customer-form.content';
+import { AddressForm, PhoneForm } from '@/components';
 import { useCustomerFormContext } from './customer-form.container';
-
-const countryCodes = getCountries().map((country) => ({
-  value: `${country}:+${getCountryCallingCode(country)}`,
-  label: `${country} (+${getCountryCallingCode(country)})`,
-}));
-
-const countries = getCountries().map((country) => ({
-  value: country,
-  label: (countryNames as Record<string, { name: string }>)[country]?.name || country,
-}));
+import { customerFormContent, CustomerFormContentPhrases } from './customer-form.content';
 
 export default function CustomerForm() {
   const form = useCustomerFormContext();
@@ -45,86 +34,7 @@ export default function CustomerForm() {
             />
           </Group>
 
-          {form.values.phones.map((_, index) => (
-            <Group key={index} grow align="flex-start">
-              <Select
-                label={customerFormContent.t(CustomerFormContentPhrases.COUNTRY_CODE_LABEL)}
-                placeholder="+972"
-                required
-                data={countryCodes}
-                searchable
-                value={`${form.values.phones[index].countryCode}:${form.values.phones[index].dialingCode}`}
-                onChange={(value) => {
-                  if (value) {
-                    const [countryCode, dialingCode] = value.split(':');
-                    form.setFieldValue(`phones.${index}.countryCode`, countryCode);
-                    form.setFieldValue(`phones.${index}.dialingCode`, dialingCode);
-                  }
-                }}
-              />
-
-              <TextInput
-                label={customerFormContent.t(CustomerFormContentPhrases.PHONE_NUMBER_LABEL)}
-                placeholder={customerFormContent.t(CustomerFormContentPhrases.PHONE_NUMBER_LABEL)}
-                required
-                {...form.getInputProps(`phones.${index}.number`)}
-              />
-
-              <Select
-                allowDeselect={false}
-                label={customerFormContent.t(CustomerFormContentPhrases.PHONE_TYPE_LABEL)}
-                data={[
-                  {
-                    value: 'MOBILE',
-                    label: customerFormContent.t(CustomerFormContentPhrases.MOBILE_LABEL),
-                  },
-                  {
-                    value: 'HOME',
-                    label: customerFormContent.t(CustomerFormContentPhrases.HOME_LABEL),
-                  },
-                  {
-                    value: 'WORK',
-                    label: customerFormContent.t(CustomerFormContentPhrases.WORK_LABEL),
-                  },
-                  {
-                    value: 'OTHER',
-                    label: customerFormContent.t(CustomerFormContentPhrases.OTHER_LABEL),
-                  },
-                ]}
-                {...form.getInputProps(`phones.${index}.type`)}
-              />
-
-              {form.values.phones.length > 1 && (
-                <Button
-                  mt={24}
-                  variant="outline"
-                  color="red"
-                  onClick={() => form.removeListItem('phones', index)}
-                >
-                  {customerFormContent.t(CustomerFormContentPhrases.REMOVE_PHONE)}
-                </Button>
-              )}
-
-              {form.values.phones.length === 1 && (
-                <div style={{ marginTop: '24px', height: '36px' }} /> // Placeholder for spacing
-              )}
-            </Group>
-          ))}
-
-          <Button
-            variant="light"
-            onClick={() =>
-              form.insertListItem('phones', {
-                countryCode: 'IL',
-                dialingCode: '+972',
-                number: '',
-                type: 'MOBILE',
-                isPrimary: false,
-              })
-            }
-          >
-            {customerFormContent.t(CustomerFormContentPhrases.ADD_PHONE)}
-          </Button>
+          <PhoneForm form={form} />
         </Stack>
 
         <Stack component="section">
@@ -172,59 +82,7 @@ export default function CustomerForm() {
               </Accordion.Control>
 
               <Accordion.Panel>
-                <Stack maw={500}>
-                  <Select
-                    label={customerFormContent.t(CustomerFormContentPhrases.COUNTRY_LABEL)}
-                    placeholder={customerFormContent.t(
-                      CustomerFormContentPhrases.COUNTRY_PLACEHOLDER
-                    )}
-                    data={countries}
-                    searchable
-                    {...form.getInputProps('address.country')}
-                  />
-
-                  <TextInput
-                    label={customerFormContent.t(CustomerFormContentPhrases.STREET_ADDRESS_LABEL)}
-                    placeholder={customerFormContent.t(
-                      CustomerFormContentPhrases.STREET_ADDRESS_PLACEHOLDER
-                    )}
-                    {...form.getInputProps('address.streetAddress')}
-                  />
-
-                  <TextInput
-                    label={customerFormContent.t(CustomerFormContentPhrases.APT_SUITE_LABEL)}
-                    placeholder={customerFormContent.t(
-                      CustomerFormContentPhrases.APT_SUITE_PLACEHOLDER
-                    )}
-                    {...form.getInputProps('address.aptSuite')}
-                  />
-
-                  <Group grow>
-                    <TextInput
-                      label={customerFormContent.t(CustomerFormContentPhrases.CITY_LABEL)}
-                      placeholder={customerFormContent.t(
-                        CustomerFormContentPhrases.CITY_PLACEHOLDER
-                      )}
-                      {...form.getInputProps('address.city')}
-                    />
-
-                    <TextInput
-                      label={customerFormContent.t(CustomerFormContentPhrases.STATE_PROVINCE_LABEL)}
-                      placeholder={customerFormContent.t(
-                        CustomerFormContentPhrases.STATE_PROVINCE_PLACEHOLDER
-                      )}
-                      {...form.getInputProps('address.stateProvince')}
-                    />
-                  </Group>
-
-                  <TextInput
-                    label={customerFormContent.t(CustomerFormContentPhrases.POSTAL_CODE_LABEL)}
-                    placeholder={customerFormContent.t(
-                      CustomerFormContentPhrases.POSTAL_CODE_PLACEHOLDER
-                    )}
-                    {...form.getInputProps('address.postalCode')}
-                  />
-                </Stack>
+                <AddressForm form={form} />
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>

@@ -11,6 +11,7 @@ interface Action {
   color?: string;
   onClick?(): void;
   variant?: string;
+  loading?: boolean;
   disabled?: boolean;
   tooltipLabel?: string;
   type?: 'button' | 'submit' | 'reset';
@@ -64,6 +65,7 @@ export default function PageHeader({
                   type={action.type || 'button'}
                   {...(action.link ? { component: Link, href: action.link } : { href: '' })}
                   onClick={action.onClick}
+                  loading={action.loading}
                   disabled={action.disabled}
                   color={action.color}
                   variant={action.variant}

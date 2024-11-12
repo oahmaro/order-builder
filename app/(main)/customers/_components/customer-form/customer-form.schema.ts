@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { phoneSchema } from '@/schemas/phone';
+import { phoneSchema } from '@/schemas/phone/phone';
 import { dateValidator } from '@/utils/date-validator';
 
 import { customerFormContent, CustomerFormContentPhrases } from './customer-form.content';

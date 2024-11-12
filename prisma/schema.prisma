@@ -73,9 +73,11 @@ model Phone {
   customerId  Int?
   customer    Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
   
-  company     Company?
+  companyId   Int?
+  company     Company? @relation(fields: [companyId], references: [id])
 
   @@index([customerId])
+  @@index([companyId])
 }
 
 enum PhoneType {
@@ -108,14 +110,12 @@ model Company {
   name    String
   email   String
 
-  phoneId Int?    @unique
-  phone   Phone?  @relation(fields: [phoneId], references: [id])
+  phones  Phone[]
 
   addressId Int     @unique
   address   Address @relation(fields: [addressId], references: [id])
 
   @@index([addressId])
-  @@index([phoneId])
 }
 
 model Frame {
