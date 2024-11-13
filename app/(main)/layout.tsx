@@ -5,6 +5,7 @@ import { MantineProvider, ColorSchemeScript, DirectionProvider } from '@mantine/
 import { Notifications } from '@mantine/notifications';
 import { NavigationProgress } from '@mantine/nprogress';
 
+import '@mantine/charts/styles.css';
 import '@mantine/nprogress/styles.css';
 import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.layer.css';

@@ -3,33 +3,27 @@ import { Stack, Text, Title } from '@mantine/core';
 import { db } from '@/lib/db';
 import { StatCardList } from './_components';
 import { homePageContent, HomePagePhrases } from './_content';
+import { getChartData } from './_actions/get-chart-data';
+import { StatChartData } from './_components/stat-card/stat-card';
 
 export default async function HomePage() {
   const totalCustomers = await db.customer.count();
   const totalOrders = await db.order.count();
 
   const pendingOrders = await db.order.count({
-    where: {
-      status: 'PENDING',
-    },
+    where: { status: 'PENDING' },
   });
 
   const processingOrders = await db.order.count({
-    where: {
-      status: 'PROCESSING',
-    },
+    where: { status: 'PROCESSING' },
   });
 
   const deliveredOrders = await db.order.count({
-    where: {
-      status: 'DELIVERED',
-    },
+    where: { status: 'DELIVERED' },
   });
 
   const shippedOrders = await db.order.count({
-    where: {
-      status: 'SHIPPED',
-    },
+    where: { status: 'SHIPPED' },
   });
 
   return (
@@ -46,6 +40,12 @@ export default async function HomePage() {
           processingOrders={processingOrders}
           deliveredOrders={deliveredOrders}
           shippedOrders={shippedOrders}
+          onFetchChartData={
+            getChartData as unknown as (
+              metric: string,
+              dateRange: [Date | null, Date | null]
+            ) => Promise<{ data: StatChartData[]; error?: string }>
+          }
         />
       </Stack>
     </Stack>
