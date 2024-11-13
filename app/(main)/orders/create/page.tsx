@@ -1,5 +1,6 @@
 import { db } from '@/lib/db';
-import { OrderForm, OrderFormContainer } from '../_components/order-form';
+import { OrderForm } from '../_components/order-form';
+import OrderFormContainer from '../_components/order-form/order-form.container';
 
 export default async function CreateOrderPage() {
   const frames = await db.frame.findMany();

@@ -11,6 +11,8 @@ export enum UserTableContent {
   ROLE = 'ROLE',
   CREATED_AT = 'CREATED_AT',
   UPDATED_AT = 'UPDATED_AT',
+  CREATED_BY = 'CREATED_BY',
+  UPDATED_BY = 'UPDATED_BY',
 }
 
 export const userTableContent = new Polyglot({
@@ -24,5 +26,7 @@ export const userTableContent = new Polyglot({
     [UserTableContent.ROLE]: 'תפקיד',
     [UserTableContent.CREATED_AT]: 'נוצר ב',
     [UserTableContent.UPDATED_AT]: 'מעודכן',
+    [UserTableContent.CREATED_BY]: 'נוצר על ידי',
+    [UserTableContent.UPDATED_BY]: 'מעודכן על ידי',
   },
 });

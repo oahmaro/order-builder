@@ -1,6 +1,7 @@
 import { Stack } from '@mantine/core';
 
 import { db } from '@/lib/db';
+import { withAuditInfo } from '@/utils';
 import { OrdersPageHeader, OrdersTable } from './_components';
 
 export default async function OrderPage() {
@@ -8,22 +9,21 @@ export default async function OrderPage() {
     include: {
       customer: {
         select: {
-          firstName: true,
+          id: true,
           lastName: true,
+          firstName: true,
         },
       },
-      _count: {
-        select: {
-          orderItems: true,
-        },
-      },
+      orderItems: true,
     },
   });
 
+  const ordersWithAudit = await withAuditInfo(orders, 'Order');
+
   return (
     <Stack gap="lg">
-      <OrdersPageHeader numberOfOrders={orders.length} />
-      <OrdersTable orders={orders} />
+      <OrdersPageHeader numberOfOrders={ordersWithAudit.length} />
+      <OrdersTable orders={ordersWithAudit} />
     </Stack>
   );
 }

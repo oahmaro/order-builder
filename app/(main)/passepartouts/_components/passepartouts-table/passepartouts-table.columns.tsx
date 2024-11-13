@@ -1,36 +1,39 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Print } from '@prisma/client';
+import { Passepartout } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { printsTableContent, PrintsTableContentPhrases } from './prints-table.content';
+import {
+  passepartoutsTableContent,
+  PassepartoutsTableContentPhrases,
+} from './passepartouts-table.content';
 import { generateUserTitle } from '@/utils/get-user-title';
 
-type PrintDataType = Partial<Print> & {
+type PassepartoutDataType = Partial<Passepartout> & {
   createdByUser?: { id: number; firstName: string; lastName: string } | null;
   updatedByUser?: { id: number; firstName: string; lastName: string } | null;
 };
 
-const columnHelper = createColumnHelper<PrintDataType>();
+const columnHelper = createColumnHelper<PassepartoutDataType>();
 
 export const columns = [
   columnHelper.accessor('id', {
-    header: printsTableContent.t(PrintsTableContentPhrases.ID),
+    header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.ID),
     cell: (info) => info.getValue(),
   }),
 
   columnHelper.accessor('name', {
-    header: printsTableContent.t(PrintsTableContentPhrases.NAME),
+    header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.NAME),
     cell: (info) => info.getValue(),
   }),
 
   columnHelper.accessor('createdAt', {
-    header: printsTableContent.t(PrintsTableContentPhrases.CREATED_AT),
+    header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.CREATED_AT),
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 
   columnHelper.accessor('createdByUser', {
-    header: printsTableContent.t(PrintsTableContentPhrases.CREATED_BY),
+    header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.CREATED_BY),
     cell: (info) =>
       info.getValue()?.id ? (
         <Link href={`/users/${info.getValue()?.id}`} className="hover:underline">
@@ -45,7 +48,7 @@ export const columns = [
   }),
 
   columnHelper.accessor('updatedByUser', {
-    header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_BY),
+    header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.UPDATED_BY),
     cell: (info) =>
       info.getValue()?.id ? (
         <Link href={`/users/${info.getValue()?.id}`} className="hover:underline">
@@ -60,7 +63,7 @@ export const columns = [
   }),
 
   columnHelper.accessor('updatedAt', {
-    header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_AT),
+    header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.UPDATED_AT),
     enableHiding: true,
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),

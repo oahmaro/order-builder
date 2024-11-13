@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
-
 import {
   passepartoutFormContent,
   PassepartoutFormContentPhrases,
@@ -16,8 +16,41 @@ export type DeletePassepartoutFormState = {
 export async function deletePassepartoutAction(
   passepartoutId: number
 ): Promise<DeletePassepartoutFormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+    };
+  }
+
   try {
-    await db.passepartout.delete({ where: { id: passepartoutId } });
+    // Get the passepartout data before deletion (for audit)
+    const passepartout = await db.passepartout.findUnique({
+      where: { id: passepartoutId },
+    });
+
+    if (!passepartout) {
+      return {
+        message: 'Passepartout not found',
+      };
+    }
+
+    // Delete the passepartout
+    await db.passepartout.delete({
+      where: { id: passepartoutId },
+    });
+
+    // Create audit entry for deletion
+    await db.audit.create({
+      data: {
+        entityId: passepartoutId,
+        entityType: 'Passepartout',
+        action: 'DELETE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(JSON.stringify(passepartout)),
+      },
+    });
 
     revalidatePath('/passepartout');
 

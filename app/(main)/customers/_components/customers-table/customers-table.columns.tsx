@@ -1,10 +1,16 @@
 import dayjs from 'dayjs';
+import Link from 'next/link';
 import { Customer, Phone } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
+import { generateUserTitle } from '@/utils/get-user-title';
 import { customersTableContent, CustomersTableContentPhrases } from './customers-table.content';
 
-type CustomerDataType = Partial<Customer> & { phones: Phone[] };
+type CustomerDataType = Partial<Customer> & {
+  phones: Phone[];
+  createdByUser?: { id: number; firstName: string; lastName: string } | null;
+  updatedByUser?: { id: number; firstName: string; lastName: string } | null;
+};
 
 const columnHelper = createColumnHelper<CustomerDataType>();
 
@@ -24,16 +30,19 @@ export const columns = [
     enableHiding: false,
     cell: (info) => info.getValue(),
   }),
+
   columnHelper.accessor('firstName', {
     header: customersTableContent.t(CustomersTableContentPhrases.FIRST_NAME),
     enableHiding: true,
     cell: (info) => info.getValue(),
   }),
+
   columnHelper.accessor('lastName', {
     header: customersTableContent.t(CustomersTableContentPhrases.LAST_NAME),
     enableHiding: true,
     cell: (info) => info.getValue(),
   }),
+
   columnHelper.accessor(
     (row) => {
       const primaryPhone = row.phones.find((phone) => phone.isPrimary);
@@ -60,6 +69,37 @@ export const columns = [
     enableHiding: true,
     cell: (info) => (info.getValue() ? dayjs(info.getValue()).format('DD/MM/YYYY') : ''),
   }),
+
+  columnHelper.accessor('createdByUser', {
+    header: customersTableContent.t(CustomersTableContentPhrases.CREATED_BY),
+    enableHiding: true,
+    cell: (info) => {
+      const user = info.getValue();
+      return user ? (
+        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          {generateUserTitle(user)}
+        </Link>
+      ) : (
+        'N/A'
+      );
+    },
+  }),
+
+  columnHelper.accessor('updatedByUser', {
+    header: customersTableContent.t(CustomersTableContentPhrases.UPDATED_BY),
+    enableHiding: true,
+    cell: (info) => {
+      const user = info.getValue();
+      return user ? (
+        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          {generateUserTitle(user)}
+        </Link>
+      ) : (
+        'N/A'
+      );
+    },
+  }),
+
   columnHelper.accessor('createdAt', {
     header: customersTableContent.t(CustomersTableContentPhrases.CREATED_AT),
     enableHiding: true,

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { frameFormSchema } from '../_components/frame-form/frame-form.schema';
 
@@ -16,6 +17,15 @@ type FormState = {
 };
 
 export async function updateFrameAction(data: FormData): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const frameId = parseInt(formData.frameId as string, 10);
 
@@ -31,9 +41,37 @@ export async function updateFrameAction(data: FormData): Promise<FormState> {
   const { name, description } = parsed.data;
 
   try {
-    await db.frame.update({
+    // Get the old data for audit
+    const oldFrame = await db.frame.findUnique({
+      where: { id: frameId },
+    });
+
+    if (!oldFrame) {
+      return {
+        message: 'Frame not found',
+      };
+    }
+
+    // Update the frame
+    const updatedFrame = await db.frame.update({
       where: { id: frameId },
       data: { name, description },
+    });
+
+    // Create audit entry
+    await db.audit.create({
+      data: {
+        entityId: frameId,
+        entityType: 'Frame',
+        action: 'UPDATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(
+          JSON.stringify({
+            before: oldFrame,
+            after: updatedFrame,
+          })
+        ),
+      },
     });
 
     revalidatePath('/frames');

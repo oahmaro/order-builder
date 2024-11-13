@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { passepartoutFormSchema } from '../_components/passepartout-form/passepartout-form.schema';
 
@@ -11,6 +12,15 @@ import {
 } from '../_components/passepartout-form/passepartout-form.content';
 
 export async function createPassepartoutAction(data: FormData) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const parsed = passepartoutFormSchema.safeParse(formData);
 
@@ -24,7 +34,24 @@ export async function createPassepartoutAction(data: FormData) {
   const { name, description } = parsed.data;
 
   try {
-    await db.passepartout.create({ data: { name, description } });
+    // Create the passepartout
+    const passepartout = await db.passepartout.create({
+      data: {
+        name,
+        description,
+      },
+    });
+
+    // Create audit entry
+    await db.audit.create({
+      data: {
+        entityId: passepartout.id,
+        entityType: 'Passepartout',
+        action: 'CREATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(JSON.stringify({ name, description })),
+      },
+    });
 
     revalidatePath('/passepartout');
 

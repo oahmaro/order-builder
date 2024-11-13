@@ -3,6 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { companyFormSchema } from '../../_components/company-form/company-form.schema';
 
@@ -17,6 +18,15 @@ type FormState = {
 };
 
 export async function updateCompanyAction(data: FormData): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const parsedPhones = JSON.parse(formData.phones as string);
   const parsedAddress = JSON.parse(formData.address as string);
@@ -42,6 +52,21 @@ export async function updateCompanyAction(data: FormData): Promise<FormState> {
   const { name, email, phones, address } = parsed.data;
 
   try {
+    // Get the old data for audit
+    const oldCompany = await db.company.findUnique({
+      where: { id: companyId },
+      include: {
+        address: true,
+        phones: true,
+      },
+    });
+
+    if (!oldCompany) {
+      return {
+        message: 'Company not found',
+      };
+    }
+
     let addressId = null;
     if (address && Object.values(address).some(Boolean)) {
       const filteredAddressData = Object.fromEntries(

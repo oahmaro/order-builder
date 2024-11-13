@@ -5,9 +5,9 @@ import { orderFormContent, OrderFormContentPhrases } from './order-form.content'
 export const orderItemSchema = z.object({
   height: z.coerce.number().min(1).max(999),
   width: z.coerce.number().min(1).max(999),
-  frameId: z.coerce.number(),
-  passepartoutNum: z.coerce.number(),
-  passepartoutWidth: z.coerce.number(),
+  frameId: z.coerce.number().optional(),
+  passepartoutNum: z.coerce.number().optional(),
+  passepartoutWidth: z.coerce.number().optional(),
   glassTypes: z.object({
     transparent: z.boolean().default(false),
     matte: z.boolean().default(false),

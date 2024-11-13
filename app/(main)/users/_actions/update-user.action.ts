@@ -1,8 +1,8 @@
 'use server';
 
-import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { userFormSchema } from '../_components/user-form/user-form.schema';
 
@@ -17,6 +17,15 @@ type FormState = {
 };
 
 export async function updateUserAction(data: FormData): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const userId = parseInt(formData.userId as string, 10);
 
@@ -29,20 +38,39 @@ export async function updateUserAction(data: FormData): Promise<FormState> {
     };
   }
 
-  const { firstName, lastName, username, email, password, role } = parsed.data;
+  const { username, firstName, lastName, email, role } = parsed.data;
 
   try {
-    const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-
-    await db.user.update({
+    // Get the old data for audit
+    const oldUser = await db.user.findUnique({
       where: { id: userId },
+    });
+
+    if (!oldUser) {
+      return {
+        message: 'User not found',
+      };
+    }
+
+    // Update the user
+    const updatedUser = await db.user.update({
+      where: { id: userId },
+      data: { username, firstName, lastName, email, role },
+    });
+
+    // Create audit entry
+    await db.audit.create({
       data: {
-        firstName,
-        lastName,
-        username,
-        email,
-        role,
-        ...(hashedPassword ? { password: hashedPassword } : {}),
+        entityId: userId,
+        entityType: 'User',
+        action: 'UPDATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(
+          JSON.stringify({
+            before: oldUser,
+            after: updatedUser,
+          })
+        ),
       },
     });
 

@@ -1,18 +1,21 @@
 export function generateUserTitle(user: {
   firstName?: string | null;
   lastName?: string | null;
+  username?: string | null;
 }): string {
-  let result = '';
-
-  if (user?.firstName) {
-    result += user.firstName;
-
-    if (user?.lastName) {
-      result += ` ${user?.lastName}`;
-    }
+  if (user?.firstName && user?.lastName) {
+    return `${user.firstName} ${user.lastName}`;
   }
 
-  return result;
+  if (user?.firstName) {
+    return user.firstName;
+  }
+
+  if (user?.lastName) {
+    return user.lastName;
+  }
+
+  return user?.username || '';
 }
 
 export function generateUserSubtitle(user: {

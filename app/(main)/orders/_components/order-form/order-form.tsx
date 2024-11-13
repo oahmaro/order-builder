@@ -1,10 +1,14 @@
 'use client';
 
+import { notifications } from '@mantine/notifications';
 import { Stack, Button, Group, Divider } from '@mantine/core';
 import { Customer, Frame, Print, Adhesion, Description, Phone, Passepartout } from '@prisma/client';
-import { notifications } from '@mantine/notifications';
+import { useRouter } from 'next/navigation';
+import * as z from 'zod';
 
 import { OrderItemCard } from '../order-item-card';
+import { createOrderAction } from '../../_actions';
+import { orderFormSchema } from './order-form.schema';
 import { OrderHeaderCard } from '../order-header-card';
 import { commonContent, CommonPhrases } from '@/content';
 import { useOrderFormContext } from './order-form.container';
@@ -30,31 +34,65 @@ export default function OrderForm({
   passepartouts,
 }: OrderFormProps) {
   const form = useOrderFormContext();
+  const router = useRouter();
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
       if (!values.customerId) {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
-          message: 'Please select a customer',
+          message: orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED),
           color: 'red',
         });
         return;
       }
 
-      console.log(values);
-      // Handle form submission
-      notifications.show({
-        title: commonContent.t(CommonPhrases.SUCCESS),
-        message: orderFormContent.t(OrderFormContentPhrases.ORDER_CREATED),
-        color: 'green',
-      });
+      console.log('Form values before validation:', values);
+
+      const validatedData = orderFormSchema.parse(values);
+
+      console.log('Validated data:', validatedData);
+
+      const formData = new FormData();
+
+      formData.append('customerId', validatedData.customerId.toString());
+      formData.append('amountPaid', validatedData.amountPaid.toString());
+      formData.append('status', validatedData.status);
+      formData.append('orderItems', JSON.stringify(validatedData.orderItems));
+
+      const response = await createOrderAction(formData);
+
+      console.log('Server response:', response);
+
+      if (response.message === orderFormContent.t(OrderFormContentPhrases.ORDER_CREATED)) {
+        notifications.show({
+          title: commonContent.t(CommonPhrases.SUCCESS),
+          message: response.message,
+          color: 'green',
+        });
+        router.push('/orders');
+      } else {
+        notifications.show({
+          title: commonContent.t(CommonPhrases.ERROR),
+          message: response.message,
+          color: 'red',
+        });
+      }
     } catch (error) {
-      notifications.show({
-        title: commonContent.t(CommonPhrases.ERROR),
-        message: orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),
-        color: 'red',
-      });
+      if (error instanceof z.ZodError) {
+        console.error('Zod validation errors:', error.errors);
+        error.errors.forEach((err) => {
+          const fieldName = err.path.join('.');
+          form.setFieldError(fieldName, err.message);
+        });
+      } else {
+        console.error('Unexpected error:', error);
+        notifications.show({
+          title: commonContent.t(CommonPhrases.ERROR),
+          message: orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),
+          color: 'red',
+        });
+      }
     }
   };
 

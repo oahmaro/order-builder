@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { adhesionFormSchema } from '../_components/adhesion-form/adhesion-form.schema';
 
@@ -16,6 +17,15 @@ type FormState = {
 };
 
 export async function updateAdhesionAction(data: FormData): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const adhesionId = parseInt(formData.adhesionId as string, 10);
 
@@ -31,9 +41,37 @@ export async function updateAdhesionAction(data: FormData): Promise<FormState> {
   const { name, description } = parsed.data;
 
   try {
-    await db.adhesion.update({
+    // Get the old data for audit
+    const oldAdhesion = await db.adhesion.findUnique({
+      where: { id: adhesionId },
+    });
+
+    if (!oldAdhesion) {
+      return {
+        message: 'Adhesion not found',
+      };
+    }
+
+    // Update the adhesion
+    const updatedAdhesion = await db.adhesion.update({
       where: { id: adhesionId },
       data: { name, description },
+    });
+
+    // Create audit entry
+    await db.audit.create({
+      data: {
+        entityId: adhesionId,
+        entityType: 'Adhesion',
+        action: 'UPDATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(
+          JSON.stringify({
+            before: oldAdhesion,
+            after: updatedAdhesion,
+          })
+        ),
+      },
     });
 
     revalidatePath('/adhesions');

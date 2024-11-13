@@ -3,6 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { customerFormSchema } from '../_components/customer-form/customer-form.schema';
 
@@ -17,6 +18,15 @@ type FormState = {
 };
 
 export async function updateCustomerAction(data: FormData): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const parsedPhones = JSON.parse(formData.phones as string);
   const parsedAddress = JSON.parse(formData.address as string);
@@ -42,6 +52,21 @@ export async function updateCustomerAction(data: FormData): Promise<FormState> {
   const { firstName, lastName, phones, email, dateOfBirth, address } = parsed.data;
 
   try {
+    // Get the old data for audit
+    const oldCustomer = await db.customer.findUnique({
+      where: { id: customerId },
+      include: {
+        phones: true,
+        address: true,
+      },
+    });
+
+    if (!oldCustomer) {
+      return {
+        message: 'Customer not found',
+      };
+    }
+
     let addressId = null;
     if (address && Object.values(address).some(Boolean)) {
       const filteredAddressData = Object.fromEntries(
@@ -49,17 +74,12 @@ export async function updateCustomerAction(data: FormData): Promise<FormState> {
       );
 
       if (Object.keys(filteredAddressData).length > 0) {
-        const existingCustomer = await db.customer.findUnique({
-          where: { id: customerId },
-          include: { address: true },
-        });
-
-        if (existingCustomer?.address) {
+        if (oldCustomer?.address) {
           await db.address.update({
-            where: { id: existingCustomer.address.id },
+            where: { id: oldCustomer.address.id },
             data: filteredAddressData,
           });
-          addressId = existingCustomer.address.id;
+          addressId = oldCustomer.address.id;
         } else {
           const createdAddress = await db.address.create({
             data: filteredAddressData,
@@ -69,25 +89,44 @@ export async function updateCustomerAction(data: FormData): Promise<FormState> {
       }
     }
 
-    await db.customer.update({
+    const updatedCustomer = await db.customer.update({
       where: { id: customerId },
       data: {
         firstName,
         lastName,
         email: email || null,
         dateOfBirth: dateOfBirth || null,
-        updatedById: null,
         addressId,
         phones: {
           deleteMany: {},
-          create: phones.map((phone: any, index: number) => ({
+          create: phones.map((phone: any) => ({
             countryCode: phone.countryCode,
             number: phone.number,
-            type: phone.type,
-            isPrimary: index === 0,
+            isPrimary: phone.isPrimary,
             dialingCode: phone.dialingCode,
+            type: phone.type,
           })),
         },
+      },
+      include: {
+        phones: true,
+        address: true,
+      },
+    });
+
+    // Create audit entry
+    await db.audit.create({
+      data: {
+        entityId: customerId,
+        entityType: 'Customer',
+        action: 'UPDATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(
+          JSON.stringify({
+            before: oldCustomer,
+            after: updatedCustomer,
+          })
+        ),
       },
     });
 

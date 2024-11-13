@@ -52,7 +52,7 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
           orderItems: order.orderItems.map((item) => ({
             height: item.height,
             width: item.width,
-            frameId: item.frameId,
+            frameId: item.frameId ?? undefined,
             passepartoutNum: item.passepartoutNum,
             passepartoutWidth: item.passepartoutWidth,
             glassTypes: item.glassTypes as OrderFormValues['orderItems'][0]['glassTypes'],

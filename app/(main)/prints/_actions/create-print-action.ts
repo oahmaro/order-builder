@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { printFormSchema } from '../_components/print-form/print-form.schema';
 
@@ -11,6 +12,15 @@ import {
 } from '../_components/print-form/print-form.content';
 
 export async function createPrintAction(data: FormData) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const parsed = printFormSchema.safeParse(formData);
 
@@ -24,7 +34,21 @@ export async function createPrintAction(data: FormData) {
   const { name, description } = parsed.data;
 
   try {
-    await db.print.create({ data: { name, description } });
+    // Create the print
+    const print = await db.print.create({
+      data: { name, description },
+    });
+
+    // Create audit entry
+    await db.audit.create({
+      data: {
+        entityId: print.id,
+        entityType: 'Print',
+        action: 'CREATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(JSON.stringify({ name, description })),
+      },
+    });
 
     revalidatePath('/prints');
 

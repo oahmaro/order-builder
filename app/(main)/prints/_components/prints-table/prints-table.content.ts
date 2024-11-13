@@ -7,6 +7,8 @@ export enum PrintsTableContentPhrases {
   NAME = 'name',
   CREATED_AT = 'created-at',
   UPDATED_AT = 'updated-at',
+  CREATED_BY = 'created-by',
+  UPDATED_BY = 'updated-by',
 }
 
 export const printsTableContent = new Polyglot({
@@ -16,5 +18,7 @@ export const printsTableContent = new Polyglot({
     [PrintsTableContentPhrases.NAME]: 'שם',
     [PrintsTableContentPhrases.CREATED_AT]: 'נוצר ב',
     [PrintsTableContentPhrases.UPDATED_AT]: 'מעודכן',
+    [PrintsTableContentPhrases.CREATED_BY]: 'נוצר על ידי',
+    [PrintsTableContentPhrases.UPDATED_BY]: 'מעודכן על ידי',
   },
 });

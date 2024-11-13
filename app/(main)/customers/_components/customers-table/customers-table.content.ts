@@ -11,6 +11,8 @@ export enum CustomersTableContentPhrases {
   DATE_OF_BIRTH = 'date-of-birth',
   CREATED_AT = 'created-at',
   UPDATED_AT = 'updated-at',
+  CREATED_BY = 'created-by',
+  UPDATED_BY = 'updated-by',
 }
 
 export const customersTableContent = new Polyglot({
@@ -24,5 +26,7 @@ export const customersTableContent = new Polyglot({
     [CustomersTableContentPhrases.DATE_OF_BIRTH]: 'תאריך לידה',
     [CustomersTableContentPhrases.CREATED_AT]: 'נוצר ב',
     [CustomersTableContentPhrases.UPDATED_AT]: 'מעודכן',
+    [CustomersTableContentPhrases.CREATED_BY]: 'נוצר על ידי',
+    [CustomersTableContentPhrases.UPDATED_BY]: 'מעודכן על ידי',
   },
 });

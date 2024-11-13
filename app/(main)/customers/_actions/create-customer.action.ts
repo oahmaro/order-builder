@@ -3,9 +3,9 @@
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { customerFormSchema } from '../_components/customer-form/customer-form.schema';
-
 import {
   customerFormContent,
   CustomerFormContentPhrases,
@@ -17,6 +17,15 @@ type FormState = {
 };
 
 export async function createCustomerAction(data: FormData): Promise<FormState> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return {
+      message: 'Unauthorized',
+      errors: ['User must be logged in'],
+    };
+  }
+
   const formData = Object.fromEntries(data);
   const parsedPhones = JSON.parse(formData.phones as string);
   const parsedAddress = JSON.parse(formData.address as string);
@@ -55,14 +64,12 @@ export async function createCustomerAction(data: FormData): Promise<FormState> {
       }
     }
 
-    await db.customer.create({
+    const customer = await db.customer.create({
       data: {
         firstName,
         lastName,
         email: email || null,
         dateOfBirth: dateOfBirth || null,
-        createdById: null,
-        updatedById: null,
         addressId,
         phones: {
           create: phones.map((phone: any) => ({
@@ -73,6 +80,21 @@ export async function createCustomerAction(data: FormData): Promise<FormState> {
             type: phone.type,
           })),
         },
+      },
+      include: {
+        phones: true,
+        address: true,
+      },
+    });
+
+    // Create audit entry
+    await db.audit.create({
+      data: {
+        entityId: customer.id,
+        entityType: 'Customer',
+        action: 'CREATE',
+        userId: Number(session.user.id),
+        changes: JSON.parse(JSON.stringify(customer)),
       },
     });
 
