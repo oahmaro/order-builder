@@ -75,7 +75,7 @@ export default function HeaderAvatar({ initials, title, subtitle }: HeaderAvatar
             color="red"
             onClick={() =>
               startTransition(async () => {
-                await signOut();
+                await signOut({ callbackUrl: '/login' });
               })
             }
             rightSection={<FiLogOut style={{ width: rem(16), height: rem(16) }} />}
