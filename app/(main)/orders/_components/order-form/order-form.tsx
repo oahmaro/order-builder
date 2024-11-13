@@ -1,10 +1,10 @@
 'use client';
 
+import * as z from 'zod';
+import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
 import { Stack, Button, Group, Divider } from '@mantine/core';
 import { Customer, Frame, Print, Adhesion, Description, Phone, Passepartout } from '@prisma/client';
-import { useRouter } from 'next/navigation';
-import * as z from 'zod';
 
 import { OrderItemCard } from '../order-item-card';
 import { createOrderAction } from '../../_actions';
@@ -47,11 +47,7 @@ export default function OrderForm({
         return;
       }
 
-      console.log('Form values before validation:', values);
-
       const validatedData = orderFormSchema.parse(values);
-
-      console.log('Validated data:', validatedData);
 
       const formData = new FormData();
 
@@ -61,8 +57,6 @@ export default function OrderForm({
       formData.append('orderItems', JSON.stringify(validatedData.orderItems));
 
       const response = await createOrderAction(formData);
-
-      console.log('Server response:', response);
 
       if (response.message === orderFormContent.t(OrderFormContentPhrases.ORDER_CREATED)) {
         notifications.show({
@@ -80,13 +74,11 @@ export default function OrderForm({
       }
     } catch (error) {
       if (error instanceof z.ZodError) {
-        console.error('Zod validation errors:', error.errors);
         error.errors.forEach((err) => {
           const fieldName = err.path.join('.');
           form.setFieldError(fieldName, err.message);
         });
       } else {
-        console.error('Unexpected error:', error);
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
           message: orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),

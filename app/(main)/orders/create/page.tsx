@@ -17,9 +17,9 @@ export default async function CreateOrderPage() {
   return (
     <OrderFormContainer>
       <OrderForm
-        customers={customers}
         frames={frames}
         prints={prints}
+        customers={customers}
         adhesions={adhesions}
         descriptions={descriptions}
         passepartouts={passepartouts}
