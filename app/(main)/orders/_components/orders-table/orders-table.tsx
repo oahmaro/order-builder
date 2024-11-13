@@ -1,9 +1,5 @@
-import { Order } from '@prisma/client';
-
-import { columns } from './orders-table.columns';
 import { MainTable } from '@/components/main-table';
-
-type OrderDataType = Partial<Order>;
+import { columns, OrderDataType } from './orders-table.columns';
 
 export interface OrdersTableProps {
   orders: OrderDataType[];

@@ -9,7 +9,7 @@ import { Order, OrderStatus, OrderItem } from '@prisma/client';
 import { generateUserTitle, getOrderStatusMapping } from '@/utils';
 import { ordersTableContent, OrdersTableContentPhrases } from './orders-table.content';
 
-type OrderDataType = Partial<Order> & {
+export type OrderDataType = Partial<Order> & {
   customer: {
     id: string;
     firstName: string;
