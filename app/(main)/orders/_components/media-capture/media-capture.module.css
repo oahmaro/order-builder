@@ -1,0 +1,114 @@
+.root {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.uploadContainer {
+  border: 2px dashed var(--mantine-color-gray-3);
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-md);
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.uploadButton {
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/12;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--mantine-radius-md);
+}
+
+.videoContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/12;
+  background: black;
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.switchCameraButton {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  transition: all 0.2s ease;
+  border-radius: var(--mantine-radius-sm);
+}
+
+.switchCameraButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: scale(1.05);
+}
+
+.captureButton {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.captureButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: translateX(-50%) scale(1.05);
+}
+
+.removeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.switchCameraButton:hover,
+.removeButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+.uploadingText {
+  text-align: center;
+  margin-top: var(--mantine-spacing-xs);
+  color: var(--mantine-color-gray-6);
+  font-size: var(--mantine-font-size-sm);
+}

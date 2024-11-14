@@ -1,26 +1,25 @@
 'use client';
 
-import { forwardRef, useRef } from 'react';
 import { notifications } from '@mantine/notifications';
 import { Adhesion, Description, Frame, Passepartout, Print } from '@prisma/client';
 
 import {
   Box,
-  Button,
-  Checkbox,
-  Divider,
-  Group,
-  Image,
-  NumberFormatter,
-  NumberInput,
-  Paper,
-  Select,
-  Stack,
-  Textarea,
   Text,
+  Group,
+  Paper,
+  Stack,
+  Select,
+  Button,
+  Divider,
+  Checkbox,
+  Textarea,
+  NumberInput,
+  NumberFormatter,
 } from '@mantine/core';
 
 import { StaticField } from '@/components';
+import { MediaCapture } from '../media-capture';
 import classes from './order-item-card.module.css';
 import { commonContent, CommonPhrases } from '@/content';
 import { uploadImageAction } from '../../_actions/upload-image.action';
@@ -38,39 +37,49 @@ export interface OrderItemCardProps {
   isRemoveDisabled?: boolean;
 }
 
-const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
-  (
-    { index, frames, prints, adhesions, descriptions, passepartouts, onRemove, isRemoveDisabled },
-    ref
-  ) => {
-    const form = useOrderFormContext();
-    const fileInputRef = useRef<HTMLInputElement>(null);
+export default function OrderItemCard({
+  index,
+  frames,
+  prints,
+  adhesions,
+  descriptions,
+  passepartouts,
+  onRemove,
+  isRemoveDisabled,
+}: OrderItemCardProps) {
+  const form = useOrderFormContext();
 
-    const handleImageUpload = async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
+  const handleImageUpload = async (file: File | undefined) => {
+    if (!file) {
+      form.setFieldValue(`orderItems.${index}.image`, undefined);
+      return;
+    }
 
-      try {
-        const result = await uploadImageAction(formData);
+    const formData = new FormData();
+    formData.append('file', file);
 
-        if (result.error) {
-          throw new Error(result.error);
-        }
+    try {
+      const result = await uploadImageAction(formData);
 
-        form.setFieldValue(`orderItems.${index}.image`, result.url);
-      } catch (error) {
-        notifications.show({
-          title: commonContent.t(CommonPhrases.ERROR),
-          message:
-            error instanceof Error ? error.message : commonContent.t(CommonPhrases.UPLOAD_FAILED),
-          color: 'red',
-        });
+      if (result.error) {
+        throw new Error(result.error);
       }
-    };
 
-    return (
-      <Paper ref={ref} className={classes.root} shadow="xs" radius="md">
-        <Stack>
+      form.setFieldValue(`orderItems.${index}.image`, result.url);
+    } catch (error) {
+      notifications.show({
+        title: commonContent.t(CommonPhrases.ERROR),
+        message:
+          error instanceof Error ? error.message : commonContent.t(CommonPhrases.UPLOAD_FAILED),
+        color: 'red',
+      });
+    }
+  };
+
+  return (
+    <Paper className={classes.root} shadow="xs" radius="md">
+      <Group align="flex-start">
+        <Stack flex={1}>
           <Group>
             <Button variant="outline" color="red" onClick={onRemove} disabled={isRemoveDisabled}>
               {orderItemCardContent.t(OrderItemCardContentPhrases.REMOVE_ORDER)}
@@ -265,36 +274,6 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
                 {...form.getInputProps(`orderItems.${index}.descriptionId`)}
               />
             </Stack>
-
-            <Stack flex={1} maw={300}>
-              <Box pos="relative">
-                <Image
-                  fallbackSrc="https://placehold.co/600x400?text=Click+to+upload"
-                  src={form.values.orderItems[index].image || ''}
-                  radius="lg"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => fileInputRef.current?.click()}
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  style={{ display: 'none' }}
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      handleImageUpload(file);
-                    }
-                  }}
-                />
-              </Box>
-              <Textarea
-                placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
-                autosize
-                minRows={4}
-                {...form.getInputProps(`orderItems.${index}.notes`)}
-              />
-            </Stack>
           </Group>
 
           <Divider w="100%" />
@@ -340,11 +319,18 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
             </Stack>
           </Group>
         </Stack>
-      </Paper>
-    );
-  }
-);
 
-OrderItemCard.displayName = 'OrderItemCard';
+        <Stack flex={1} maw={400}>
+          <MediaCapture value={form.values.orderItems[index].image} onCapture={handleImageUpload} />
 
-export default OrderItemCard;
+          <Textarea
+            placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
+            autosize
+            minRows={4}
+            {...form.getInputProps(`orderItems.${index}.notes`)}
+          />
+        </Stack>
+      </Group>
+    </Paper>
+  );
+}
