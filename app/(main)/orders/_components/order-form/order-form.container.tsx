@@ -30,6 +30,7 @@ const initialValues: OrderFormValues = {
       unitPrice: 0,
       quantity: 1,
       price: 0,
+      image: undefined,
     },
   ],
 };

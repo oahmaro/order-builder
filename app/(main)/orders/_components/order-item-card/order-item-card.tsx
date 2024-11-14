@@ -1,6 +1,7 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
+import { notifications } from '@mantine/notifications';
 import { Adhesion, Description, Frame, Passepartout, Print } from '@prisma/client';
 
 import {
@@ -21,6 +22,8 @@ import {
 
 import { StaticField } from '@/components';
 import classes from './order-item-card.module.css';
+import { commonContent, CommonPhrases } from '@/content';
+import { uploadImageAction } from '../../_actions/upload-image.action';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { orderItemCardContent, OrderItemCardContentPhrases } from './order-item-card.content';
 
@@ -41,6 +44,29 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
     ref
   ) => {
     const form = useOrderFormContext();
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleImageUpload = async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const result = await uploadImageAction(formData);
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        form.setFieldValue(`orderItems.${index}.image`, result.url);
+      } catch (error) {
+        notifications.show({
+          title: commonContent.t(CommonPhrases.ERROR),
+          message:
+            error instanceof Error ? error.message : commonContent.t(CommonPhrases.UPLOAD_FAILED),
+          color: 'red',
+        });
+      }
+    };
 
     return (
       <Paper ref={ref} className={classes.root} shadow="xs" radius="md">
@@ -241,7 +267,27 @@ const OrderItemCard = forwardRef<HTMLDivElement, OrderItemCardProps>(
             </Stack>
 
             <Stack flex={1} maw={300}>
-              <Image fallbackSrc="https://placehold.co/600x400?text=Placeholder" radius="lg" />
+              <Box pos="relative">
+                <Image
+                  fallbackSrc="https://placehold.co/600x400?text=Click+to+upload"
+                  src={form.values.orderItems[index].image || ''}
+                  radius="lg"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => fileInputRef.current?.click()}
+                />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  style={{ display: 'none' }}
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleImageUpload(file);
+                    }
+                  }}
+                />
+              </Box>
               <Textarea
                 placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
                 autosize

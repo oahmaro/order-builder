@@ -18,6 +18,7 @@ export enum CommonPhrases {
   WARNING = 'warning',
   INFO = 'info',
   SUBMIT = 'submit',
+  UPLOAD_FAILED = 'upload-failed',
 }
 
 export const commonContent = new Polyglot({
@@ -38,5 +39,6 @@ export const commonContent = new Polyglot({
     [CommonPhrases.WARNING]: 'אזהרה',
     [CommonPhrases.INFO]: 'מידע',
     [CommonPhrases.SUBMIT]: 'שליחה',
+    [CommonPhrases.UPLOAD_FAILED]: 'העלאת התמונה נכשלה',
   },
 });
