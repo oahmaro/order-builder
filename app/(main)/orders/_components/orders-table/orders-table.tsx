@@ -6,5 +6,11 @@ export interface OrdersTableProps {
 }
 
 export default function OrdersTable({ orders }: OrdersTableProps) {
-  return <MainTable<OrderDataType> columns={columns} data={orders} navigateOnRowClick />;
+  return (
+    <MainTable<OrderDataType>
+      columns={columns}
+      data={orders}
+      initialColumnsVisibility={{ id: true, createdAt: false, updatedAt: false }}
+    />
+  );
 }

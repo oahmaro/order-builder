@@ -12,5 +12,5 @@ export interface FramesTableProps {
 }
 
 export default function FramesTable({ frames }: FramesTableProps) {
-  return <MainTable<FrameDataType> columns={columns} data={frames} navigateOnRowClick />;
+  return <MainTable<FrameDataType> columns={columns} data={frames} />;
 }

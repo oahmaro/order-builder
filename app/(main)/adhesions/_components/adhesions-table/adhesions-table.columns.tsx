@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import { Anchor } from '@mantine/core';
 import { Adhesion } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
@@ -16,25 +17,26 @@ const columnHelper = createColumnHelper<AdhesionDataType>();
 export const columns = [
   columnHelper.accessor('id', {
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.ID),
-    enableHiding: false,
     cell: (info) => info.getValue(),
   }),
 
   columnHelper.accessor('name', {
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.NAME),
-    enableHiding: true,
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Anchor size="sm" component={Link} href={`/adhesions/${info.row.original.id}`}>
+        {info.getValue()}
+      </Anchor>
+    ),
   }),
 
   columnHelper.accessor('createdByUser', {
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.CREATED_BY),
-    enableHiding: true,
     cell: (info) => {
       const user = info.getValue();
       return user ? (
-        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
           {generateUserTitle(user)}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       );
@@ -43,19 +45,17 @@ export const columns = [
 
   columnHelper.accessor('createdAt', {
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.CREATED_AT),
-    enableHiding: true,
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 
   columnHelper.accessor('updatedByUser', {
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.UPDATED_BY),
-    enableHiding: true,
     cell: (info) => {
       const user = info.getValue();
       return user ? (
-        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
           {generateUserTitle(user)}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       );
@@ -64,7 +64,6 @@ export const columns = [
 
   columnHelper.accessor('updatedAt', {
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.UPDATED_AT),
-    enableHiding: true,
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 ];

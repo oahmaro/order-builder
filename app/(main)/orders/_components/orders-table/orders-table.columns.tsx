@@ -2,7 +2,7 @@
 
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Badge, NumberFormatter } from '@mantine/core';
+import { Anchor, Badge, NumberFormatter } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Order, OrderStatus, OrderItem } from '@prisma/client';
 
@@ -25,19 +25,19 @@ const columnHelper = createColumnHelper<OrderDataType>();
 export const columns = [
   columnHelper.accessor('id', {
     header: ordersTableContent.t(OrdersTableContentPhrases.ID),
-    enableHiding: false,
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Anchor size="sm" component={Link} href={`/orders/${info.getValue()}`}>
+        {`ORD-${info.getValue()}`}
+      </Anchor>
+    ),
   }),
 
   columnHelper.accessor('customer', {
     header: ordersTableContent.t(OrdersTableContentPhrases.CUSTOMER),
     cell: (info) => (
-      <Link
-        href={`/customers/${info.getValue().id}`}
-        style={{ textDecoration: 'none', color: 'inherit' }}
-      >
+      <Anchor component={Link} size="sm" href={`/customers/${info.getValue().id}`}>
         {`${info.getValue().firstName} ${info.getValue().lastName}`}
-      </Link>
+      </Anchor>
     ),
   }),
 
@@ -60,21 +60,14 @@ export const columns = [
     cell: (info) => info.getValue()?.length || 0,
   }),
 
-  columnHelper.accessor('createdAt', {
-    header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_AT),
-    enableHiding: true,
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('DD/MM/YYYY HH:mm'),
-  }),
-
   columnHelper.accessor('createdByUser', {
     header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_BY),
-    enableHiding: true,
     cell: (info) => {
       const user = info.getValue();
       return user ? (
-        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
           {generateUserTitle(user)}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       );
@@ -83,7 +76,6 @@ export const columns = [
 
   columnHelper.accessor('updatedByUser', {
     header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_BY),
-    enableHiding: true,
     cell: (info) => {
       const user = info.getValue();
       return user ? (
@@ -96,9 +88,13 @@ export const columns = [
     },
   }),
 
+  columnHelper.accessor('createdAt', {
+    header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_AT),
+    cell: (info) => info.getValue() && dayjs(info.getValue()).format('DD/MM/YYYY HH:mm'),
+  }),
+
   columnHelper.accessor('updatedAt', {
     header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_AT),
-    enableHiding: true,
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('DD/MM/YYYY HH:mm'),
   }),
 ];

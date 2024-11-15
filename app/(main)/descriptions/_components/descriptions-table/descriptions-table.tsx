@@ -12,7 +12,5 @@ export interface DescriptionsTableProps {
 }
 
 export default function DescriptionsTable({ descriptions }: DescriptionsTableProps) {
-  return (
-    <MainTable<DescriptionDataType> columns={columns} data={descriptions} navigateOnRowClick />
-  );
+  return <MainTable<DescriptionDataType> columns={columns} data={descriptions} />;
 }

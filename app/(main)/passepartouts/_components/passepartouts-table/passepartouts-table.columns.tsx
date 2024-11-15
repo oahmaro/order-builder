@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
+import { Anchor } from '@mantine/core';
 import { Passepartout } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
@@ -24,7 +25,11 @@ export const columns = [
 
   columnHelper.accessor('name', {
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.NAME),
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Anchor size="sm" component={Link} href={`/passepartouts/${info.row.original.id}`}>
+        {info.getValue()}
+      </Anchor>
+    ),
   }),
 
   columnHelper.accessor('createdAt', {
@@ -36,12 +41,12 @@ export const columns = [
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.CREATED_BY),
     cell: (info) =>
       info.getValue()?.id ? (
-        <Link href={`/users/${info.getValue()?.id}`} className="hover:underline">
+        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
           {generateUserTitle({
             firstName: info.getValue()?.firstName,
             lastName: info.getValue()?.lastName,
           })}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       ),
@@ -51,12 +56,12 @@ export const columns = [
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.UPDATED_BY),
     cell: (info) =>
       info.getValue()?.id ? (
-        <Link href={`/users/${info.getValue()?.id}`} className="hover:underline">
+        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
           {generateUserTitle({
             firstName: info.getValue()?.firstName,
             lastName: info.getValue()?.lastName,
           })}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       ),
@@ -64,7 +69,6 @@ export const columns = [
 
   columnHelper.accessor('updatedAt', {
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.UPDATED_AT),
-    enableHiding: true,
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 ];

@@ -12,5 +12,5 @@ export interface UsersTableProps {
 }
 
 export default function UsersTable({ users }: UsersTableProps) {
-  return <MainTable<UserDataType> columns={columns} data={users} navigateOnRowClick />;
+  return <MainTable<UserDataType> columns={columns} data={users} />;
 }

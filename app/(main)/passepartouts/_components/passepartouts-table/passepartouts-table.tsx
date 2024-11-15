@@ -12,7 +12,5 @@ export interface PassepartoutsTableProps {
 }
 
 export default function PassepartoutsTable({ passepartouts }: PassepartoutsTableProps) {
-  return (
-    <MainTable<PassepartoutDataType> columns={columns} data={passepartouts} navigateOnRowClick />
-  );
+  return <MainTable<PassepartoutDataType> columns={columns} data={passepartouts} />;
 }

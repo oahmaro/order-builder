@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Print } from '@prisma/client';
+import { Anchor } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { printsTableContent, PrintsTableContentPhrases } from './prints-table.content';
@@ -21,7 +22,11 @@ export const columns = [
 
   columnHelper.accessor('name', {
     header: printsTableContent.t(PrintsTableContentPhrases.NAME),
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Anchor size="sm" component={Link} href={`/prints/${info.row.original.id}`}>
+        {info.getValue()}
+      </Anchor>
+    ),
   }),
 
   columnHelper.accessor('createdAt', {
@@ -33,12 +38,12 @@ export const columns = [
     header: printsTableContent.t(PrintsTableContentPhrases.CREATED_BY),
     cell: (info) =>
       info.getValue()?.id ? (
-        <Link href={`/users/${info.getValue()?.id}`} className="hover:underline">
+        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
           {generateUserTitle({
             firstName: info.getValue()?.firstName,
             lastName: info.getValue()?.lastName,
           })}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       ),
@@ -48,12 +53,12 @@ export const columns = [
     header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_BY),
     cell: (info) =>
       info.getValue()?.id ? (
-        <Link href={`/users/${info.getValue()?.id}`} className="hover:underline">
+        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
           {generateUserTitle({
             firstName: info.getValue()?.firstName,
             lastName: info.getValue()?.lastName,
           })}
-        </Link>
+        </Anchor>
       ) : (
         'N/A'
       ),
@@ -61,7 +66,6 @@ export const columns = [
 
   columnHelper.accessor('updatedAt', {
     header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_AT),
-    enableHiding: true,
     cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
   }),
 ];

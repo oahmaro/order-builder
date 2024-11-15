@@ -4,6 +4,7 @@ import Polyglot from 'node-polyglot';
 
 export enum CustomersTableContentPhrases {
   ID = 'id',
+  NAME = 'name',
   FIRST_NAME = 'first-name',
   LAST_NAME = 'last-name',
   PHONE = 'phone',
@@ -18,6 +19,7 @@ export enum CustomersTableContentPhrases {
 export const customersTableContent = new Polyglot({
   locale: 'he',
   phrases: {
+    [CustomersTableContentPhrases.NAME]: 'שם',
     [CustomersTableContentPhrases.ID]: 'זהות הלקוח',
     [CustomersTableContentPhrases.FIRST_NAME]: 'שם פרטי',
     [CustomersTableContentPhrases.LAST_NAME]: 'שם משפחה',

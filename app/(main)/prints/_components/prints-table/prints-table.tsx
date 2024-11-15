@@ -12,5 +12,5 @@ export interface PrintsTableProps {
 }
 
 export default function PrintsTable({ prints }: PrintsTableProps) {
-  return <MainTable<PrintDataType> columns={columns} data={prints} navigateOnRowClick />;
+  return <MainTable<PrintDataType> columns={columns} data={prints} />;
 }

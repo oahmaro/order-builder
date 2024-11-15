@@ -9,8 +9,7 @@ import {
   PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
-import { useCallback, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 import classes from './main-table.module.css';
 import { MainTablePagination } from './main-table-pagination';
@@ -26,18 +25,14 @@ export interface MainTableProps<T extends Identifiable> extends Omit<TableProps,
   data: T[];
   columns: ColumnDef<T, any>[];
   initialColumnsVisibility?: Record<string, boolean>;
-  navigateOnRowClick?: boolean;
 }
 
 export default function MainTable<T extends Identifiable>({
   data = [],
   columns = [],
-  initialColumnsVisibility = { createdAt: false, updatedAt: false },
-  navigateOnRowClick,
+  initialColumnsVisibility = { id: false, createdAt: false, updatedAt: false },
   ...tableProps
 }: MainTableProps<T>) {
-  const router = useRouter();
-  const pathname = usePathname();
   const [columnVisibility, setColumnVisibility] = useState(initialColumnsVisibility);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
 
@@ -53,14 +48,6 @@ export default function MainTable<T extends Identifiable>({
 
   const hasData = data?.length !== 0;
 
-  const handleNavigation = useCallback(
-    (segment: string) => {
-      const newPath = `${pathname}/${segment}`;
-      router.push(newPath);
-    },
-    [router, pathname]
-  );
-
   return (
     <Stack gap="xs">
       {hasData && <MainTableHeader columns={table.getAllLeafColumns()} />}
@@ -70,13 +57,9 @@ export default function MainTable<T extends Identifiable>({
           <Table className={classes.table} striped highlightOnHover {...tableProps}>
             <Table.Thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <Table.Tr key={headerGroup.id} className={classes.tr}>
+                <Table.Tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <Table.Th
-                      key={header.id}
-                      className={classes.th}
-                      mod={{ select: !header.column.getCanSort() }}
-                    >
+                    <Table.Th key={header.id} className={classes.th}>
                       <Box>
                         {header.isPlaceholder
                           ? null
@@ -90,14 +73,7 @@ export default function MainTable<T extends Identifiable>({
 
             <Table.Tbody>
               {table.getRowModel().rows.map((row) => (
-                <Table.Tr
-                  key={row.id}
-                  className={classes.tr}
-                  mod={{ selected: row.getIsSelected(), clickable: navigateOnRowClick }}
-                  {...(navigateOnRowClick
-                    ? { onClick: () => handleNavigation(`/${row.original.id}`) }
-                    : {})}
-                >
+                <Table.Tr key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <Table.Td key={cell.id}>
                       {cell.getValue()
