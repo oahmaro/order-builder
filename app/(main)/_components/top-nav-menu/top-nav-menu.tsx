@@ -66,11 +66,12 @@ export default function TopNavMenu() {
           flex={1}
           size="sm"
           color="gray"
-          variant="subtle"
           href={menu.url}
+          variant="subtle"
           key={menu.value}
           component={Link}
           leftSection={menu.icon}
+          className={classes.button}
         >
           {menu.label}
         </Button>

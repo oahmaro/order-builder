@@ -10,3 +10,9 @@
     display: none;
   }
 }
+
+.button {
+  &:hover {
+    color: var(--mantine-color-gray-7);
+  }
+}
