@@ -262,17 +262,16 @@ export default function MediaCapture({
                 {mediaCaptureContent.t(MediaCaptureContentPhrases.CAPTURE)}
               </Button>
 
-              {availableDevices.length > 1 ||
-                (true && (
-                  <ActionIcon
-                    className={`${classes.switchCameraButton} debug-switch-camera`}
-                    variant="filled"
-                    size="lg"
-                    onClick={switchCamera}
-                  >
-                    <IconCameraRotate size={18} />
-                  </ActionIcon>
-                ))}
+              {availableDevices.length > 1 && (
+                <ActionIcon
+                  className={classes.switchCameraButton}
+                  variant="filled"
+                  size="lg"
+                  onClick={switchCamera}
+                >
+                  <IconCameraRotate size={18} />
+                </ActionIcon>
+              )}
             </div>
           </Stack>
         ) : !localImageUrl ? (
