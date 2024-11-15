@@ -1,9 +1,12 @@
-import { Card, Title } from '@mantine/core';
+import { getCustomerOrders } from '../../_actions';
+import { OrdersTable } from '@/app/(main)/orders/_components';
 
-export default function CustomerOrders() {
-  return (
-    <Card shadow="sm" radius="md" padding="xl">
-      <Title order={4}>Customer orders</Title>
-    </Card>
-  );
+interface CustomerOrdersProps {
+  customerId: number;
+}
+
+export default async function CustomerOrders({ customerId }: CustomerOrdersProps) {
+  const orders = await getCustomerOrders(customerId);
+
+  return <OrdersTable orders={orders} />;
 }

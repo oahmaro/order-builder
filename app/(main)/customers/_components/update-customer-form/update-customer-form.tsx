@@ -2,13 +2,12 @@
 
 import { z } from 'zod';
 import { Customer } from '@prisma/client';
-import { Card, Stack } from '@mantine/core';
+import { Card } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 
 import { CustomerForm } from '../customer-form';
 import { formatDateToISOString } from '@/utils';
 import { updateCustomerAction } from '../../_actions';
-import { CustomerPageHeader } from '../customer-page-header';
 import { customerFormSchema } from '../customer-form/customer-form.schema';
 
 import {
@@ -20,13 +19,7 @@ import {
   CustomerFormContentPhrases,
 } from '../customer-form/customer-form.content';
 
-export default function UpdateCustomerForm({
-  customer,
-  hasOrders,
-}: {
-  customer: Customer;
-  hasOrders: boolean;
-}) {
+export default function UpdateCustomerForm({ customer }: { customer: Customer }) {
   const form = useCustomerFormContext();
 
   const handleSubmit = async (data: CustomerFormValues) => {
@@ -103,17 +96,9 @@ export default function UpdateCustomerForm({
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <Stack gap="lg">
-        <CustomerPageHeader
-          name={`${customer?.firstName} ${customer?.lastName}`}
-          hasOrders={hasOrders}
-          customerId={customer.id}
-        />
-
-        <Card shadow="sm" radius="md" padding="xl">
-          <CustomerForm />
-        </Card>
-      </Stack>
+      <Card shadow="sm" radius="md" padding="xl">
+        <CustomerForm />
+      </Card>
     </form>
   );
 }

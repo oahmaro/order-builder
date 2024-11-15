@@ -1,10 +1,7 @@
-import { Stack } from '@mantine/core';
 import { Customer, Phone, Address } from '@prisma/client';
 
 import { db } from '@/lib/db';
-import { CustomerOrders } from '../_components';
-import { UpdateCustomerForm } from '../_components/update-customer-form';
-import CustomerFormContainer from '../_components/customer-form/customer-form.container';
+import CustomerTabs from '../_components/customer-tabs/customer-tabs';
 
 export default async function CustomerPage({ params }: { params: { customerId: string } }) {
   const customer = (await db.customer.findUnique({
@@ -20,17 +17,5 @@ export default async function CustomerPage({ params }: { params: { customerId: s
     },
   })) as Customer & { phones: Phone[]; address?: Address; _count: { orders: number } };
 
-  const hasOrders = customer?._count.orders > 0;
-
-  return (
-    <Stack gap="lg">
-      {customer && (
-        <CustomerFormContainer customer={customer}>
-          <UpdateCustomerForm customer={customer} hasOrders={hasOrders} />
-        </CustomerFormContainer>
-      )}
-
-      <CustomerOrders />
-    </Stack>
-  );
+  return customer && <CustomerTabs customer={customer} />;
 }
