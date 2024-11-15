@@ -14,6 +14,7 @@ import '@mantine/notifications/styles.css';
 import './global.css';
 import { auth } from '@/auth';
 import { theme } from '../../theme';
+import { TopNavMenu } from './_components';
 import { Header } from '@/components/header';
 import { NprogressComplete } from '@/components';
 
@@ -46,6 +47,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             </Suspense>
             <Header user={session?.user} />
             <main>
+              <TopNavMenu />
+
               <ModalsProvider>{children}</ModalsProvider>
             </main>
           </MantineProvider>

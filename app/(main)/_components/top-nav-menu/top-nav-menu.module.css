@@ -1,0 +1,12 @@
+.root {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: var(--mantine-spacing-xs);
+  margin: 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback, useState, useEffect } from 'react';
-import { Divider, SimpleGrid, Stack, Title } from '@mantine/core';
+import { Accordion, SimpleGrid, Stack } from '@mantine/core';
 import { PiReceipt, PiUsers, PiTruck, PiHandshake, PiPause, PiTimer } from 'react-icons/pi';
 
-import StatCard, { StatChartData } from '../stat-card/stat-card';
 import classes from './stat-card-list.module.css';
+import StatCard, { StatChartData } from '../stat-card/stat-card';
 import { statCardListContent, StatCardListPhrases } from './stat-card-list.content';
 
 interface StatCardListProps {
@@ -114,59 +114,78 @@ export default function StatCardList({
 
   return (
     <Stack className={classes.root} gap={32}>
-      <SimpleGrid cols={{ base: 1, xs: 2 }}>
-        <StatCard
-          defaultExpanded
-          value={customers}
-          chartData={customersChartData}
-          icon={<PiUsers className={classes.icon} />}
-          href="/customers?page=1&pageSize=10&sort=name:ASC"
-          title={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
-          subtitle={statCardListContent.t(StatCardListPhrases.ALL_CUSTOMERS)}
-          onDateRangeChange={(range) =>
-            handleDateRangeChange(
-              'customers',
-              range,
-              statCardListContent.t(StatCardListPhrases.CUSTOMERS)
-            )
-          }
-          metricName={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
-        />
+      <Accordion
+        variant="separated"
+        defaultValue={['overview', 'orderTracking']}
+        multiple
+        classNames={{
+          item: classes.accordionItem,
+          panel: classes.accordionPanel,
+          control: classes.accordionControl,
+          content: classes.accordionContent,
+        }}
+      >
+        <Accordion.Item value="overview">
+          <Accordion.Control>
+            {statCardListContent.t(StatCardListPhrases.OVERVIEW)}
+          </Accordion.Control>
+          <Accordion.Panel>
+            <SimpleGrid cols={{ base: 1, xs: 2 }}>
+              <StatCard
+                defaultExpanded
+                value={customers}
+                chartData={customersChartData}
+                icon={<PiUsers className={classes.icon} />}
+                href="/customers?page=1&pageSize=10&sort=name:ASC"
+                title={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
+                subtitle={statCardListContent.t(StatCardListPhrases.ALL_CUSTOMERS)}
+                onDateRangeChange={(range) =>
+                  handleDateRangeChange(
+                    'customers',
+                    range,
+                    statCardListContent.t(StatCardListPhrases.CUSTOMERS)
+                  )
+                }
+                metricName={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
+              />
 
-        <StatCard
-          value={orders}
-          defaultExpanded
-          chartData={ordersChartData}
-          icon={<PiReceipt className={classes.icon} />}
-          href="/orders?page=1&pageSize=10&sort=createdAt:DESC"
-          title={statCardListContent.t(StatCardListPhrases.ORDERS)}
-          subtitle={statCardListContent.t(StatCardListPhrases.ALL_ORDERS)}
-          onDateRangeChange={(range) => handleDateRangeChange('orders', range, 'value')}
-          metricName={statCardListContent.t(StatCardListPhrases.ORDERS)}
-        />
-      </SimpleGrid>
+              <StatCard
+                value={orders}
+                defaultExpanded
+                chartData={ordersChartData}
+                icon={<PiReceipt className={classes.icon} />}
+                href="/orders?page=1&pageSize=10&sort=createdAt:DESC"
+                title={statCardListContent.t(StatCardListPhrases.ORDERS)}
+                subtitle={statCardListContent.t(StatCardListPhrases.ALL_ORDERS)}
+                onDateRangeChange={(range) => handleDateRangeChange('orders', range, 'value')}
+                metricName={statCardListContent.t(StatCardListPhrases.ORDERS)}
+              />
+            </SimpleGrid>
+          </Accordion.Panel>
+        </Accordion.Item>
 
-      <Stack gap={8}>
-        <Divider />
-        <Title size="h6" tt="uppercase" c="dimmed">
-          {statCardListContent.t(StatCardListPhrases.ORDER_TRACKING)}
-        </Title>
-      </Stack>
-
-      <SimpleGrid cols={{ base: 1, xs: 2 }}>
-        {orderStats.map((stat) => (
-          <StatCard
-            key={stat.title}
-            title={stat.title}
-            value={stat.value}
-            icon={stat.icon}
-            chartData={stat.chartData}
-            onDateRangeChange={(range) => handleDateRangeChange(stat.metric, range, 'value')}
-            defaultExpanded={false}
-            metricName={stat.title}
-          />
-        ))}
-      </SimpleGrid>
+        <Accordion.Item value="orderTracking">
+          <Accordion.Control>
+            {statCardListContent.t(StatCardListPhrases.ORDER_TRACKING)}
+          </Accordion.Control>
+          <Accordion.Panel>
+            <SimpleGrid cols={{ base: 1, xs: 2 }}>
+              {orderStats.map((stat) => (
+                <StatCard
+                  key={stat.title}
+                  title={stat.title}
+                  value={stat.value}
+                  icon={stat.icon}
+                  chartData={stat.chartData}
+                  onDateRangeChange={(range) => handleDateRangeChange(stat.metric, range, 'value')}
+                  defaultExpanded={false}
+                  metricName={stat.title}
+                />
+              ))}
+            </SimpleGrid>
+          </Accordion.Panel>
+        </Accordion.Item>
+      </Accordion>
     </Stack>
   );
 }
