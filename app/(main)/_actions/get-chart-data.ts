@@ -13,13 +13,30 @@ export type ChartDataPoint = {
 
 export async function getChartData(
   metric: 'customers' | 'orders' | 'pending' | 'processing' | 'shipped' | 'delivered',
-  dateRange: [Date | null, Date | null]
+  dateRange: [Date | null, Date | null],
+  metricLabel: string = 'value'
 ): Promise<{ data: ChartDataPoint[]; error?: string }> {
   try {
     const [startDate, endDate] = dateRange;
     if (!startDate || !endDate) {
       return { data: [], error: 'Invalid date range' };
     }
+
+    // Reusable function to format the result
+    const formatResult = (groupedData: Record<string, number>) => {
+      const result: ChartDataPoint[] = [];
+      const currentDate = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        const dataPoint: any = { date: dateStr };
+        dataPoint[metricLabel] = groupedData[dateStr] || 0;
+        result.push(dataPoint);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      return result;
+    };
 
     if (metric === 'customers') {
       const customers = await db.customer.findMany({
@@ -37,27 +54,13 @@ export async function getChartData(
         },
       });
 
-      // Group customers by date
       const groupedData = customers.reduce((acc: Record<string, number>, customer) => {
         const date = customer.createdAt!.toISOString().split('T')[0];
         acc[date] = (acc[date] || 0) + 1;
         return acc;
       }, {});
 
-      // Fill in missing dates
-      const result: ChartDataPoint[] = [];
-      const currentDate = new Date(startDate);
-
-      while (currentDate <= endDate) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        result.push({
-          date: dateStr,
-          value: groupedData[dateStr] || 0,
-        });
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      return { data: result };
+      return { data: formatResult(groupedData) };
     }
 
     if (metric === 'orders') {
@@ -76,27 +79,13 @@ export async function getChartData(
         },
       });
 
-      // Group orders by date
       const groupedData = orders.reduce((acc: Record<string, number>, order) => {
         const date = order.createdAt!.toISOString().split('T')[0];
         acc[date] = (acc[date] || 0) + 1;
         return acc;
       }, {});
 
-      // Fill in missing dates
-      const result: ChartDataPoint[] = [];
-      const currentDate = new Date(startDate);
-
-      while (currentDate <= endDate) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        result.push({
-          date: dateStr,
-          value: groupedData[dateStr] || 0,
-        });
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      return { data: result };
+      return { data: formatResult(groupedData) };
     }
 
     if (['pending', 'processing', 'shipped', 'delivered'].includes(metric)) {
@@ -116,27 +105,13 @@ export async function getChartData(
         },
       });
 
-      // Group orders by date
       const groupedData = orders.reduce((acc: Record<string, number>, order) => {
         const date = order.createdAt!.toISOString().split('T')[0];
         acc[date] = (acc[date] || 0) + 1;
         return acc;
       }, {});
 
-      // Fill in missing dates
-      const result: ChartDataPoint[] = [];
-      const currentDate = new Date(startDate);
-
-      while (currentDate <= endDate) {
-        const dateStr = currentDate.toISOString().split('T')[0];
-        result.push({
-          date: dateStr,
-          value: groupedData[dateStr] || 0,
-        });
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      return { data: result };
+      return { data: formatResult(groupedData) };
     }
 
     return { data: [] };

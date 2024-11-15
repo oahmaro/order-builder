@@ -20,6 +20,7 @@ export const orderItemSchema = z.object({
   descriptionId: z.coerce.number().optional(),
   notes: z.string().optional(),
   image: z.string().optional(),
+  imageFile: z.any().optional(),
   unitPrice: z.coerce
     .number()
     .min(0.01, orderFormContent.t(OrderFormContentPhrases.UNIT_PRICE_REQUIRED)),

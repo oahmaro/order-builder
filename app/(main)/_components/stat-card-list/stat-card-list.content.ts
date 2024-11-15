@@ -12,6 +12,10 @@ export enum StatCardListPhrases {
   SHIPPED = 'shipped',
   DELIVERED = 'delivered',
   ORDER_TRACKING = 'order-tracking',
+  PENDING_ORDERS = 'pending-orders',
+  PROCESSING_ORDERS = 'processing-orders',
+  SHIPPED_ORDERS = 'shipped-orders',
+  DELIVERED_ORDERS = 'delivered-orders',
 }
 
 export const statCardListContent = new Polyglot({
@@ -26,5 +30,9 @@ export const statCardListContent = new Polyglot({
     [StatCardListPhrases.SHIPPED]: 'נשלח',
     [StatCardListPhrases.DELIVERED]: 'נמסר',
     [StatCardListPhrases.ORDER_TRACKING]: 'מעקב אחר הזמנות',
+    [StatCardListPhrases.PENDING_ORDERS]: 'הזמנות ממתין ל',
+    [StatCardListPhrases.PROCESSING_ORDERS]: 'הזמנות מעבד',
+    [StatCardListPhrases.SHIPPED_ORDERS]: 'הזמנות נשלח',
+    [StatCardListPhrases.DELIVERED_ORDERS]: 'הזמנות נמסר',
   },
 });

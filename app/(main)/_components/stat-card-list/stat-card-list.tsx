@@ -17,7 +17,8 @@ interface StatCardListProps {
   shippedOrders: number;
   onFetchChartData: (
     metric: string,
-    dateRange: [Date | null, Date | null]
+    dateRange: [Date | null, Date | null],
+    metricLabel: string
   ) => Promise<{ data: StatChartData[]; error?: string }>;
 }
 
@@ -38,8 +39,8 @@ export default function StatCardList({
   const [deliveredChartData, setDeliveredChartData] = useState<StatChartData[]>([]);
 
   const handleDateRangeChange = useCallback(
-    async (metric: string, range: [Date | null, Date | null]) => {
-      const { data, error } = await onFetchChartData(metric, range);
+    async (metric: string, range: [Date | null, Date | null], metricLabel: string) => {
+      const { data, error } = await onFetchChartData(metric, range, metricLabel);
 
       if (error) {
         return;
@@ -65,11 +66,14 @@ export default function StatCardList({
   useEffect(() => {
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
+    startDate.setDate(endDate.getDate() - 7);
 
     const metrics = ['customers', 'orders', 'pending', 'processing', 'shipped', 'delivered'];
     metrics.forEach((metric) => {
-      handleDateRangeChange(metric, [startDate, endDate]);
+      const label = statCardListContent.t(
+        StatCardListPhrases[metric.toUpperCase() as keyof typeof StatCardListPhrases]
+      );
+      handleDateRangeChange(metric, [startDate, endDate], label);
     });
   }, [handleDateRangeChange]);
 
@@ -80,6 +84,7 @@ export default function StatCardList({
       value: pendingOrders,
       chartData: pendingChartData,
       metric: 'pending',
+      valueLabel: statCardListContent.t(StatCardListPhrases.PENDING_ORDERS),
     },
     {
       title: statCardListContent.t(StatCardListPhrases.PROCESSING),
@@ -87,6 +92,7 @@ export default function StatCardList({
       value: processingOrders,
       chartData: processingChartData,
       metric: 'processing',
+      valueLabel: statCardListContent.t(StatCardListPhrases.PROCESSING_ORDERS),
     },
     {
       title: statCardListContent.t(StatCardListPhrases.SHIPPED),
@@ -94,6 +100,7 @@ export default function StatCardList({
       value: shippedOrders,
       chartData: shippedChartData,
       metric: 'shipped',
+      valueLabel: statCardListContent.t(StatCardListPhrases.SHIPPED_ORDERS),
     },
     {
       title: statCardListContent.t(StatCardListPhrases.DELIVERED),
@@ -101,6 +108,7 @@ export default function StatCardList({
       value: deliveredOrders,
       chartData: deliveredChartData,
       metric: 'delivered',
+      valueLabel: statCardListContent.t(StatCardListPhrases.DELIVERED_ORDERS),
     },
   ] as const;
 
@@ -115,8 +123,16 @@ export default function StatCardList({
           href="/customers?page=1&pageSize=10&sort=name:ASC"
           title={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
           subtitle={statCardListContent.t(StatCardListPhrases.ALL_CUSTOMERS)}
-          onDateRangeChange={(range) => handleDateRangeChange('customers', range)}
+          onDateRangeChange={(range) =>
+            handleDateRangeChange(
+              'customers',
+              range,
+              statCardListContent.t(StatCardListPhrases.CUSTOMERS)
+            )
+          }
+          metricName={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
         />
+
         <StatCard
           value={orders}
           defaultExpanded
@@ -125,7 +141,8 @@ export default function StatCardList({
           href="/orders?page=1&pageSize=10&sort=createdAt:DESC"
           title={statCardListContent.t(StatCardListPhrases.ORDERS)}
           subtitle={statCardListContent.t(StatCardListPhrases.ALL_ORDERS)}
-          onDateRangeChange={(range) => handleDateRangeChange('orders', range)}
+          onDateRangeChange={(range) => handleDateRangeChange('orders', range, 'value')}
+          metricName={statCardListContent.t(StatCardListPhrases.ORDERS)}
         />
       </SimpleGrid>
 
@@ -144,8 +161,9 @@ export default function StatCardList({
             value={stat.value}
             icon={stat.icon}
             chartData={stat.chartData}
-            onDateRangeChange={(range) => handleDateRangeChange(stat.metric, range)}
+            onDateRangeChange={(range) => handleDateRangeChange(stat.metric, range, 'value')}
             defaultExpanded={false}
+            metricName={stat.title}
           />
         ))}
       </SimpleGrid>

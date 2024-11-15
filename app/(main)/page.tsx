@@ -43,7 +43,8 @@ export default async function HomePage() {
           onFetchChartData={
             getChartData as unknown as (
               metric: string,
-              dateRange: [Date | null, Date | null]
+              dateRange: [Date | null, Date | null],
+              metricLabel: string
             ) => Promise<{ data: StatChartData[]; error?: string }>
           }
         />

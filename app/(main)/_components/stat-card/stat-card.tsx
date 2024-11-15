@@ -24,6 +24,7 @@ export interface StatCardProps {
   chartData?: StatChartData[];
   onDateRangeChange?: (range: [Date | null, Date | null]) => void;
   defaultExpanded?: boolean;
+  metricName?: string;
 }
 
 const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
@@ -37,6 +38,7 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       chartData,
       onDateRangeChange,
       defaultExpanded = true,
+      metricName,
     },
     ref
   ) => {
@@ -112,9 +114,8 @@ const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
               mt="md"
               data={chartData}
               dataKey="date"
-              series={[{ name: 'value', color: 'dark.9' }]}
-              curveType="linear"
-              withLegend={false}
+              series={[{ name: metricName || 'value', color: 'indigo.6' }]}
+              curveType="monotone"
               withTooltip
               tickLine="y"
             />

@@ -26,50 +26,61 @@ export default function MediaCapture({
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [currentDeviceId, setCurrentDeviceId] = useState<string>();
   const [availableDevices, setAvailableDevices] = useState<MediaDeviceInfo[]>([]);
+  const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(value);
 
   useEffect(() => {
-    async function getCameras() {
-      try {
-        // First request camera permissions explicitly
-        await navigator.mediaDevices.getUserMedia({ video: true });
-
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter((device) => device.kind === 'videoinput');
-
-        setAvailableDevices(videoDevices);
-        if (videoDevices.length > 0) {
-          setCurrentDeviceId(videoDevices[0].deviceId);
-        }
-      } catch (error) {
-        notifications.show({
-          title: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR),
-          message: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR_ACCESSING_CAMERA),
-          color: 'red',
-        });
-      }
+    if (!localImageUrl) {
+      setLocalImageUrl(value);
     }
+  }, [value]);
 
-    getCameras();
-  }, []);
-
-  const handleFileUpload = async (file: File) => {
+  const initializeCamera = async () => {
     try {
-      setIsUploading(true);
-      await onCapture(file);
+      // First request camera permissions explicitly
+      await navigator.mediaDevices.getUserMedia({ video: true });
+
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+      setAvailableDevices(videoDevices);
+      if (videoDevices.length > 0) {
+        setCurrentDeviceId(videoDevices[0].deviceId);
+      }
     } catch (error) {
       notifications.show({
         title: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR),
-        message: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR_UPLOADING_IMAGE),
+        message: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR_ACCESSING_CAMERA),
         color: 'red',
       });
-    } finally {
-      setIsUploading(false);
     }
   };
+
+  const handleFileCapture = async (file: File | undefined) => {
+    if (!file) {
+      setLocalImageUrl(undefined);
+      onCapture(undefined);
+      return;
+    }
+
+    // Create local URL for preview
+    const objectUrl = URL.createObjectURL(file);
+    setLocalImageUrl(objectUrl);
+
+    // Pass the file to parent
+    await onCapture(file);
+  };
+
+  useEffect(
+    () => () => {
+      if (localImageUrl && !localImageUrl.startsWith('https://')) {
+        URL.revokeObjectURL(localImageUrl);
+      }
+    },
+    [localImageUrl]
+  );
 
   const checkCameraSupport = async () => {
     try {
@@ -97,13 +108,14 @@ export default function MediaCapture({
         return;
       }
 
+      await initializeCamera();
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           deviceId: currentDeviceId ? { exact: currentDeviceId } : undefined,
           width: { ideal: typeof width === 'number' ? width : parseInt(width as string, 10) },
           height: { ideal: typeof height === 'number' ? height : parseInt(height as string, 10) },
         },
-        audio: false,
       });
 
       streamRef.current = stream;
@@ -180,16 +192,19 @@ export default function MediaCapture({
       if (!ctx) return;
 
       ctx.drawImage(videoRef.current, 0, 0);
+
+      stopCamera();
+
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((b) => {
           if (b) resolve(b);
           else reject(new Error('Failed to create blob'));
         });
       });
+
       const file = new File([blob], 'photo.jpg', { type: 'image/jpeg' });
 
-      await handleFileUpload(file);
-      stopCamera();
+      await handleFileCapture(file);
     } catch (error) {
       notifications.show({
         title: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR),
@@ -260,7 +275,7 @@ export default function MediaCapture({
                 ))}
             </div>
           </Stack>
-        ) : !value ? (
+        ) : !localImageUrl ? (
           <div className={classes.buttonContainer}>
             <input
               ref={fileInputRef}
@@ -270,7 +285,7 @@ export default function MediaCapture({
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  handleFileUpload(file);
+                  handleFileCapture(file);
                 }
               }}
             />
@@ -278,7 +293,6 @@ export default function MediaCapture({
               <Button
                 onClick={() => fileInputRef.current?.click()}
                 className={classes.uploadButton}
-                disabled={isUploading}
                 leftSection={<IconUpload size={16} />}
               >
                 {mediaCaptureContent.t(MediaCaptureContentPhrases.UPLOAD_IMAGE)}
@@ -288,7 +302,6 @@ export default function MediaCapture({
                 variant="outline"
                 onClick={startCamera}
                 className={classes.uploadButton}
-                disabled={isUploading}
                 leftSection={<IconCamera size={16} />}
               >
                 {mediaCaptureContent.t(MediaCaptureContentPhrases.TAKE_PHOTO)}
@@ -297,7 +310,7 @@ export default function MediaCapture({
           </div>
         ) : (
           <div className={classes.imageContainer}>
-            <Image src={value} fallbackSrc={fallbackSrc} className={classes.image} />
+            <Image src={localImageUrl} fallbackSrc={fallbackSrc} className={classes.image} />
             <ActionIcon
               variant="filled"
               color="red"
@@ -308,6 +321,7 @@ export default function MediaCapture({
                 if (fileInputRef.current) {
                   fileInputRef.current.value = '';
                 }
+                setLocalImageUrl(undefined);
                 await onCapture(undefined);
               }}
             >
@@ -316,11 +330,6 @@ export default function MediaCapture({
           </div>
         )}
       </div>
-      {isUploading && (
-        <div className={classes.uploadingText}>
-          {mediaCaptureContent.t(MediaCaptureContentPhrases.UPLOADING)}
-        </div>
-      )}
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 import { auth } from '@/auth';
-import { commonContent, CommonPhrases } from '@/content';
 import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
 
 type UploadImageResponse = {
@@ -15,52 +14,49 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
   const session = await auth();
 
   if (!session?.user?.id) {
-    return {
-      error: 'Unauthorized',
-    };
+    return { error: 'Unauthorized' };
   }
 
   try {
     const file = data.get('file') as File;
+    const orderItemIndex = data.get('orderItemIndex') as string;
+    const orderId = data.get('orderId') as string;
 
     if (!file) {
-      return {
-        error: 'No file provided',
-      };
+      return { error: 'No file provided' };
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
     const timestamp = Date.now();
-    const filename = `order-images/${timestamp}-${file.name}`;
+    const fileExtension = file.name.split('.').pop() || 'jpg';
+    const filename = `order-images/${orderItemIndex}-${orderId}-${timestamp}.${fileExtension}`;
 
-    await spacesClient.send(
-      new PutObjectCommand({
-        Bucket: SPACES_BUCKET,
-        Key: filename,
-        Body: buffer,
-        ACL: 'public-read',
-        ContentType: file.type,
-      })
-    );
-
-    const imageUrl = `${SPACES_CDN_ENDPOINT}/${filename}`;
-
-    return { url: imageUrl };
-  } catch (error) {
-    // Check for specific AWS S3 errors
-    if (error instanceof Error) {
-      if (error.name === 'NoSuchBucket') {
-        return { error: 'Storage configuration error' };
+    try {
+      await spacesClient.send(
+        new PutObjectCommand({
+          Bucket: SPACES_BUCKET,
+          Key: filename,
+          Body: buffer,
+          ACL: 'public-read',
+          ContentType: file.type,
+        })
+      );
+    } catch (uploadError) {
+      if (uploadError instanceof Error) {
+        return {
+          error: `S3 Upload Error: ${uploadError.message}`,
+        };
       }
-      if (error.name === 'AccessDenied') {
-        return { error: 'Storage access denied' };
-      }
+      return {
+        error: 'Failed to upload to S3',
+      };
     }
 
-    return {
-      error: commonContent.t(CommonPhrases.UPLOAD_FAILED),
-    };
+    const imageUrl = `${SPACES_CDN_ENDPOINT}/${filename}`;
+    return { url: imageUrl };
+  } catch (error) {
+    return { error: 'Failed to upload image' };
   }
 }

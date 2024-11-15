@@ -9,6 +9,7 @@ export enum OrderFormContentPhrases {
   CUSTOMER_REQUIRED = 'customer-required',
   UNIT_PRICE_REQUIRED = 'unit-price-required',
   ERROR_WHILE_CREATING = 'error-while-creating',
+  IMAGE_UPLOAD_FAILED = 'image-upload-failed',
   FORM_DATA_INVALID = 'form-data-invalid',
 }
 
@@ -22,5 +23,6 @@ export const orderFormContent = new Polyglot({
     [OrderFormContentPhrases.UNIT_PRICE_REQUIRED]: 'מחיר יחידה נדרש',
     [OrderFormContentPhrases.ERROR_WHILE_CREATING]: 'שגיאה ביצירת ההזמנה',
     [OrderFormContentPhrases.FORM_DATA_INVALID]: 'נתוני הטופס שגויים',
+    [OrderFormContentPhrases.IMAGE_UPLOAD_FAILED]: 'העלאת התמונה נכשלה',
   },
 });

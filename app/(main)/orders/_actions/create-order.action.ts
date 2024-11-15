@@ -5,8 +5,8 @@ import { OrderStatus } from '@prisma/client';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { uploadImageAction } from './upload-image.action';
 import { orderFormSchema } from '../_components/order-form/order-form.schema';
-
 import {
   orderFormContent,
   OrderFormContentPhrases,
@@ -27,27 +27,27 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
     };
   }
 
-  const formData = Object.fromEntries(data);
-  const customerId = parseInt(formData.customerId as string, 10);
-  const amountPaid = parseFloat(formData.amountPaid as string);
-  const status = formData.status as OrderStatus;
-  const orderItems = JSON.parse(formData.orderItems as string);
-
-  const parsed = orderFormSchema.safeParse({
-    customerId,
-    amountPaid: Number(amountPaid),
-    status,
-    orderItems,
-  });
-
-  if (!parsed.success) {
-    return {
-      message: orderFormContent.t(OrderFormContentPhrases.FORM_DATA_INVALID),
-      errors: parsed.error.errors,
-    };
-  }
-
   try {
+    const customerId = parseInt(data.get('customerId') as string, 10);
+    const amountPaid = parseFloat(data.get('amountPaid') as string);
+    const status = data.get('status') as OrderStatus;
+    const orderItems = JSON.parse(data.get('orderItems') as string);
+
+    const parsed = orderFormSchema.safeParse({
+      customerId,
+      amountPaid,
+      status,
+      orderItems,
+    });
+
+    if (!parsed.success) {
+      return {
+        message: orderFormContent.t(OrderFormContentPhrases.FORM_DATA_INVALID),
+        errors: parsed.error.errors,
+      };
+    }
+
+    // First create the order and items
     const createdOrder = await db.order.create({
       data: {
         customerId: parsed.data.customerId,
@@ -65,7 +65,6 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
             print: item.printId ? { connect: { id: item.printId } } : undefined,
             description: item.descriptionId ? { connect: { id: item.descriptionId } } : undefined,
             notes: item.notes || undefined,
-            image: item.image || undefined,
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,
@@ -74,11 +73,46 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
       },
       include: {
         orderItems: true,
-        customer: true,
       },
     });
 
-    // Create audit entry
+    // Then handle image uploads with proper IDs
+    try {
+      await Promise.all(
+        orderItems.map(async (item: any, index: number) => {
+          const imageFile = data.get(`orderItem${index}Image`) as File;
+          const orderItem = createdOrder.orderItems[index];
+
+          if (imageFile && orderItem) {
+            const imageFormData = new FormData();
+            imageFormData.append('file', imageFile);
+            imageFormData.append('orderItemIndex', index.toString());
+            imageFormData.append('orderId', createdOrder.id.toString());
+            imageFormData.append('orderItemId', orderItem.id.toString());
+
+            const uploadResult = await uploadImageAction(imageFormData);
+            if (uploadResult.error) {
+              throw new Error(`Image upload failed: ${uploadResult.error}`);
+            }
+
+            // Update the order item with the image URL
+            await db.orderItem.update({
+              where: { id: orderItem.id },
+              data: { image: uploadResult.url },
+            });
+          }
+        })
+      );
+    } catch (error) {
+      // Return success but with warning about image upload
+      return {
+        message: `${orderFormContent.t(OrderFormContentPhrases.ORDER_CREATED)} ${orderFormContent.t(
+          OrderFormContentPhrases.IMAGE_UPLOAD_FAILED
+        )}`,
+      };
+    }
+
+    // Create audit entry and finish
     await db.audit.create({
       data: {
         entityId: createdOrder.id,
@@ -97,6 +131,7 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
   } catch (error) {
     return {
       message: orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),
+      errors: [error instanceof Error ? error.message : 'Unknown error'],
     };
   }
 }

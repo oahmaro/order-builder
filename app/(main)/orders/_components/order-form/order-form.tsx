@@ -48,13 +48,27 @@ export default function OrderForm({
       }
 
       const validatedData = orderFormSchema.parse(values);
-
       const formData = new FormData();
 
+      // Add basic order data
       formData.append('customerId', validatedData.customerId.toString());
       formData.append('amountPaid', validatedData.amountPaid.toString());
       formData.append('status', validatedData.status);
-      formData.append('orderItems', JSON.stringify(validatedData.orderItems));
+
+      // Handle order items and their images separately
+      const orderItemsWithoutFiles = validatedData.orderItems.map((item) => {
+        const { imageFile, ...itemWithoutFile } = item;
+        return itemWithoutFile;
+      });
+
+      formData.append('orderItems', JSON.stringify(orderItemsWithoutFiles));
+
+      // Append image files separately
+      validatedData.orderItems.forEach((item, index) => {
+        if (item.imageFile) {
+          formData.append(`orderItem${index}Image`, item.imageFile);
+        }
+      });
 
       const response = await createOrderAction(formData);
 
@@ -81,7 +95,10 @@ export default function OrderForm({
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
-          message: orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),
+          message:
+            error instanceof Error && error.message.includes('Image upload failed')
+              ? error.message
+              : orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),
           color: 'red',
         });
       }

@@ -1,6 +1,5 @@
 'use client';
 
-import { notifications } from '@mantine/notifications';
 import { Adhesion, Description, Frame, Passepartout, Print } from '@prisma/client';
 
 import {
@@ -21,8 +20,6 @@ import {
 import { StaticField } from '@/components';
 import { MediaCapture } from '../media-capture';
 import classes from './order-item-card.module.css';
-import { commonContent, CommonPhrases } from '@/content';
-import { uploadImageAction } from '../../_actions/upload-image.action';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { orderItemCardContent, OrderItemCardContentPhrases } from './order-item-card.content';
 
@@ -49,30 +46,14 @@ export default function OrderItemCard({
 }: OrderItemCardProps) {
   const form = useOrderFormContext();
 
-  const handleImageUpload = async (file: File | undefined) => {
-    if (!file) {
+  const handleImageCapture = async (file: File | undefined) => {
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      form.setFieldValue(`orderItems.${index}.imageFile`, file);
+      form.setFieldValue(`orderItems.${index}.image`, objectUrl);
+    } else {
+      form.setFieldValue(`orderItems.${index}.imageFile`, undefined);
       form.setFieldValue(`orderItems.${index}.image`, undefined);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const result = await uploadImageAction(formData);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      form.setFieldValue(`orderItems.${index}.image`, result.url);
-    } catch (error) {
-      notifications.show({
-        title: commonContent.t(CommonPhrases.ERROR),
-        message:
-          error instanceof Error ? error.message : commonContent.t(CommonPhrases.UPLOAD_FAILED),
-        color: 'red',
-      });
     }
   };
 
@@ -321,7 +302,10 @@ export default function OrderItemCard({
         </Stack>
 
         <Stack flex={1} maw={400}>
-          <MediaCapture value={form.values.orderItems[index].image} onCapture={handleImageUpload} />
+          <MediaCapture
+            value={form.values.orderItems[index].image}
+            onCapture={handleImageCapture}
+          />
 
           <Textarea
             placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
