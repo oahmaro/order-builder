@@ -1,5 +1,7 @@
+import { Stack } from '@mantine/core';
+
 import { db } from '@/lib/db';
-import { StatCardList } from './_components';
+import { StatCardList, TopNavMenu } from './_components';
 import { getChartData } from './_actions/get-chart-data';
 import { StatChartData } from './_components/stat-card/stat-card';
 
@@ -24,20 +26,24 @@ export default async function HomePage() {
   });
 
   return (
-    <StatCardList
-      customers={totalCustomers}
-      orders={totalOrders}
-      pendingOrders={pendingOrders}
-      processingOrders={processingOrders}
-      deliveredOrders={deliveredOrders}
-      shippedOrders={shippedOrders}
-      onFetchChartData={
-        getChartData as unknown as (
-          metric: string,
-          dateRange: [Date | null, Date | null],
-          metricLabel: string
-        ) => Promise<{ data: StatChartData[]; error?: string }>
-      }
-    />
+    <Stack gap="lg">
+      <TopNavMenu />
+
+      <StatCardList
+        customers={totalCustomers}
+        orders={totalOrders}
+        pendingOrders={pendingOrders}
+        processingOrders={processingOrders}
+        deliveredOrders={deliveredOrders}
+        shippedOrders={shippedOrders}
+        onFetchChartData={
+          getChartData as unknown as (
+            metric: string,
+            dateRange: [Date | null, Date | null],
+            metricLabel: string
+          ) => Promise<{ data: StatChartData[]; error?: string }>
+        }
+      />
+    </Stack>
   );
 }

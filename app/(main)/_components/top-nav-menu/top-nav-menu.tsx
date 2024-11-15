@@ -60,7 +60,7 @@ const menus = [
 
 export default function TopNavMenu() {
   return (
-    <Group gap="xs" py="lg" className={classes.root}>
+    <Group gap="xs" className={classes.root}>
       {menus.map((menu) => (
         <Button
           flex={1}
