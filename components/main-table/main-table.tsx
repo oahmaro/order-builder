@@ -106,37 +106,39 @@ export default function MainTable<T extends Identifiable>({
 
       <Paper className={classes.card}>
         {hasFilteredData ? (
-          <Table className={classes.table} striped highlightOnHover {...tableProps}>
-            <Table.Thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <Table.Tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <Table.Th key={header.id} className={classes.th}>
-                      <Box>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                      </Box>
-                    </Table.Th>
-                  ))}
-                </Table.Tr>
-              ))}
-            </Table.Thead>
+          <Table.ScrollContainer minWidth={500} type="native">
+            <Table className={classes.table} striped highlightOnHover {...tableProps}>
+              <Table.Thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Table.Tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <Table.Th key={header.id} className={classes.th}>
+                        <Box>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                        </Box>
+                      </Table.Th>
+                    ))}
+                  </Table.Tr>
+                ))}
+              </Table.Thead>
 
-            <Table.Tbody>
-              {table.getRowModel().rows.map((row) => (
-                <Table.Tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <Table.Td key={cell.id}>
-                      {cell.getValue()
-                        ? flexRender(cell.column.columnDef.cell, cell.getContext())
-                        : '-'}
-                    </Table.Td>
-                  ))}
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+              <Table.Tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <Table.Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <Table.Td key={cell.id}>
+                        {cell.getValue()
+                          ? flexRender(cell.column.columnDef.cell, cell.getContext())
+                          : '-'}
+                      </Table.Td>
+                    ))}
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
         ) : (
           <MainTableEmptyState
             title={mainTableContent.t(MainTableContentPhrases.EMPTY_STATE_TITLE)}
