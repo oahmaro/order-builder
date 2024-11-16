@@ -85,6 +85,7 @@ export default function StatCardList({
       chartData: pendingChartData,
       metric: 'pending',
       valueLabel: statCardListContent.t(StatCardListPhrases.PENDING_ORDERS),
+      href: '/orders?page=1&pageSize=10&sort=id:ASC&status=PENDING',
     },
     {
       title: statCardListContent.t(StatCardListPhrases.PROCESSING),
@@ -93,6 +94,7 @@ export default function StatCardList({
       chartData: processingChartData,
       metric: 'processing',
       valueLabel: statCardListContent.t(StatCardListPhrases.PROCESSING_ORDERS),
+      href: '/orders?page=1&pageSize=10&sort=id:ASC&status=PROCESSING',
     },
     {
       title: statCardListContent.t(StatCardListPhrases.SHIPPED),
@@ -101,6 +103,7 @@ export default function StatCardList({
       chartData: shippedChartData,
       metric: 'shipped',
       valueLabel: statCardListContent.t(StatCardListPhrases.SHIPPED_ORDERS),
+      href: '/orders?page=1&pageSize=10&sort=id:ASC&status=SHIPPED',
     },
     {
       title: statCardListContent.t(StatCardListPhrases.DELIVERED),
@@ -109,6 +112,7 @@ export default function StatCardList({
       chartData: deliveredChartData,
       metric: 'delivered',
       valueLabel: statCardListContent.t(StatCardListPhrases.DELIVERED_ORDERS),
+      href: '/orders?page=1&pageSize=10&sort=id:ASC&status=DELIVERED',
     },
   ] as const;
 
@@ -180,6 +184,7 @@ export default function StatCardList({
                   onDateRangeChange={(range) => handleDateRangeChange(stat.metric, range, 'value')}
                   defaultExpanded={false}
                   metricName={stat.title}
+                  href={stat.href}
                 />
               ))}
             </SimpleGrid>

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { OrderStatus } from '@prisma/client';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { MainTable } from '@/components/main-table';
 import { columns, OrderDataType } from './orders-table.columns';
@@ -12,12 +13,36 @@ export interface OrdersTableProps {
 }
 
 export default function OrdersTable({ orders }: OrdersTableProps) {
-  const [statusFilter, setStatusFilter] = useState<OrderStatus | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [statusFilter, setStatusFilter] = useState<OrderStatus | null>(() => {
+    const status = searchParams.get('status');
+    return status ? (status as OrderStatus) : null;
+  });
 
   const filteredOrders = useMemo(() => {
     if (!statusFilter) return orders;
     return orders.filter((order) => order.status === statusFilter);
   }, [orders, statusFilter]);
+
+  const handleStatusChange = (status: OrderStatus | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (status) {
+      params.set('status', status);
+    } else {
+      params.delete('status');
+    }
+
+    router.push(`/orders?${params.toString()}`);
+    setStatusFilter(status);
+  };
+
+  // Sync with URL on mount and when URL changes
+  useEffect(() => {
+    const status = searchParams.get('status') as OrderStatus | null;
+    setStatusFilter(status);
+  }, [searchParams]);
 
   return (
     <MainTable<OrderDataType>
@@ -25,7 +50,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       columns={columns}
       initialColumnsVisibility={{ id: true, createdAt: false, updatedAt: false }}
       headerActions={
-        <OrderStatusFilter selectedStatus={statusFilter} onStatusChange={setStatusFilter} />
+        <OrderStatusFilter selectedStatus={statusFilter} onStatusChange={handleStatusChange} />
       }
     />
   );
