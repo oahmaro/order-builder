@@ -156,18 +156,50 @@ export default function MediaCapture({
   };
 
   const switchCamera = async () => {
-    const currentIndex = availableDevices.findIndex(
-      (device) => device.deviceId === currentDeviceId
-    );
-    const nextIndex = (currentIndex + 1) % availableDevices.length;
-    const nextDevice = availableDevices[nextIndex];
+    try {
+      // Find next device
+      const currentIndex = availableDevices.findIndex(
+        (device) => device.deviceId === currentDeviceId
+      );
+      const nextIndex = (currentIndex + 1) % availableDevices.length;
+      const nextDevice = availableDevices[nextIndex];
 
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
+      // Stop current stream
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
+      }
+
+      // Update device ID and wait for state to update
+      await new Promise<void>((resolve) => {
+        setCurrentDeviceId(nextDevice.deviceId);
+        setTimeout(resolve, 0);
+      });
+
+      // Start new stream with selected device
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          deviceId: { exact: nextDevice.deviceId },
+          width: { ideal: typeof width === 'number' ? width : parseInt(width as string, 10) },
+          height: { ideal: typeof height === 'number' ? height : parseInt(height as string, 10) },
+        },
+      });
+
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+    } catch (error) {
+      notifications.show({
+        title: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR),
+        message: mediaCaptureContent.t(MediaCaptureContentPhrases.ERROR_ACCESSING_CAMERA),
+        color: 'red',
+      });
     }
-
-    setCurrentDeviceId(nextDevice.deviceId);
-    await startCamera();
   };
 
   const stopCamera = () => {
