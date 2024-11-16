@@ -1,0 +1,8 @@
+.statusFilter {
+  color: var(--mantine-color-gray-6);
+  border-color: var(--mantine-color-gray-3);
+
+  &:hover {
+    color: var(--mantine-color-gray-7);
+  }
+}

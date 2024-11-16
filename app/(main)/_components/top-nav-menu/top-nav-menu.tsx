@@ -63,13 +63,12 @@ export default function TopNavMenu() {
     <Group gap="xs" className={classes.root}>
       {menus.map((menu) => (
         <Button
-          flex={1}
           size="sm"
           color="gray"
           href={menu.url}
           variant="subtle"
-          key={menu.value}
           component={Link}
+          key={menu.value}
           leftSection={menu.icon}
           className={classes.button}
         >

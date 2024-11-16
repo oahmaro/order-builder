@@ -12,6 +12,7 @@ export enum OrdersTableContentPhrases {
   UPDATED_BY = 'updatedBy',
   ITEMS_COUNT = 'itemsCount',
   AMOUNT_PAID = 'amountPaid',
+  ORDER_STATUS_FILTER = 'orderStatusFilter',
 }
 
 export const ordersTableContent = new Polyglot({
@@ -26,5 +27,6 @@ export const ordersTableContent = new Polyglot({
     [OrdersTableContentPhrases.UPDATED_BY]: 'עודכן על ידי',
     [OrdersTableContentPhrases.ITEMS_COUNT]: 'מספר פריטים',
     [OrdersTableContentPhrases.AMOUNT_PAID]: 'סכום ששולם',
+    [OrdersTableContentPhrases.ORDER_STATUS_FILTER]: 'סטטוס הזמנה',
   },
 });

@@ -15,56 +15,83 @@ type FrameDataType = Partial<Frame> & {
 const columnHelper = createColumnHelper<FrameDataType>();
 
 export const columns = [
-  columnHelper.accessor('id', {
+  columnHelper.accessor((row) => String(row.id), {
+    id: 'id',
     header: framesTableContent.t(FramesTableContentPhrases.ID),
-
     cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor('name', {
+  columnHelper.accessor((row) => `${row.id} ${row.name}`, {
+    id: 'name',
     header: framesTableContent.t(FramesTableContentPhrases.NAME),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/frames/${info.row.original.id}`}>
-        {info.getValue()}
+        {info.row.original.name}
       </Anchor>
     ),
   }),
 
-  columnHelper.accessor('createdByUser', {
-    header: framesTableContent.t(FramesTableContentPhrases.CREATED_BY),
-    cell: (info) => {
-      const user = info.getValue();
-      return user ? (
-        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
-        </Anchor>
-      ) : (
-        'N/A'
-      );
-    },
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdByUser ? `${row.createdByUser.id} ${generateUserTitle(row.createdByUser)}` : '',
+    {
+      id: 'createdBy',
+      header: framesTableContent.t(FramesTableContentPhrases.CREATED_BY),
+      cell: (info) => {
+        const user = info.row.original.createdByUser;
+        return user ? (
+          <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+            {generateUserTitle(user)}
+          </Anchor>
+        ) : (
+          'N/A'
+        );
+      },
+    }
+  ),
 
-  columnHelper.accessor('createdAt', {
-    header: framesTableContent.t(FramesTableContentPhrases.CREATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.updatedByUser ? `${row.updatedByUser.id} ${generateUserTitle(row.updatedByUser)}` : '',
+    {
+      id: 'updatedBy',
+      header: framesTableContent.t(FramesTableContentPhrases.UPDATED_BY),
+      cell: (info) => {
+        const user = info.row.original.updatedByUser;
+        return user ? (
+          <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            {generateUserTitle(user)}
+          </Link>
+        ) : (
+          'N/A'
+        );
+      },
+    }
+  ),
 
-  columnHelper.accessor('updatedByUser', {
-    header: framesTableContent.t(FramesTableContentPhrases.UPDATED_BY),
-    cell: (info) => {
-      const user = info.getValue();
-      return user ? (
-        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-          {generateUserTitle(user)}
-        </Link>
-      ) : (
-        'N/A'
-      );
-    },
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdAt
+        ? `${row.createdAt.toISOString()} ${dayjs(row.createdAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'createdAt',
+      header: framesTableContent.t(FramesTableContentPhrases.CREATED_AT),
+      cell: (info) =>
+        info.getValue() && dayjs(info.row.original.createdAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
 
-  columnHelper.accessor('updatedAt', {
-    header: framesTableContent.t(FramesTableContentPhrases.UPDATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.updatedAt
+        ? `${row.updatedAt.toISOString()} ${dayjs(row.updatedAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'updatedAt',
+      header: framesTableContent.t(FramesTableContentPhrases.UPDATED_AT),
+      cell: (info) =>
+        info.getValue() && dayjs(info.row.original.updatedAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
 ];

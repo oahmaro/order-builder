@@ -1,7 +1,3 @@
-.root {
-  justify-content: space-between;
-}
-
 .settings {
   color: var(--mantine-color-gray-6);
   border-color: var(--mantine-color-gray-3);

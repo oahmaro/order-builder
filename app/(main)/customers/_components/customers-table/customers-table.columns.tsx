@@ -97,12 +97,31 @@ export const columns = [
     },
   }),
 
-  columnHelper.accessor('createdAt', {
-    header: customersTableContent.t(CustomersTableContentPhrases.CREATED_AT),
-    cell: (info) => (info.getValue() ? dayjs(info.getValue()).format('DD/MM/YYYY HH:mm') : ''),
-  }),
-  columnHelper.accessor('updatedAt', {
-    header: customersTableContent.t(CustomersTableContentPhrases.UPDATED_AT),
-    cell: (info) => (info.getValue() ? dayjs(info.getValue()).format('DD/MM/YYYY HH:mm') : ''),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdAt
+        ? `${row.createdAt.toISOString()} ${dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}`
+        : '',
+    {
+      id: 'createdAt',
+      header: customersTableContent.t(CustomersTableContentPhrases.CREATED_AT),
+      cell: (info) =>
+        info.row.original.createdAt &&
+        dayjs(info.row.original.createdAt).format('DD/MM/YYYY HH:mm'),
+    }
+  ),
+
+  columnHelper.accessor(
+    (row) =>
+      row.updatedAt
+        ? `${row.updatedAt.toISOString()} ${dayjs(row.updatedAt).format('DD/MM/YYYY HH:mm')}`
+        : '',
+    {
+      id: 'updatedAt',
+      header: customersTableContent.t(CustomersTableContentPhrases.UPDATED_AT),
+      cell: (info) =>
+        info.row.original.updatedAt &&
+        dayjs(info.row.original.updatedAt).format('DD/MM/YYYY HH:mm'),
+    }
+  ),
 ];

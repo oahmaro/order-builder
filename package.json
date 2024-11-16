@@ -40,6 +40,7 @@
     "@next/bundle-analyzer": "^14.0.1",
     "@prisma/client": "^5.22.0",
     "@tabler/icons-react": "^2.40.0",
+    "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.19.2",
     "bcryptjs": "^2.4.3",
     "countries-list": "^3.1.1",

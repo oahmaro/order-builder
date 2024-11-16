@@ -15,57 +15,83 @@ type PrintDataType = Partial<Print> & {
 const columnHelper = createColumnHelper<PrintDataType>();
 
 export const columns = [
-  columnHelper.accessor('id', {
+  columnHelper.accessor((row) => String(row.id), {
+    id: 'id',
     header: printsTableContent.t(PrintsTableContentPhrases.ID),
     cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor('name', {
+  columnHelper.accessor((row) => `${row.id} ${row.name}`, {
+    id: 'name',
     header: printsTableContent.t(PrintsTableContentPhrases.NAME),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/prints/${info.row.original.id}`}>
-        {info.getValue()}
+        {info.row.original.name}
       </Anchor>
     ),
   }),
 
-  columnHelper.accessor('createdAt', {
-    header: printsTableContent.t(PrintsTableContentPhrases.CREATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdByUser ? `${row.createdByUser.id} ${generateUserTitle(row.createdByUser)}` : '',
+    {
+      id: 'createdBy',
+      header: printsTableContent.t(PrintsTableContentPhrases.CREATED_BY),
+      cell: (info) => {
+        const user = info.row.original.createdByUser;
+        return user ? (
+          <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+            {generateUserTitle(user)}
+          </Anchor>
+        ) : (
+          'N/A'
+        );
+      },
+    }
+  ),
 
-  columnHelper.accessor('createdByUser', {
-    header: printsTableContent.t(PrintsTableContentPhrases.CREATED_BY),
-    cell: (info) =>
-      info.getValue()?.id ? (
-        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
-          {generateUserTitle({
-            firstName: info.getValue()?.firstName,
-            lastName: info.getValue()?.lastName,
-          })}
-        </Anchor>
-      ) : (
-        'N/A'
-      ),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.updatedByUser ? `${row.updatedByUser.id} ${generateUserTitle(row.updatedByUser)}` : '',
+    {
+      id: 'updatedBy',
+      header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_BY),
+      cell: (info) => {
+        const user = info.row.original.updatedByUser;
+        return user ? (
+          <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+            {generateUserTitle(user)}
+          </Anchor>
+        ) : (
+          'N/A'
+        );
+      },
+    }
+  ),
 
-  columnHelper.accessor('updatedByUser', {
-    header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_BY),
-    cell: (info) =>
-      info.getValue()?.id ? (
-        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
-          {generateUserTitle({
-            firstName: info.getValue()?.firstName,
-            lastName: info.getValue()?.lastName,
-          })}
-        </Anchor>
-      ) : (
-        'N/A'
-      ),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdAt
+        ? `${row.createdAt.toISOString()} ${dayjs(row.createdAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'createdAt',
+      header: printsTableContent.t(PrintsTableContentPhrases.CREATED_AT),
+      cell: (info) =>
+        info.getValue() && dayjs(info.row.original.createdAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
 
-  columnHelper.accessor('updatedAt', {
-    header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.updatedAt
+        ? `${row.updatedAt.toISOString()} ${dayjs(row.updatedAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'updatedAt',
+      header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_AT),
+      cell: (info) =>
+        info.getValue() && dayjs(info.row.original.updatedAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
 ];

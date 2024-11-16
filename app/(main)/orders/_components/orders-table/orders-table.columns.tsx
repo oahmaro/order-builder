@@ -23,20 +23,22 @@ export type OrderDataType = Partial<Order> & {
 const columnHelper = createColumnHelper<OrderDataType>();
 
 export const columns = [
-  columnHelper.accessor('id', {
+  columnHelper.accessor((row) => String(row.id), {
+    id: 'id',
     header: ordersTableContent.t(OrdersTableContentPhrases.ID),
     cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/orders/${info.getValue()}`}>
+      <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
         {`ORD-${info.getValue()}`}
       </Anchor>
     ),
   }),
 
-  columnHelper.accessor('customer', {
+  columnHelper.accessor((row) => `${row.customer.firstName} ${row.customer.lastName}`, {
+    id: 'customerName',
     header: ordersTableContent.t(OrdersTableContentPhrases.CUSTOMER),
     cell: (info) => (
-      <Anchor component={Link} size="sm" href={`/customers/${info.getValue().id}`}>
-        {`${info.getValue().firstName} ${info.getValue().lastName}`}
+      <Anchor component={Link} size="sm" href={`/customers/${info.row.original.customer.id}`}>
+        {info.getValue()}
       </Anchor>
     ),
   }),
@@ -46,55 +48,83 @@ export const columns = [
     cell: (info) => <NumberFormatter prefix="₪" value={info.getValue() || 0} thousandSeparator />,
   }),
 
-  columnHelper.accessor('status', {
-    header: ordersTableContent.t(OrdersTableContentPhrases.STATUS),
-    cell: (info) => (
-      <Badge color={getOrderStatusMapping(info.getValue() as OrderStatus).color}>
-        {getOrderStatusMapping(info.getValue() as OrderStatus).label}
-      </Badge>
-    ),
-  }),
+  columnHelper.accessor(
+    (row) => {
+      const statusMapping = getOrderStatusMapping(row.status as OrderStatus);
+      // Return both English and Hebrew values for searching
+      return `${row.status} ${statusMapping.label}`;
+    },
+    {
+      id: 'status',
+      header: ordersTableContent.t(OrdersTableContentPhrases.STATUS),
+      cell: (info) => (
+        <Badge color={getOrderStatusMapping(info.row.original.status as OrderStatus).color}>
+          {getOrderStatusMapping(info.row.original.status as OrderStatus).label}
+        </Badge>
+      ),
+    }
+  ),
 
-  columnHelper.accessor('orderItems', {
+  columnHelper.accessor((row) => row.orderItems.length, {
+    id: 'itemsCount',
     header: ordersTableContent.t(OrdersTableContentPhrases.ITEMS_COUNT),
-    cell: (info) => info.getValue()?.length || 0,
   }),
 
-  columnHelper.accessor('createdByUser', {
+  columnHelper.accessor((row) => (row.createdByUser ? generateUserTitle(row.createdByUser) : '-'), {
+    id: 'createdBy',
     header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_BY),
     cell: (info) => {
-      const user = info.getValue();
+      const user = info.row.original.createdByUser;
       return user ? (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
+          {info.getValue()}
         </Anchor>
       ) : (
-        'N/A'
+        '-'
       );
     },
   }),
 
-  columnHelper.accessor('updatedByUser', {
+  columnHelper.accessor((row) => (row.updatedByUser ? generateUserTitle(row.updatedByUser) : '-'), {
+    id: 'updatedBy',
     header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_BY),
     cell: (info) => {
-      const user = info.getValue();
+      const user = info.row.original.updatedByUser;
       return user ? (
         <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-          {generateUserTitle(user)}
+          {info.getValue()}
         </Link>
       ) : (
-        'N/A'
+        '-'
       );
     },
   }),
 
-  columnHelper.accessor('createdAt', {
-    header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('DD/MM/YYYY HH:mm'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdAt
+        ? `${row.createdAt.toISOString()} ${dayjs(row.createdAt).format('DD/MM/YYYY HH:mm')}`
+        : '',
+    {
+      id: 'createdAt',
+      header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_AT),
+      cell: (info) =>
+        info.row.original.createdAt &&
+        dayjs(info.row.original.createdAt).format('DD/MM/YYYY HH:mm'),
+    }
+  ),
 
-  columnHelper.accessor('updatedAt', {
-    header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('DD/MM/YYYY HH:mm'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.updatedAt
+        ? `${row.updatedAt.toISOString()} ${dayjs(row.updatedAt).format('DD/MM/YYYY HH:mm')}`
+        : '',
+    {
+      id: 'updatedAt',
+      header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_AT),
+      cell: (info) =>
+        info.row.original.updatedAt &&
+        dayjs(info.row.original.updatedAt).format('DD/MM/YYYY HH:mm'),
+    }
+  ),
 ];

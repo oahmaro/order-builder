@@ -46,11 +46,6 @@ export const columns = [
     },
   }),
 
-  columnHelper.accessor('createdAt', {
-    header: descriptionsTableContent.t(DescriptionsTableContentPhrases.CREATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
-
   columnHelper.accessor('updatedByUser', {
     header: descriptionsTableContent.t(DescriptionsTableContentPhrases.UPDATED_BY),
     cell: (info) => {
@@ -65,8 +60,31 @@ export const columns = [
     },
   }),
 
-  columnHelper.accessor('updatedAt', {
-    header: descriptionsTableContent.t(DescriptionsTableContentPhrases.UPDATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdAt
+        ? `${row.createdAt.toISOString()} ${dayjs(row.createdAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'createdAt',
+      header: descriptionsTableContent.t(DescriptionsTableContentPhrases.CREATED_AT),
+      cell: (info) =>
+        info.row.original.createdAt &&
+        dayjs(info.row.original.createdAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
+
+  columnHelper.accessor(
+    (row) =>
+      row.updatedAt
+        ? `${row.updatedAt.toISOString()} ${dayjs(row.updatedAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'updatedAt',
+      header: descriptionsTableContent.t(DescriptionsTableContentPhrases.UPDATED_AT),
+      cell: (info) =>
+        info.row.original.updatedAt &&
+        dayjs(info.row.original.updatedAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
 ];

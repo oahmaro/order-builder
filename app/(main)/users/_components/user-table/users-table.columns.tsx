@@ -15,7 +15,8 @@ type UserDataType = Partial<User> & {
 const columnHelper = createColumnHelper<UserDataType>();
 
 export const columns = [
-  columnHelper.accessor('id', {
+  columnHelper.accessor((row) => String(row.id), {
+    id: 'id',
     header: userTableContent.t(UserTableContent.ID),
     cell: (info) => info.getValue(),
   }),
@@ -40,33 +41,48 @@ export const columns = [
     cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor('role', {
+  columnHelper.accessor((row) => `${row.role} ${userTableContent.t(`ROLE_${row.role}`)}`, {
+    id: 'role',
     header: userTableContent.t(UserTableContent.ROLE),
     cell: (info) => (
       <Badge color="gray" variant="light">
-        {info.getValue()}
+        {info.row.original.role}
       </Badge>
     ),
   }),
 
-  columnHelper.accessor('createdByUser', {
-    header: userTableContent.t(UserTableContent.CREATED_BY),
-    cell: (info) => {
-      const user = info.getValue();
-      return user ? (
-        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
-        </Anchor>
-      ) : (
-        'N/A'
-      );
-    },
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdByUser ? `${row.createdByUser.id} ${generateUserTitle(row.createdByUser)}` : '',
+    {
+      id: 'createdBy',
+      header: userTableContent.t(UserTableContent.CREATED_BY),
+      cell: (info) => {
+        const user = info.row.original.createdByUser;
+        return user ? (
+          <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+            {generateUserTitle(user)}
+          </Anchor>
+        ) : (
+          'N/A'
+        );
+      },
+    }
+  ),
 
-  columnHelper.accessor('createdAt', {
-    header: userTableContent.t(UserTableContent.CREATED_AT),
-    cell: (info) => info.getValue() && dayjs(info.getValue()).format('MMMM D, YYYY h:mm A'),
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdAt
+        ? `${row.createdAt.toISOString()} ${dayjs(row.createdAt).format('MMMM D, YYYY h:mm A')}`
+        : '',
+    {
+      id: 'createdAt',
+      header: userTableContent.t(UserTableContent.CREATED_AT),
+      cell: (info) =>
+        info.row.original.createdAt &&
+        dayjs(info.row.original.createdAt).format('MMMM D, YYYY h:mm A'),
+    }
+  ),
 
   columnHelper.accessor('updatedByUser', {
     header: userTableContent.t(UserTableContent.UPDATED_BY),

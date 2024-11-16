@@ -1,30 +1,76 @@
+import { ReactNode } from 'react';
 import { Column } from '@tanstack/react-table';
+import { IconSearch, IconSettings, IconX } from '@tabler/icons-react';
+
 import {
   ActionIcon,
   Box,
+  Button,
   Group,
   Popover,
   PopoverDropdown,
   PopoverTarget,
   Stack,
   Switch,
+  TextInput,
+  ThemeIcon,
 } from '@mantine/core';
-import { IconSettings } from '@tabler/icons-react';
 
 import classes from './main-table-header.module.css';
+import { mainTableHeaderContent, MainTableHeaderPhrases } from './main-table-header.content';
 
 export interface MainTableHeaderProps<T> {
+  globalFilter: string;
   columns: Array<Column<T, unknown>>;
+  setGlobalFilter: (filter: string) => void;
+  additionalActions?: ReactNode;
 }
 
-export default function MainTableHeader<T>({ columns }: MainTableHeaderProps<T>) {
+export default function MainTableHeader<T>({
+  columns,
+  globalFilter,
+  setGlobalFilter,
+  additionalActions,
+}: MainTableHeaderProps<T>) {
   return (
-    <Group className={classes.root}>
+    <Group>
+      <TextInput
+        w={300}
+        size="sm"
+        value={globalFilter}
+        onChange={(event) => setGlobalFilter(event.currentTarget.value)}
+        placeholder={mainTableHeaderContent.t(MainTableHeaderPhrases.SEARCH)}
+        leftSection={
+          <ThemeIcon variant="transparent" size="lg" fz={14} color="dark">
+            <IconSearch size={16} />
+          </ThemeIcon>
+        }
+        {...(globalFilter.length > 0
+          ? {
+              rightSection: (
+                <ActionIcon
+                  size="sm"
+                  color="gray"
+                  variant="light"
+                  onClick={() => setGlobalFilter('')}
+                >
+                  <IconX size={16} />
+                </ActionIcon>
+              ),
+            }
+          : {})}
+      />
+
       <Popover shadow="lg" radius="lg">
         <PopoverTarget>
-          <ActionIcon className={classes.settings} size="md" variant="white">
-            <IconSettings size={16} />
-          </ActionIcon>
+          <Button
+            size="sm"
+            variant="white"
+            className={classes.settings}
+            leftSection={<IconSettings size={16} />}
+          >
+            {mainTableHeaderContent.t(MainTableHeaderPhrases.COLUMNS)}
+          </Button>
         </PopoverTarget>
 
         <PopoverDropdown>
@@ -49,6 +95,8 @@ export default function MainTableHeader<T>({ columns }: MainTableHeaderProps<T>)
           </Stack>
         </PopoverDropdown>
       </Popover>
+
+      {additionalActions}
 
       <Box />
     </Group>
