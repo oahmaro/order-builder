@@ -69,50 +69,52 @@ export default function StatCardList({
     startDate.setDate(endDate.getDate() - 7);
 
     const metrics = ['customers', 'orders', 'pending', 'processing', 'shipped', 'delivered'];
+
     metrics.forEach((metric) => {
       const label = statCardListContent.t(
         StatCardListPhrases[metric.toUpperCase() as keyof typeof StatCardListPhrases]
       );
+
       handleDateRangeChange(metric, [startDate, endDate], label);
     });
   }, [handleDateRangeChange]);
 
   const orderStats = [
     {
-      title: statCardListContent.t(StatCardListPhrases.PENDING),
-      icon: <PiPause className={classes.icon} />,
+      metric: 'pending',
       value: pendingOrders,
       chartData: pendingChartData,
-      metric: 'pending',
-      valueLabel: statCardListContent.t(StatCardListPhrases.PENDING_ORDERS),
+      icon: <PiPause className={classes.icon} />,
+      title: statCardListContent.t(StatCardListPhrases.PENDING),
       href: '/orders?page=1&pageSize=10&sort=id:ASC&status=PENDING',
+      valueLabel: statCardListContent.t(StatCardListPhrases.PENDING_ORDERS),
     },
     {
-      title: statCardListContent.t(StatCardListPhrases.PROCESSING),
-      icon: <PiTimer className={classes.icon} />,
+      metric: 'processing',
       value: processingOrders,
       chartData: processingChartData,
-      metric: 'processing',
-      valueLabel: statCardListContent.t(StatCardListPhrases.PROCESSING_ORDERS),
+      icon: <PiTimer className={classes.icon} />,
+      title: statCardListContent.t(StatCardListPhrases.PROCESSING),
       href: '/orders?page=1&pageSize=10&sort=id:ASC&status=PROCESSING',
+      valueLabel: statCardListContent.t(StatCardListPhrases.PROCESSING_ORDERS),
     },
     {
-      title: statCardListContent.t(StatCardListPhrases.SHIPPED),
-      icon: <PiTruck className={classes.icon} />,
+      metric: 'shipped',
       value: shippedOrders,
       chartData: shippedChartData,
-      metric: 'shipped',
-      valueLabel: statCardListContent.t(StatCardListPhrases.SHIPPED_ORDERS),
+      icon: <PiTruck className={classes.icon} />,
+      title: statCardListContent.t(StatCardListPhrases.SHIPPED),
       href: '/orders?page=1&pageSize=10&sort=id:ASC&status=SHIPPED',
+      valueLabel: statCardListContent.t(StatCardListPhrases.SHIPPED_ORDERS),
     },
     {
-      title: statCardListContent.t(StatCardListPhrases.DELIVERED),
-      icon: <PiHandshake className={classes.icon} />,
+      metric: 'delivered',
       value: deliveredOrders,
       chartData: deliveredChartData,
-      metric: 'delivered',
-      valueLabel: statCardListContent.t(StatCardListPhrases.DELIVERED_ORDERS),
+      icon: <PiHandshake className={classes.icon} />,
+      title: statCardListContent.t(StatCardListPhrases.DELIVERED),
       href: '/orders?page=1&pageSize=10&sort=id:ASC&status=DELIVERED',
+      valueLabel: statCardListContent.t(StatCardListPhrases.DELIVERED_ORDERS),
     },
   ] as const;
 
@@ -161,7 +163,13 @@ export default function StatCardList({
                 href="/orders?page=1&pageSize=10&sort=createdAt:DESC"
                 title={statCardListContent.t(StatCardListPhrases.ORDERS)}
                 subtitle={statCardListContent.t(StatCardListPhrases.ALL_ORDERS)}
-                onDateRangeChange={(range) => handleDateRangeChange('orders', range, 'value')}
+                onDateRangeChange={(range) =>
+                  handleDateRangeChange(
+                    'orders',
+                    range,
+                    statCardListContent.t(StatCardListPhrases.ORDERS)
+                  )
+                }
                 metricName={statCardListContent.t(StatCardListPhrases.ORDERS)}
               />
             </SimpleGrid>
@@ -176,15 +184,23 @@ export default function StatCardList({
             <SimpleGrid cols={{ base: 1, xs: 2 }}>
               {orderStats.map((stat) => (
                 <StatCard
+                  icon={stat.icon}
+                  href={stat.href}
                   key={stat.title}
                   title={stat.title}
                   value={stat.value}
-                  icon={stat.icon}
-                  chartData={stat.chartData}
-                  onDateRangeChange={(range) => handleDateRangeChange(stat.metric, range, 'value')}
                   defaultExpanded={false}
                   metricName={stat.title}
-                  href={stat.href}
+                  chartData={stat.chartData}
+                  onDateRangeChange={(range) => {
+                    const label = statCardListContent.t(
+                      StatCardListPhrases[
+                        stat.metric.toUpperCase() as keyof typeof StatCardListPhrases
+                      ]
+                    );
+
+                    handleDateRangeChange(stat.metric, range, label);
+                  }}
                 />
               ))}
             </SimpleGrid>
