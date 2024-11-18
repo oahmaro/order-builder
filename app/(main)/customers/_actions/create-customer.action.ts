@@ -104,10 +104,22 @@ export async function createCustomerAction(data: FormData): Promise<FormState> {
       message: customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_CREATED),
     };
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-      return {
-        message: customerFormContent.t(CustomerFormContentPhrases.PHONE_NUMBER_IN_USE),
-      };
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        const target = (error.meta?.target as string[]) || [];
+
+        if (target.includes('email')) {
+          return {
+            message: customerFormContent.t(CustomerFormContentPhrases.EMAIL_IN_USE),
+          };
+        }
+
+        if (target.includes('number')) {
+          return {
+            message: customerFormContent.t(CustomerFormContentPhrases.PHONE_NUMBER_IN_USE),
+          };
+        }
+      }
     }
 
     return {

@@ -29,11 +29,11 @@ enum UserRole {
 }
 
 model Customer {
-  id          Int     @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   firstName   String
   lastName    String
   phones      Phone[]
-  email       String?
+  email       String?   @unique
   dateOfBirth String?
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
@@ -59,6 +59,7 @@ model Phone {
   companyId   Int?
   company     Company?  @relation(fields: [companyId], references: [id])
 
+  @@unique([countryCode, dialingCode, number])
   @@index([customerId])
   @@index([companyId])
 }
@@ -105,7 +106,7 @@ model Company {
 
 model Frame {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   description String?
   
   createdAt   DateTime? @default(now())
@@ -116,7 +117,7 @@ model Frame {
 
 model Adhesion {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   description String?
   
   createdAt   DateTime? @default(now())
@@ -127,7 +128,7 @@ model Adhesion {
 
 model Print {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   description String?
   
   createdAt   DateTime? @default(now())
@@ -138,7 +139,7 @@ model Print {
 
 model Description {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   description String?
   
   createdAt   DateTime? @default(now())
@@ -149,7 +150,7 @@ model Description {
 
 model Passepartout {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   description String?
   
   createdAt   DateTime? @default(now())

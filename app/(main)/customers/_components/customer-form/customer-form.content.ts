@@ -35,6 +35,7 @@ export enum CustomerFormContentPhrases {
   CUSTOMER_DELETED = 'customer-deleted',
   ERROR_WHILE_DELETING = 'error-while-deleting',
   ADDRESS_LABEL = 'address-label',
+  EMAIL_IN_USE = 'email-in-use',
 }
 
 export const customerFormContent = new Polyglot({
@@ -72,5 +73,6 @@ export const customerFormContent = new Polyglot({
     [CustomerFormContentPhrases.CUSTOMER_DELETED]: 'הלקוח נמחק בהצלחה',
     [CustomerFormContentPhrases.ERROR_WHILE_DELETING]: 'אירעה שגיאה במחיקת הלקוח',
     [CustomerFormContentPhrases.ADDRESS_LABEL]: 'כתובת',
+    [CustomerFormContentPhrases.EMAIL_IN_USE]: 'כתובת הדואר האלקטרוני כבר בשימוש',
   },
 });
