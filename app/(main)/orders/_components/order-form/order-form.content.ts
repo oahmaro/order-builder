@@ -15,6 +15,7 @@ export enum OrderFormContentPhrases {
   UPDATE_ORDER = 'update-order',
   ORDER_UPDATED = 'order-updated',
   ERROR_WHILE_UPDATING = 'error-while-updating',
+  DIMENSIONS_REQUIRED = 'dimensions-required',
 }
 
 export const orderFormContent = new Polyglot({
@@ -32,5 +33,6 @@ export const orderFormContent = new Polyglot({
     [OrderFormContentPhrases.UPDATE_ORDER]: 'עדכן הזמנה',
     [OrderFormContentPhrases.ORDER_UPDATED]: 'ההזמנה עודכנה בהצלחה',
     [OrderFormContentPhrases.ERROR_WHILE_UPDATING]: 'שגיאה בעדכון ההזמנה',
+    [OrderFormContentPhrases.DIMENSIONS_REQUIRED]: 'גובה ורוחב נדרשים',
   },
 });

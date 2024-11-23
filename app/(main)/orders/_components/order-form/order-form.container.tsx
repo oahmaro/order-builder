@@ -16,9 +16,9 @@ const initialValues: OrderFormValues = {
   status: 'PENDING',
   orderItems: [
     {
-      height: null,
-      width: null,
-      frameId: null,
+      height: 0,
+      width: 0,
+      frameId: 0,
       passepartoutNum: null,
       passepartoutWidth: null,
       glassTypes: {
