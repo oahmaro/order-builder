@@ -45,6 +45,7 @@ export enum OrderItemCardContentPhrases {
   CREATE_NEW_DESCRIPTION = 'create-new-description',
   CREATE_DESCRIPTION = 'create-description',
   ORDER_ITEM = 'order-item',
+  REMOVE_ORDER_DISABLED_TOOLTIP = 'remove-order-disabled-tooltip',
 }
 
 export const orderItemCardContent = new Polyglot({
@@ -92,5 +93,6 @@ export const orderItemCardContent = new Polyglot({
     [OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION]: 'צור תיאור חדש',
     [OrderItemCardContentPhrases.CREATE_DESCRIPTION]: 'יצירת תיאור',
     [OrderItemCardContentPhrases.ORDER_ITEM]: 'פריט הזמנה',
+    [OrderItemCardContentPhrases.REMOVE_ORDER_DISABLED_TOOLTIP]: 'חייב להיות לפחות פריט הזמנה אחד',
   },
 });

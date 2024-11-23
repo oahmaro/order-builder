@@ -19,6 +19,7 @@ import {
   NumberFormatter,
   ComboboxItem,
   Accordion,
+  Tooltip,
 } from '@mantine/core';
 
 import { StaticField } from '@/components';
@@ -174,19 +175,26 @@ export default function OrderItemCard({
                 )}
               </Group>
 
-              <Button
-                variant="outline"
-                color="red"
-                size="xs"
-                ml="xl"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemove();
-                }}
-                disabled={isRemoveDisabled}
+              <Tooltip
+                label={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.REMOVE_ORDER_DISABLED_TOOLTIP
+                )}
+                disabled={!isRemoveDisabled}
               >
-                {orderItemCardContent.t(OrderItemCardContentPhrases.REMOVE_ORDER)}
-              </Button>
+                <Button
+                  variant="outline"
+                  color="red"
+                  size="xs"
+                  ml="xl"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRemove();
+                  }}
+                  disabled={isRemoveDisabled}
+                >
+                  {orderItemCardContent.t(OrderItemCardContentPhrases.REMOVE_ORDER)}
+                </Button>
+              </Tooltip>
             </Group>
           </Accordion.Control>
 
