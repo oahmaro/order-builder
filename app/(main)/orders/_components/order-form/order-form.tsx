@@ -69,7 +69,7 @@ export default function OrderForm({
         const { imageFile, ...itemWithoutFile } = item;
         return {
           ...itemWithoutFile,
-          image: item.image === undefined ? null : item.image,
+          image: item.image === null ? null : item.image,
         };
       });
 

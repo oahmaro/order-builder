@@ -7,6 +7,7 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { uploadImageAction } from './upload-image.action';
 import { orderFormSchema } from '../_components/order-form/order-form.schema';
+import { deleteImageAction } from './delete-image.action';
 
 import {
   orderFormContent,
@@ -63,6 +64,16 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
       };
     }
 
+    // Check for removed images and delete them from storage
+    await Promise.all(
+      oldOrder.orderItems.map(async (oldItem, index) => {
+        const newItemImage = parsed.data.orderItems[index]?.image;
+        if (oldItem.image && (!newItemImage || newItemImage === null)) {
+          await deleteImageAction(oldItem.image);
+        }
+      })
+    );
+
     // Update order and recreate all order items
     const updatedOrder = await db.order.update({
       where: { id: orderId },
@@ -86,7 +97,7 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,
-            image: item.image === null ? null : oldOrder.orderItems[index]?.image || undefined,
+            image: item.image === null ? null : oldOrder.orderItems[index]?.image,
             orderIndex: index,
           })),
         },
