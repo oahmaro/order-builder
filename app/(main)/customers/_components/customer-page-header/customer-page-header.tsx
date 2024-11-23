@@ -86,7 +86,6 @@ export default function CustomerPageHeader({
         },
         {
           label: customerPageHeaderContent.t(CustomerPageHeaderPhrases.SAVE_ACTION),
-          onClick: () => {},
           disabled: !form.isDirty(),
           type: 'submit',
           tooltipLabel: !form.isDirty()

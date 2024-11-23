@@ -1,12 +1,10 @@
-import { getCustomerOrders } from '../../_actions';
 import { OrdersTable } from '@/app/(main)/orders/_components';
+import { OrderDataType } from '@/app/(main)/orders/_components/orders-table/orders-table.columns';
 
 interface CustomerOrdersProps {
-  customerId: number;
+  orders: OrderDataType[];
 }
 
-export default async function CustomerOrders({ customerId }: CustomerOrdersProps) {
-  const orders = await getCustomerOrders(customerId);
-
+export default function CustomerOrders({ orders }: CustomerOrdersProps) {
   return <OrdersTable orders={orders} />;
 }

@@ -1,7 +1,8 @@
 import { Customer, Phone, Address } from '@prisma/client';
 
 import { db } from '@/lib/db';
-import CustomerTabs from '../_components/customer-tabs/customer-tabs';
+import { CustomerPageWrapper } from '../_components';
+import { getCustomerOrders } from '../_actions';
 
 export default async function CustomerPage({ params }: { params: { customerId: string } }) {
   const customer = (await db.customer.findUnique({
@@ -17,5 +18,7 @@ export default async function CustomerPage({ params }: { params: { customerId: s
     },
   })) as Customer & { phones: Phone[]; address?: Address; _count: { orders: number } };
 
-  return customer && <CustomerTabs customer={customer} />;
+  const orders = await getCustomerOrders(customer.id);
+
+  return customer && <CustomerPageWrapper customer={customer} orders={orders} />;
 }
