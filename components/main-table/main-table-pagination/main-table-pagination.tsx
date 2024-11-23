@@ -6,9 +6,13 @@ import { mainTableContent, MainTableContentPhrases } from '../main-table.content
 
 export interface MainTablePaginationProps<T> {
   table: Table<T>;
+  onPageSizeChange?: (pageSize: number) => void;
 }
 
-export default function MainTablePagination<T>({ table }: MainTablePaginationProps<T>) {
+export default function MainTablePagination<T>({
+  table,
+  onPageSizeChange,
+}: MainTablePaginationProps<T>) {
   return (
     <Group className={classes.root}>
       <Box>
@@ -40,7 +44,11 @@ export default function MainTablePagination<T>({ table }: MainTablePaginationPro
           w={72}
           withCheckIcon={false}
           allowDeselect={false}
-          onChange={(value) => table.setPageSize?.(Number(value))}
+          onChange={(value) => {
+            const newSize = Number(value);
+            table.setPageSize(newSize);
+            onPageSizeChange?.(newSize);
+          }}
         />
       </Group>
     </Group>

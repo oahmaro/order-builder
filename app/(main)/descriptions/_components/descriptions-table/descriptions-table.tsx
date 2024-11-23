@@ -39,6 +39,14 @@ export default function DescriptionsTable({ descriptions }: DescriptionsTablePro
     router.push(`/descriptions?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    params.set('pageSize', String(newPageSize));
+    router.push(`/descriptions?${params.toString()}`);
+  };
+
+  const initialPageSize = Number(searchParams?.get('pageSize')) || 10;
+
   return (
     <MainTable<DescriptionDataType>
       data={descriptions}
@@ -46,6 +54,8 @@ export default function DescriptionsTable({ descriptions }: DescriptionsTablePro
       enableSorting
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
+      onPageSizeChange={handlePageSizeChange}
+      initialPageSize={initialPageSize}
     />
   );
 }

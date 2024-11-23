@@ -39,6 +39,14 @@ export default function CustomersTable({ customers }: CustomersTableProps) {
     router.push(`/customers?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    params.set('pageSize', String(newPageSize));
+    router.push(`/customers?${params.toString()}`);
+  };
+
+  const initialPageSize = Number(searchParams?.get('pageSize')) || 10;
+
   return (
     <MainTable<CustomerDataType>
       data={customers}
@@ -46,6 +54,8 @@ export default function CustomersTable({ customers }: CustomersTableProps) {
       enableSorting
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
+      onPageSizeChange={handlePageSizeChange}
+      initialPageSize={initialPageSize}
     />
   );
 }

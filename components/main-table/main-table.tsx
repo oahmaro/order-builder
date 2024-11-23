@@ -54,6 +54,8 @@ export interface MainTableProps<T extends Identifiable> extends Omit<TableProps,
   enableSorting?: boolean;
   onSortingChange?: (sorting: SortingState) => void;
   initialSorting?: SortingState;
+  onPageSizeChange?: (pageSize: number) => void;
+  initialPageSize?: number;
 }
 
 export default function MainTable<T extends Identifiable>({
@@ -65,11 +67,16 @@ export default function MainTable<T extends Identifiable>({
   enableSorting = true,
   onSortingChange,
   initialSorting = [],
+  onPageSizeChange,
+  initialPageSize = 10,
   ...tableProps
 }: MainTableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnVisibility, setColumnVisibility] = useState(initialColumnsVisibility);
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: initialPageSize,
+  });
   const [sorting, setSorting] = useState<SortingState>(initialSorting);
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -208,7 +215,7 @@ export default function MainTable<T extends Identifiable>({
         )}
       </Paper>
 
-      {hasFilteredData && <MainTablePagination<T> table={table} />}
+      {hasFilteredData && <MainTablePagination table={table} onPageSizeChange={onPageSizeChange} />}
     </Stack>
   );
 }

@@ -39,6 +39,14 @@ export default function FramesTable({ frames }: FramesTableProps) {
     router.push(`/frames?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    params.set('pageSize', String(newPageSize));
+    router.push(`/frames?${params.toString()}`);
+  };
+
+  const initialPageSize = Number(searchParams?.get('pageSize')) || 10;
+
   return (
     <MainTable<FrameDataType>
       data={frames}
@@ -46,6 +54,8 @@ export default function FramesTable({ frames }: FramesTableProps) {
       enableSorting
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
+      onPageSizeChange={handlePageSizeChange}
+      initialPageSize={initialPageSize}
     />
   );
 }

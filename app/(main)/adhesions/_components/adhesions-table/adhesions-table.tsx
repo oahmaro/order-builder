@@ -39,6 +39,14 @@ export default function AdhesionsTable({ adhesions }: AdhesionsTableProps) {
     router.push(`/adhesions?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    params.set('pageSize', String(newPageSize));
+    router.push(`/adhesions?${params.toString()}`);
+  };
+
+  const initialPageSize = Number(searchParams?.get('pageSize')) || 10;
+
   return (
     <MainTable<AdhesionDataType>
       data={adhesions}
@@ -46,6 +54,8 @@ export default function AdhesionsTable({ adhesions }: AdhesionsTableProps) {
       enableSorting
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
+      onPageSizeChange={handlePageSizeChange}
+      initialPageSize={initialPageSize}
     />
   );
 }

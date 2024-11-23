@@ -39,6 +39,14 @@ export default function PrintsTable({ prints }: PrintsTableProps) {
     router.push(`/prints?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams?.toString() || '');
+    params.set('pageSize', String(newPageSize));
+    router.push(`/prints?${params.toString()}`);
+  };
+
+  const initialPageSize = Number(searchParams?.get('pageSize')) || 10;
+
   return (
     <MainTable<PrintDataType>
       data={prints}
@@ -46,6 +54,8 @@ export default function PrintsTable({ prints }: PrintsTableProps) {
       enableSorting
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
+      onPageSizeChange={handlePageSizeChange}
+      initialPageSize={initialPageSize}
     />
   );
 }

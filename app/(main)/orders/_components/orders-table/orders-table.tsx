@@ -193,6 +193,14 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     router.push(`/orders?${params.toString()}`);
   };
 
+  const handlePageSizeChange = (newPageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('pageSize', String(newPageSize));
+    router.push(`/orders?${params.toString()}`);
+  };
+
+  const initialPageSize = Number(searchParams?.get('pageSize')) || 10;
+
   return (
     <MainTable<OrderDataType>
       data={filteredOrders}
@@ -204,6 +212,8 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       initialColumnsVisibility={{ id: true, createdAt: false, updatedAt: false }}
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
+      onPageSizeChange={handlePageSizeChange}
+      initialPageSize={initialPageSize}
     />
   );
 }
