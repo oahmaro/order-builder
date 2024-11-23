@@ -1,5 +1,7 @@
 'use client';
 
+import { modals } from '@mantine/modals';
+import { IconPlus } from '@tabler/icons-react';
 import { Adhesion, Description, Frame, Passepartout, Print } from '@prisma/client';
 
 import {
@@ -15,13 +17,16 @@ import {
   Textarea,
   NumberInput,
   NumberFormatter,
+  ComboboxItem,
 } from '@mantine/core';
 
 import { StaticField } from '@/components';
 import { MediaCapture } from '../media-capture';
 import classes from './order-item-card.module.css';
 import { useOrderFormContext } from '../order-form/order-form.container';
+import { CreateFrameForm } from '@/app/(main)/frames/_components/create-frame-form';
 import { orderItemCardContent, OrderItemCardContentPhrases } from './order-item-card.content';
+import FrameFormContainer from '@/app/(main)/frames/_components/frame-form/frame-form.container';
 
 export interface OrderItemCardProps {
   index: number;
@@ -55,6 +60,23 @@ export default function OrderItemCard({
       form.setFieldValue(`orderItems.${index}.imageFile`, undefined);
       form.setFieldValue(`orderItems.${index}.image`, undefined);
     }
+  };
+
+  const createNewFrameOption: ComboboxItem = {
+    value: 'create_new',
+    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_FRAME),
+  };
+
+  const handleCreateFrame = () => {
+    modals.open({
+      title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_FRAME),
+      size: 'xl',
+      children: (
+        <FrameFormContainer>
+          <CreateFrameForm />
+        </FrameFormContainer>
+      ),
+    });
   };
 
   return (
@@ -129,17 +151,59 @@ export default function OrderItemCard({
               </Group>
 
               <Select
+                searchable
                 styles={{
                   root: { display: 'flex', alignItems: 'center' },
                   label: { marginLeft: '8px' },
                   input: { width: 200 },
                 }}
-                nothingFoundMessage={orderItemCardContent.t(
-                  OrderItemCardContentPhrases.NOTHING_FOUND
-                )}
+                nothingFoundMessage={
+                  <Box
+                    style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                    fw={500}
+                    c="dark"
+                    onClick={() => handleCreateFrame()}
+                  >
+                    <Group gap={8}>
+                      <IconPlus size={14} stroke={1.5} />
+                      <span>
+                        {orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_FRAME)}
+                      </span>
+                    </Group>
+                  </Box>
+                }
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.FRAME_NUMBER)}
-                data={frames.map((frame) => ({ value: frame.id.toString(), label: frame.name }))}
-                {...form.getInputProps(`orderItems.${index}.frameId`)}
+                data={[
+                  ...frames.map((frame) => ({
+                    value: frame.id.toString(),
+                    label: frame.name,
+                  })),
+                  createNewFrameOption,
+                ]}
+                renderOption={({ option }) =>
+                  option.value === 'create_new' ? (
+                    <Box
+                      style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                      fw={500}
+                      c="dark"
+                    >
+                      <Group gap={8}>
+                        <IconPlus size={14} stroke={1.5} />
+                        <span>{option.label}</span>
+                      </Group>
+                    </Box>
+                  ) : (
+                    <span>{option.label}</span>
+                  )
+                }
+                onChange={(value) => {
+                  if (value === 'create_new') {
+                    handleCreateFrame();
+                    return;
+                  }
+                  form.setFieldValue(`orderItems.${index}.frameId`, value);
+                }}
+                value={form.values.orderItems[index].frameId?.toString()}
                 placeholder={orderItemCardContent.t(
                   OrderItemCardContentPhrases.FRAME_NUMBER_PLACEHOLDER
                 )}

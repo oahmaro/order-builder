@@ -40,7 +40,7 @@ export const orderHeaderContent = new Polyglot({
     [OrderHeaderContentPhrases.PLACEHOLDER_PHONE]: '0522039315',
     [OrderHeaderContentPhrases.PLACEHOLDER_EMAIL]: 'omanut.hm@gmail.com',
     [OrderHeaderContentPhrases.CREATE_CUSTOMER]: 'הוסף לקוח חדש',
-    [OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER]: '+ הוסף לקוח חדש',
+    [OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER]: 'הוסף לקוח חדש',
     [OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER]: 'בחר לקוח',
   },
 });

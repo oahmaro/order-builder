@@ -15,6 +15,7 @@ import {
 } from '@mantine/core';
 import { useEffect } from 'react';
 import { modals } from '@mantine/modals';
+import { IconPlus } from '@tabler/icons-react';
 
 import { StaticField } from '@/components';
 import classes from './order-header-card.module.css';
@@ -130,15 +131,21 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
                     item.label.toLowerCase().includes(searchTerm)
                 );
               }}
-              nothingFoundMessage={
-                <Box
-                  onClick={() => handleCreateCustomer()}
-                  style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                  fw={500}
-                  c="dark"
-                >
-                  {orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER)}
-                </Box>
+              renderOption={({ option }) =>
+                option.value === 'create_new' ? (
+                  <Box
+                    style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                    fw={500}
+                    c="dark"
+                  >
+                    <Group gap={8}>
+                      <IconPlus size={14} stroke={1.5} />
+                      <span>{option.label}</span>
+                    </Group>
+                  </Box>
+                ) : (
+                  <span>{option.label}</span>
+                )
               }
               value={form.values.customerId ? String(form.values.customerId) : ''}
               onChange={(value) => {
@@ -149,6 +156,21 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
                 }
               }}
               placeholder={orderHeaderContent.t(OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER)}
+              nothingFoundMessage={
+                <Box
+                  style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                  fw={500}
+                  c="dark"
+                  onClick={() => handleCreateCustomer()}
+                >
+                  <Group gap={8}>
+                    <IconPlus size={14} stroke={1.5} />
+                    <span>
+                      {orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER)}
+                    </span>
+                  </Group>
+                </Box>
+              }
             />
           </Group>
 

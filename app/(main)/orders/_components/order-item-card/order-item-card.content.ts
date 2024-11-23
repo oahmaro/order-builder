@@ -34,6 +34,16 @@ export enum OrderItemCardContentPhrases {
   DESCRIPTION_PLACEHOLDER = 'description-placeholder',
   QUANTITY_PLACEHOLDER = 'quantity-placeholder',
   UNIT_PRICE_PLACEHOLDER = 'unit-price-placeholder',
+  CREATE_NEW_FRAME = 'create-new-frame',
+  CREATE_FRAME = 'create-frame',
+  CREATE_NEW_PASSEPARTOUT = 'create-new-passepartout',
+  CREATE_PASSEPARTOUT = 'create-passepartout',
+  CREATE_NEW_ADHESION = 'create-new-adhesion',
+  CREATE_ADHESION = 'create-adhesion',
+  CREATE_NEW_PRINT = 'create-new-print',
+  CREATE_PRINT = 'create-print',
+  CREATE_NEW_DESCRIPTION = 'create-new-description',
+  CREATE_DESCRIPTION = 'create-description',
 }
 
 export const orderItemCardContent = new Polyglot({
@@ -70,5 +80,15 @@ export const orderItemCardContent = new Polyglot({
     [OrderItemCardContentPhrases.DESCRIPTION_PLACEHOLDER]: 'בחר תיאור',
     [OrderItemCardContentPhrases.QUANTITY_PLACEHOLDER]: 'הזן כמות',
     [OrderItemCardContentPhrases.UNIT_PRICE_PLACEHOLDER]: 'הזן מחיר יחידה',
+    [OrderItemCardContentPhrases.CREATE_NEW_FRAME]: 'צור מסגרת חדשה',
+    [OrderItemCardContentPhrases.CREATE_FRAME]: 'יצירת מסגרת',
+    [OrderItemCardContentPhrases.CREATE_NEW_PASSEPARTOUT]: 'צור פספרטו חדש',
+    [OrderItemCardContentPhrases.CREATE_PASSEPARTOUT]: 'יצירת פספרטו',
+    [OrderItemCardContentPhrases.CREATE_NEW_ADHESION]: 'צור הדבקה חדשה',
+    [OrderItemCardContentPhrases.CREATE_ADHESION]: 'יצירת הדבקה',
+    [OrderItemCardContentPhrases.CREATE_NEW_PRINT]: 'צור הדפסה חדשה',
+    [OrderItemCardContentPhrases.CREATE_PRINT]: 'יצירת הדפסה',
+    [OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION]: 'צור תיאור חדש',
+    [OrderItemCardContentPhrases.CREATE_DESCRIPTION]: 'יצירת תיאור',
   },
 });
