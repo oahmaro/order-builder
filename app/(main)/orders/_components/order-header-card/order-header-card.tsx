@@ -50,7 +50,7 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
     : [];
 
   const selectedCustomer = customers?.find(
-    (customer) => customer.id === Number(form.values.customerId)
+    (customer) => String(customer.id) === String(form.values.customerId)
   );
 
   const primaryPhone = selectedCustomer?.phones?.find((phone) => phone.isPrimary);

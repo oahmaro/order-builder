@@ -11,6 +11,10 @@ export enum OrderFormContentPhrases {
   ERROR_WHILE_CREATING = 'error-while-creating',
   IMAGE_UPLOAD_FAILED = 'image-upload-failed',
   FORM_DATA_INVALID = 'form-data-invalid',
+  CANCEL = 'cancel',
+  UPDATE_ORDER = 'update-order',
+  ORDER_UPDATED = 'order-updated',
+  ERROR_WHILE_UPDATING = 'error-while-updating',
 }
 
 export const orderFormContent = new Polyglot({
@@ -24,5 +28,9 @@ export const orderFormContent = new Polyglot({
     [OrderFormContentPhrases.ERROR_WHILE_CREATING]: 'שגיאה ביצירת ההזמנה',
     [OrderFormContentPhrases.FORM_DATA_INVALID]: 'נתוני הטופס שגויים',
     [OrderFormContentPhrases.IMAGE_UPLOAD_FAILED]: 'העלאת התמונה נכשלה',
+    [OrderFormContentPhrases.CANCEL]: 'ביטול',
+    [OrderFormContentPhrases.UPDATE_ORDER]: 'עדכן הזמנה',
+    [OrderFormContentPhrases.ORDER_UPDATED]: 'ההזמנה עודכנה בהצלחה',
+    [OrderFormContentPhrases.ERROR_WHILE_UPDATING]: 'שגיאה בעדכון ההזמנה',
   },
 });

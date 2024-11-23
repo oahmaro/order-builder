@@ -41,6 +41,8 @@ export default async function OrderPage({ params }: OrderPageProps) {
   return (
     <OrderFormContainer order={order}>
       <OrderForm
+        isUpdate
+        order={order}
         frames={frames}
         prints={prints}
         customers={customers}

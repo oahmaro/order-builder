@@ -7,10 +7,11 @@ import { createFormContext, zodResolver } from '@mantine/form';
 import { Order, OrderItem } from '@prisma/client';
 import { orderFormSchema } from './order-form.schema';
 
-export type OrderFormValues = z.infer<typeof orderFormSchema>;
+type OrderFormInput = z.input<typeof orderFormSchema>;
+export type OrderFormValues = OrderFormInput;
 
 const initialValues: OrderFormValues = {
-  customerId: 0,
+  customerId: '',
   amountPaid: 0,
   status: 'PENDING',
   orderItems: [
@@ -47,7 +48,7 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
   const form = useOrderForm({
     initialValues: order
       ? {
-          customerId: order.customerId,
+          customerId: String(order.customerId),
           amountPaid: order.amountPaid,
           status: order.status,
           orderItems: order.orderItems.map((item) => ({
@@ -56,16 +57,29 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
             frameId: item.frameId ?? undefined,
             passepartoutNum: item.passepartoutNum,
             passepartoutWidth: item.passepartoutWidth,
-            glassTypes: item.glassTypes as OrderFormValues['orderItems'][0]['glassTypes'],
+            glassTypes: item.glassTypes
+              ? JSON.parse(item.glassTypes as string)
+              : {
+                  transparent: false,
+                  matte: false,
+                  none: false,
+                  perspex: false,
+                  mirror: false,
+                },
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,
             adhesionId: item.adhesionId ?? undefined,
             printId: item.printId ?? undefined,
+            descriptionId: item.descriptionId ?? undefined,
+            notes: item.notes ?? undefined,
             image: item.image ?? undefined,
           })),
         }
-      : initialValues,
+      : {
+          ...initialValues,
+          customerId: '',
+        },
     validate: zodResolver(orderFormSchema),
   });
 

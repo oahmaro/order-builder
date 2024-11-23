@@ -4,10 +4,20 @@ import * as z from 'zod';
 import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
 import { Stack, Button, Group, Divider } from '@mantine/core';
-import { Customer, Frame, Print, Adhesion, Description, Phone, Passepartout } from '@prisma/client';
+
+import {
+  Customer,
+  Frame,
+  Print,
+  Adhesion,
+  Description,
+  Phone,
+  Passepartout,
+  Order,
+} from '@prisma/client';
 
 import { OrderItemCard } from '../order-item-card';
-import { createOrderAction } from '../../_actions';
+import { createOrderAction, updateOrderAction } from '../../_actions';
 import { orderFormSchema } from './order-form.schema';
 import { OrderHeaderCard } from '../order-header-card';
 import { commonContent, CommonPhrases } from '@/content';
@@ -23,6 +33,8 @@ interface OrderFormProps {
   adhesions: Adhesion[];
   descriptions: Description[];
   passepartouts: Passepartout[];
+  isUpdate?: boolean;
+  order?: Order;
 }
 
 export default function OrderForm({
@@ -32,6 +44,8 @@ export default function OrderForm({
   adhesions,
   descriptions,
   passepartouts,
+  isUpdate,
+  order,
 }: OrderFormProps) {
   const form = useOrderFormContext();
   const router = useRouter();
@@ -49,6 +63,10 @@ export default function OrderForm({
 
       const validatedData = orderFormSchema.parse(values);
       const formData = new FormData();
+
+      if (isUpdate && order?.id) {
+        formData.append('orderId', order.id.toString());
+      }
 
       // Add basic order data
       formData.append('customerId', validatedData.customerId.toString());
@@ -70,14 +88,18 @@ export default function OrderForm({
         }
       });
 
-      const response = await createOrderAction(formData);
+      const response = await (isUpdate ? updateOrderAction(formData) : createOrderAction(formData));
 
-      if (response.message === orderFormContent.t(OrderFormContentPhrases.ORDER_CREATED)) {
+      if (
+        response.message === orderFormContent.t(OrderFormContentPhrases.ORDER_CREATED) ||
+        response.message === orderFormContent.t(OrderFormContentPhrases.ORDER_UPDATED)
+      ) {
         notifications.show({
           title: commonContent.t(CommonPhrases.SUCCESS),
           message: response.message,
           color: 'green',
         });
+        form.resetDirty();
         router.push('/orders');
       } else {
         notifications.show({
@@ -95,10 +117,7 @@ export default function OrderForm({
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
-          message:
-            error instanceof Error && error.message.includes('Image upload failed')
-              ? error.message
-              : orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_CREATING),
+          message: orderFormContent.t(OrderFormContentPhrases.ERROR_WHILE_UPDATING),
           color: 'red',
         });
       }
@@ -153,8 +172,15 @@ export default function OrderForm({
           <Divider flex={1} />
         </Group>
 
-        <Group justify="flex-end">
-          <Button type="submit">{orderFormContent.t(OrderFormContentPhrases.CREATE_ORDER)}</Button>
+        <Group justify="flex-end" gap="md">
+          <Button variant="default" onClick={() => router.push('/orders')}>
+            {orderFormContent.t(OrderFormContentPhrases.CANCEL)}
+          </Button>
+          <Button type="submit">
+            {orderFormContent.t(
+              isUpdate ? OrderFormContentPhrases.UPDATE_ORDER : OrderFormContentPhrases.CREATE_ORDER
+            )}
+          </Button>
         </Group>
       </Stack>
     </form>
