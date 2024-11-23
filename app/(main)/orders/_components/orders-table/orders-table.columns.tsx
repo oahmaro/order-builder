@@ -14,6 +14,12 @@ export type OrderDataType = Partial<Order> & {
     id: string;
     firstName: string;
     lastName: string;
+    phones?: {
+      id: number;
+      number: string;
+      dialingCode: string;
+      isPrimary: boolean;
+    }[];
   };
   orderItems: OrderItem[];
   createdByUser?: { id: number; firstName: string; lastName: string } | null;

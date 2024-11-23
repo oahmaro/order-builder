@@ -15,6 +15,7 @@ export async function getCustomerOrders(customerId: number) {
             id: true,
             lastName: true,
             firstName: true,
+            phones: true,
           },
         },
         orderItems: true,

@@ -13,6 +13,11 @@ export enum OrdersTableContentPhrases {
   ITEMS_COUNT = 'itemsCount',
   AMOUNT_PAID = 'amountPaid',
   ORDER_STATUS_FILTER = 'orderStatusFilter',
+  EDIT_ORDER = 'editOrder',
+  PREVIEW_ORDER = 'previewOrder',
+  PRINT_ORDER = 'printOrder',
+  UPDATE_STATUS = 'updateStatus',
+  SEND_WHATSAPP = 'sendWhatsapp',
 }
 
 export const ordersTableContent = new Polyglot({
@@ -28,5 +33,10 @@ export const ordersTableContent = new Polyglot({
     [OrdersTableContentPhrases.ITEMS_COUNT]: 'מספר פריטים',
     [OrdersTableContentPhrases.AMOUNT_PAID]: 'סכום ששולם',
     [OrdersTableContentPhrases.ORDER_STATUS_FILTER]: 'סטטוס הזמנה',
+    [OrdersTableContentPhrases.EDIT_ORDER]: 'ערוך הזמנה',
+    [OrdersTableContentPhrases.PREVIEW_ORDER]: 'תצוגה מקדימה',
+    [OrdersTableContentPhrases.PRINT_ORDER]: 'הדפס הזמנה',
+    [OrdersTableContentPhrases.UPDATE_STATUS]: 'עדכן סטטוס',
+    [OrdersTableContentPhrases.SEND_WHATSAPP]: 'שלח בוואטסאפ',
   },
 });

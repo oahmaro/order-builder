@@ -21,6 +21,7 @@ export default async function OrderPage({ searchParams }: OrdersPageProps) {
             id: true,
             lastName: true,
             firstName: true,
+            phones: true,
           },
         },
         orderItems: true,

@@ -152,7 +152,9 @@ export default function MainTable<T extends Identifiable>({
                   <Table.Tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
                       <Table.Td key={cell.id}>
-                        {cell.getValue()
+                        {cell.column.id === 'actions'
+                          ? flexRender(cell.column.columnDef.cell, cell.getContext())
+                          : cell.getValue()
                           ? flexRender(cell.column.columnDef.cell, cell.getContext())
                           : '-'}
                       </Table.Td>
