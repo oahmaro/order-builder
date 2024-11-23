@@ -33,6 +33,8 @@ import { CreateDescriptionForm } from '@/app/(main)/descriptions/_components/cre
 import AdhesionFormContainer from '@/app/(main)/adhesions/_components/adhesion-form/adhesion-form.container';
 import PrintFormContainer from '@/app/(main)/prints/_components/print-form/print-form.container';
 import DescriptionFormContainer from '@/app/(main)/descriptions/_components/description-form/description-form.container';
+import { CreatePassepartoutForm } from '@/app/(main)/passepartouts/_components/create-passepartout-form';
+import PassepartoutFormContainer from '@/app/(main)/passepartouts/_components/passepartout-form/passepartout-form.container';
 
 export interface OrderItemCardProps {
   index: number;
@@ -88,6 +90,11 @@ export default function OrderItemCard({
     label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION),
   };
 
+  const createNewPassepartoutOption: ComboboxItem = {
+    value: 'create_new',
+    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_PASSEPARTOUT),
+  };
+
   const handleCreateFrame = () => {
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_FRAME),
@@ -132,6 +139,18 @@ export default function OrderItemCard({
         <DescriptionFormContainer>
           <CreateDescriptionForm />
         </DescriptionFormContainer>
+      ),
+    });
+  };
+
+  const handleCreatePassepartout = () => {
+    modals.open({
+      title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_PASSEPARTOUT),
+      size: 'xl',
+      children: (
+        <PassepartoutFormContainer>
+          <CreatePassepartoutForm />
+        </PassepartoutFormContainer>
       ),
     });
   };
@@ -291,20 +310,61 @@ export default function OrderItemCard({
                 />
 
                 <Select
+                  searchable
                   styles={{
                     root: { display: 'flex', alignItems: 'center' },
                     label: { marginLeft: '8px' },
                     input: { width: 200 },
                   }}
-                  nothingFoundMessage={orderItemCardContent.t(
-                    OrderItemCardContentPhrases.NOTHING_FOUND
-                  )}
+                  nothingFoundMessage={
+                    <Box
+                      style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                      fw={500}
+                      c="dark"
+                      onClick={() => handleCreatePassepartout()}
+                    >
+                      <Group gap={8}>
+                        <IconPlus size={14} stroke={1.5} />
+                        <span>
+                          {orderItemCardContent.t(
+                            OrderItemCardContentPhrases.CREATE_NEW_PASSEPARTOUT
+                          )}
+                        </span>
+                      </Group>
+                    </Box>
+                  }
                   label={orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER)}
-                  data={passepartouts.map((passepartout) => ({
-                    value: passepartout.id.toString(),
-                    label: passepartout.name,
-                  }))}
-                  {...form.getInputProps(`orderItems.${index}.passepartoutNum`)}
+                  data={[
+                    ...passepartouts.map((passepartout) => ({
+                      value: passepartout.id.toString(),
+                      label: passepartout.name,
+                    })),
+                    createNewPassepartoutOption,
+                  ]}
+                  renderOption={({ option }) =>
+                    option.value === 'create_new' ? (
+                      <Box
+                        style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                        fw={500}
+                        c="dark"
+                      >
+                        <Group gap={8}>
+                          <IconPlus size={14} stroke={1.5} />
+                          <span>{option.label}</span>
+                        </Group>
+                      </Box>
+                    ) : (
+                      <span>{option.label}</span>
+                    )
+                  }
+                  onChange={(value) => {
+                    if (value === 'create_new') {
+                      handleCreatePassepartout();
+                      return;
+                    }
+                    form.setFieldValue(`orderItems.${index}.passepartoutNum`, value);
+                  }}
+                  value={form.values.orderItems[index].passepartoutNum?.toString()}
                   placeholder={orderItemCardContent.t(
                     OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER_PLACEHOLDER
                   )}
