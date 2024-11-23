@@ -55,8 +55,8 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
         amountPaid: parsed.data.amountPaid,
         orderItems: {
           create: parsed.data.orderItems.map((item) => ({
-            height: item.height,
-            width: item.width,
+            height: item.height ?? 0,
+            width: item.width ?? 0,
             frame: item.frameId ? { connect: { id: item.frameId } } : undefined,
             passepartoutNum: item.passepartoutNum || 0,
             passepartoutWidth: item.passepartoutWidth || 0,

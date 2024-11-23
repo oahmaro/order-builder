@@ -27,6 +27,12 @@ import { useOrderFormContext } from '../order-form/order-form.container';
 import { CreateFrameForm } from '@/app/(main)/frames/_components/create-frame-form';
 import { orderItemCardContent, OrderItemCardContentPhrases } from './order-item-card.content';
 import FrameFormContainer from '@/app/(main)/frames/_components/frame-form/frame-form.container';
+import { CreateAdhesionForm } from '@/app/(main)/adhesions/_components/create-adhesion-form';
+import { CreatePrintForm } from '@/app/(main)/prints/_components/create-print-form';
+import { CreateDescriptionForm } from '@/app/(main)/descriptions/_components/create-description-form';
+import AdhesionFormContainer from '@/app/(main)/adhesions/_components/adhesion-form/adhesion-form.container';
+import PrintFormContainer from '@/app/(main)/prints/_components/print-form/print-form.container';
+import DescriptionFormContainer from '@/app/(main)/descriptions/_components/description-form/description-form.container';
 
 export interface OrderItemCardProps {
   index: number;
@@ -67,6 +73,21 @@ export default function OrderItemCard({
     label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_FRAME),
   };
 
+  const createNewAdhesionOption: ComboboxItem = {
+    value: 'create_new',
+    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_ADHESION),
+  };
+
+  const createNewPrintOption: ComboboxItem = {
+    value: 'create_new',
+    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_PRINT),
+  };
+
+  const createNewDescriptionOption: ComboboxItem = {
+    value: 'create_new',
+    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION),
+  };
+
   const handleCreateFrame = () => {
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_FRAME),
@@ -75,6 +96,42 @@ export default function OrderItemCard({
         <FrameFormContainer>
           <CreateFrameForm />
         </FrameFormContainer>
+      ),
+    });
+  };
+
+  const handleCreateAdhesion = () => {
+    modals.open({
+      title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_ADHESION),
+      size: 'xl',
+      children: (
+        <AdhesionFormContainer>
+          <CreateAdhesionForm />
+        </AdhesionFormContainer>
+      ),
+    });
+  };
+
+  const handleCreatePrint = () => {
+    modals.open({
+      title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_PRINT),
+      size: 'xl',
+      children: (
+        <PrintFormContainer>
+          <CreatePrintForm />
+        </PrintFormContainer>
+      ),
+    });
+  };
+
+  const handleCreateDescription = () => {
+    modals.open({
+      title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_DESCRIPTION),
+      size: 'xl',
+      children: (
+        <DescriptionFormContainer>
+          <CreateDescriptionForm />
+        </DescriptionFormContainer>
       ),
     });
   };
@@ -285,55 +342,175 @@ export default function OrderItemCard({
               </Group>
 
               <Select
+                searchable
                 styles={{
                   root: { display: 'flex', alignItems: 'center' },
                   label: { marginLeft: '8px', minWidth: 56 },
                   input: { width: 400 },
                 }}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.ADHESIONS)}
-                nothingFoundMessage={orderItemCardContent.t(
-                  OrderItemCardContentPhrases.NOTHING_FOUND
-                )}
-                data={adhesions.map((adhesion) => ({
-                  value: adhesion.id.toString(),
-                  label: adhesion.name,
-                }))}
-                {...form.getInputProps(`orderItems.${index}.adhesionId`)}
+                nothingFoundMessage={
+                  <Box
+                    style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                    fw={500}
+                    c="dark"
+                    onClick={() => handleCreateAdhesion()}
+                  >
+                    <Group gap={8}>
+                      <IconPlus size={14} stroke={1.5} />
+                      <span>
+                        {orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_ADHESION)}
+                      </span>
+                    </Group>
+                  </Box>
+                }
+                data={[
+                  ...adhesions.map((adhesion) => ({
+                    value: adhesion.id.toString(),
+                    label: adhesion.name,
+                  })),
+                  createNewAdhesionOption,
+                ]}
+                renderOption={({ option }) =>
+                  option.value === 'create_new' ? (
+                    <Box
+                      style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                      fw={500}
+                      c="dark"
+                    >
+                      <Group gap={8}>
+                        <IconPlus size={14} stroke={1.5} />
+                        <span>{option.label}</span>
+                      </Group>
+                    </Box>
+                  ) : (
+                    <span>{option.label}</span>
+                  )
+                }
+                onChange={(value) => {
+                  if (value === 'create_new') {
+                    handleCreateAdhesion();
+                    return;
+                  }
+                  form.setFieldValue(`orderItems.${index}.adhesionId`, value);
+                }}
+                value={form.values.orderItems[index].adhesionId?.toString()}
                 placeholder={orderItemCardContent.t(
                   OrderItemCardContentPhrases.ADHESIONS_PLACEHOLDER
                 )}
               />
 
               <Select
+                searchable
                 styles={{
                   root: { display: 'flex', alignItems: 'center' },
                   label: { marginLeft: '8px', minWidth: 56 },
                   input: { width: 400 },
                 }}
-                nothingFoundMessage={orderItemCardContent.t(
-                  OrderItemCardContentPhrases.NOTHING_FOUND
-                )}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS)}
-                data={prints.map((print) => ({ value: print.id.toString(), label: print.name }))}
-                {...form.getInputProps(`orderItems.${index}.printId`)}
+                nothingFoundMessage={
+                  <Box
+                    style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                    fw={500}
+                    c="dark"
+                    onClick={() => handleCreatePrint()}
+                  >
+                    <Group gap={8}>
+                      <IconPlus size={14} stroke={1.5} />
+                      <span>
+                        {orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_PRINT)}
+                      </span>
+                    </Group>
+                  </Box>
+                }
+                data={[
+                  ...prints.map((print) => ({
+                    value: print.id.toString(),
+                    label: print.name,
+                  })),
+                  createNewPrintOption,
+                ]}
+                renderOption={({ option }) =>
+                  option.value === 'create_new' ? (
+                    <Box
+                      style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                      fw={500}
+                      c="dark"
+                    >
+                      <Group gap={8}>
+                        <IconPlus size={14} stroke={1.5} />
+                        <span>{option.label}</span>
+                      </Group>
+                    </Box>
+                  ) : (
+                    <span>{option.label}</span>
+                  )
+                }
+                onChange={(value) => {
+                  if (value === 'create_new') {
+                    handleCreatePrint();
+                    return;
+                  }
+                  form.setFieldValue(`orderItems.${index}.printId`, value);
+                }}
+                value={form.values.orderItems[index].printId?.toString()}
                 placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS_PLACEHOLDER)}
               />
 
               <Select
+                searchable
                 styles={{
                   root: { display: 'flex', alignItems: 'center' },
                   label: { marginLeft: '8px', minWidth: 56 },
                   input: { width: 400 },
                 }}
-                nothingFoundMessage={orderItemCardContent.t(
-                  OrderItemCardContentPhrases.NOTHING_FOUND
-                )}
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.DESCRIPTION)}
-                data={descriptions.map((description) => ({
-                  value: description.id.toString(),
-                  label: description.name,
-                }))}
-                {...form.getInputProps(`orderItems.${index}.descriptionId`)}
+                nothingFoundMessage={
+                  <Box
+                    style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                    fw={500}
+                    c="dark"
+                    onClick={() => handleCreateDescription()}
+                  >
+                    <Group gap={8}>
+                      <IconPlus size={14} stroke={1.5} />
+                      <span>
+                        {orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION)}
+                      </span>
+                    </Group>
+                  </Box>
+                }
+                data={[
+                  ...descriptions.map((description) => ({
+                    value: description.id.toString(),
+                    label: description.name,
+                  })),
+                  createNewDescriptionOption,
+                ]}
+                renderOption={({ option }) =>
+                  option.value === 'create_new' ? (
+                    <Box
+                      style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                      fw={500}
+                      c="dark"
+                    >
+                      <Group gap={8}>
+                        <IconPlus size={14} stroke={1.5} />
+                        <span>{option.label}</span>
+                      </Group>
+                    </Box>
+                  ) : (
+                    <span>{option.label}</span>
+                  )
+                }
+                onChange={(value) => {
+                  if (value === 'create_new') {
+                    handleCreateDescription();
+                    return;
+                  }
+                  form.setFieldValue(`orderItems.${index}.descriptionId`, value);
+                }}
+                value={form.values.orderItems[index].descriptionId?.toString()}
                 placeholder={orderItemCardContent.t(
                   OrderItemCardContentPhrases.DESCRIPTION_PLACEHOLDER
                 )}
