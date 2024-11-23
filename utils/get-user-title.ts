@@ -15,7 +15,11 @@ export function generateUserTitle(user: {
     return user.lastName;
   }
 
-  return user?.username || '';
+  if (user?.username) {
+    return user.username;
+  }
+
+  return '';
 }
 
 export function generateUserSubtitle(user: {

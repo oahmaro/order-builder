@@ -15,6 +15,7 @@ const Header = forwardRef<HTMLDivElement, HeaderProps>(({ user }, ref) => {
   const title = generateUserTitle({
     firstName: user?.firstName,
     lastName: user?.lastName,
+    username: user?.username,
   });
 
   const subtitle = generateUserSubtitle({

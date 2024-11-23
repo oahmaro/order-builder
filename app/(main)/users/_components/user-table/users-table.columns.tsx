@@ -21,15 +21,21 @@ export const columns = [
     cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
-    id: 'fullName',
-    header: userTableContent.t(UserTableContent.FULL_NAME),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/users/${info.row.original.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
-  }),
+  columnHelper.accessor(
+    (row) => {
+      const title = generateUserTitle(row);
+      return title || 'N/A';
+    },
+    {
+      id: 'fullName',
+      header: userTableContent.t(UserTableContent.FULL_NAME),
+      cell: (info) => (
+        <Anchor size="sm" component={Link} href={`/users/${info.row.original.id}`}>
+          {info.getValue()}
+        </Anchor>
+      ),
+    }
+  ),
 
   columnHelper.accessor('email', {
     header: userTableContent.t(UserTableContent.EMAIL),
