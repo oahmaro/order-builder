@@ -288,27 +288,6 @@ export default function OrderItemCard({
               />
 
               <Group>
-                <Stack justify="center" h={36}>
-                  <Text fz="sm">
-                    {orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH)}
-                  </Text>
-                </Stack>
-
-                <NumberInput
-                  w={120}
-                  min={1}
-                  max={999}
-                  size="sm"
-                  prefix="cm"
-                  hideControls
-                  clampBehavior="strict"
-                  allowLeadingZeros={false}
-                  {...form.getInputProps(`orderItems.${index}.passepartoutWidth`)}
-                  placeholder={orderItemCardContent.t(
-                    OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER
-                  )}
-                />
-
                 <Select
                   searchable
                   styles={{
@@ -367,6 +346,27 @@ export default function OrderItemCard({
                   value={form.values.orderItems[index].passepartoutNum?.toString()}
                   placeholder={orderItemCardContent.t(
                     OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER_PLACEHOLDER
+                  )}
+                />
+
+                <Stack justify="center" h={36}>
+                  <Text fz="sm">
+                    {orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH)}
+                  </Text>
+                </Stack>
+
+                <NumberInput
+                  w={120}
+                  min={1}
+                  max={999}
+                  size="sm"
+                  prefix="cm"
+                  hideControls
+                  clampBehavior="strict"
+                  allowLeadingZeros={false}
+                  {...form.getInputProps(`orderItems.${index}.passepartoutWidth`)}
+                  placeholder={orderItemCardContent.t(
+                    OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER
                   )}
                 />
               </Group>
