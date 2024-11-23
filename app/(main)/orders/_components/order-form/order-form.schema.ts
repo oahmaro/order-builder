@@ -30,11 +30,11 @@ export const orderItemSchema = z.object({
 
 export const orderFormSchema = z.object({
   customerId: z
-    .union([
-      z.string().min(1, orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED)),
-      z.number().min(1, orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED)),
-    ])
-    .transform((val) => Number(val)),
+    .number({
+      required_error: orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED),
+      invalid_type_error: orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED),
+    })
+    .min(1, orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED)),
   amountPaid: z.coerce.number().min(0),
   status: z.nativeEnum(OrderStatus).default('PENDING'),
   orderItems: z.array(orderItemSchema).min(1),

@@ -122,6 +122,7 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
               clearable
               allowDeselect
               spellCheck="false"
+              error={form.errors.customerId}
               data={[...customerItems, createNewCustomerOption]}
               filter={({ options, search }) => {
                 const searchTerm = search.toLowerCase().trim();
@@ -147,12 +148,12 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
                   <span>{option.label}</span>
                 )
               }
-              value={form.values.customerId ? String(form.values.customerId) : ''}
+              value={form.values.customerId ? String(form.values.customerId) : null}
               onChange={(value) => {
                 if (value === 'create_new') {
                   handleCreateCustomer();
                 } else {
-                  form.setFieldValue('customerId', value ? Number(value) : 0);
+                  form.setFieldValue('customerId', value ? Number(value) : null);
                 }
               }}
               placeholder={orderHeaderContent.t(OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER)}

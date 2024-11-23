@@ -11,7 +11,7 @@ type OrderFormInput = z.input<typeof orderFormSchema>;
 export type OrderFormValues = OrderFormInput;
 
 const initialValues: OrderFormValues = {
-  customerId: '',
+  customerId: 0,
   amountPaid: 0,
   status: 'PENDING',
   orderItems: [
@@ -48,7 +48,7 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
   const form = useOrderForm({
     initialValues: order
       ? {
-          customerId: String(order.customerId),
+          customerId: order.customerId,
           amountPaid: order.amountPaid,
           status: order.status,
           orderItems: order.orderItems.map((item) => ({
@@ -72,7 +72,7 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
         }
       : {
           ...initialValues,
-          customerId: '',
+          customerId: 0,
         },
     validate: zodResolver(orderFormSchema),
   });

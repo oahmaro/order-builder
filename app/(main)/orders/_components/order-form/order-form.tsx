@@ -52,15 +52,6 @@ export default function OrderForm({
 
   const handleSubmit = async (values: typeof form.values) => {
     try {
-      if (!values.customerId) {
-        notifications.show({
-          title: commonContent.t(CommonPhrases.ERROR),
-          message: orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED),
-          color: 'red',
-        });
-        return;
-      }
-
       const validatedData = orderFormSchema.parse(values);
       const formData = new FormData();
 
