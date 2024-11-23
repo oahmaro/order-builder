@@ -162,9 +162,10 @@ export default function OrderItemCard({
                       min={1}
                       max={999}
                       size="sm"
-                      prefix="cm "
+                      prefix="cm"
                       hideControls
                       clampBehavior="strict"
+                      allowLeadingZeros={false}
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.WIDTH_PLACEHOLDER
                       )}
@@ -184,9 +185,10 @@ export default function OrderItemCard({
                       min={1}
                       max={999}
                       size="sm"
-                      prefix="cm "
+                      prefix="cm"
                       hideControls
                       clampBehavior="strict"
+                      allowLeadingZeros={false}
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.HEIGHT_PLACEHOLDER
                       )}
@@ -278,9 +280,10 @@ export default function OrderItemCard({
                   min={1}
                   max={999}
                   size="sm"
-                  prefix="cm "
+                  prefix="cm"
                   hideControls
                   clampBehavior="strict"
+                  allowLeadingZeros={false}
                   {...form.getInputProps(`orderItems.${index}.passepartoutWidth`)}
                   placeholder={orderItemCardContent.t(
                     OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER
@@ -540,6 +543,8 @@ export default function OrderItemCard({
               <NumberInput
                 prefix="₪"
                 hideControls
+                allowLeadingZeros={false}
+                allowDecimal={false}
                 {...form.getInputProps(`orderItems.${index}.unitPrice`)}
                 placeholder={orderItemCardContent.t(
                   OrderItemCardContentPhrases.UNIT_PRICE_PLACEHOLDER

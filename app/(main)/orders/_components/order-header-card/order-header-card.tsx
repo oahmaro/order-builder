@@ -191,6 +191,7 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
               input: { width: 160 },
             }}
             hideControls
+            allowLeadingZeros={false}
             label={orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}
             prefix="₪"
             {...form.getInputProps('amountPaid')}
