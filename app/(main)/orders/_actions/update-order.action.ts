@@ -73,8 +73,8 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
         orderItems: {
           deleteMany: {},
           create: parsed.data.orderItems.map((item, index) => ({
-            height: item.height,
-            width: item.width,
+            height: item.height || 0,
+            width: item.width || 0,
             frame: item.frameId ? { connect: { id: item.frameId } } : undefined,
             passepartoutNum: item.passepartoutNum || 0,
             passepartoutWidth: item.passepartoutWidth || 0,
@@ -87,11 +87,16 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             quantity: item.quantity,
             price: item.price,
             image: oldOrder.orderItems[index]?.image || undefined,
+            orderIndex: index,
           })),
         },
       },
       include: {
-        orderItems: true,
+        orderItems: {
+          orderBy: {
+            orderIndex: 'asc',
+          },
+        },
       },
     });
 
