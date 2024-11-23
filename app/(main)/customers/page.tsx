@@ -4,9 +4,34 @@ import { db } from '@/lib/db';
 import { CustomersPageHeader, CustomersTable } from './_components';
 import { withAuditInfo } from '@/utils';
 
-export default async function CustomersPage() {
+interface CustomersPageProps {
+  searchParams: { [key: string]: string | undefined };
+}
+
+const validSortFields = [
+  'id',
+  'firstName',
+  'lastName',
+  'email',
+  'dateOfBirth',
+  'createdAt',
+  'updatedAt',
+] as const;
+
+type ValidSortField = (typeof validSortFields)[number];
+
+const isValidSortField = (field: string | undefined): field is ValidSortField =>
+  typeof field === 'string' && validSortFields.includes(field as ValidSortField);
+
+export default async function CustomersPage({ searchParams }: CustomersPageProps) {
+  const { sortBy, sortDir } = searchParams;
+
   const customers = await db.customer.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: isValidSortField(sortBy)
+      ? {
+          [sortBy]: sortDir === 'desc' ? 'desc' : 'asc',
+        }
+      : { createdAt: 'desc' },
     include: {
       phones: true,
     },

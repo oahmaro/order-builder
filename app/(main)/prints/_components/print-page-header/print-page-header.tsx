@@ -38,7 +38,7 @@ export default function PrintPageHeader({ name, printId, hasOrderItems }: PrintP
         color: 'green',
       });
 
-      router.push('/prints?page=1&pageSize=10&sort=name:ASC');
+      router.push('/prints?page=1&pageSize=10&sortBy=name&sortDir=asc');
     } else {
       notifications.show({
         title: commonContent.t(CommonPhrases.ERROR),
@@ -64,7 +64,7 @@ export default function PrintPageHeader({ name, printId, hasOrderItems }: PrintP
   return (
     <PageHeader
       title={name}
-      backPath="/prints?page=1&pageSize=10&sort=name:ASC"
+      backPath="/prints?page=1&pageSize=10&sortBy=name&sortDir=asc"
       actions={[
         {
           label: printsPageHeaderContent.t(PrintsPageHeaderPhrases.DELETE_ACTION),

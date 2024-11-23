@@ -45,7 +45,7 @@ export default function PassepartoutPageHeader({
         color: 'green',
       });
 
-      router.push('/passepartouts?page=1&pageSize=10&sort=name:ASC');
+      router.push('/passepartouts?page=1&pageSize=10&sortBy=name&sortDir=asc');
     } else {
       notifications.show({
         title: commonContent.t(CommonPhrases.ERROR),
@@ -71,7 +71,7 @@ export default function PassepartoutPageHeader({
   return (
     <PageHeader
       title={name}
-      backPath="/passepartouts?page=1&pageSize=10&sort=name:ASC"
+      backPath="/passepartouts?page=1&pageSize=10&sortBy=name&sortDir=asc"
       actions={[
         {
           label: passepartoutFormContent.t(PassepartoutFormContentPhrases.DELETE_ACTION),

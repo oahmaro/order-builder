@@ -52,6 +52,8 @@ export interface MainTableProps<T extends Identifiable> extends Omit<TableProps,
   initialColumnsVisibility?: Record<string, boolean>;
   headerActions?: ReactNode;
   enableSorting?: boolean;
+  onSortingChange?: (sorting: SortingState) => void;
+  initialSorting?: SortingState;
 }
 
 export default function MainTable<T extends Identifiable>({
@@ -61,12 +63,14 @@ export default function MainTable<T extends Identifiable>({
   initialColumnsVisibility = { id: false, createdAt: false, updatedAt: false },
   headerActions,
   enableSorting = true,
+  onSortingChange,
+  initialSorting = [],
   ...tableProps
 }: MainTableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnVisibility, setColumnVisibility] = useState(initialColumnsVisibility);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>(initialSorting);
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Get the raw value
@@ -104,6 +108,15 @@ export default function MainTable<T extends Identifiable>({
     ];
   }, [columns, actions]);
 
+  const handleSortingChange = (
+    updatedSorting: SortingState | ((old: SortingState) => SortingState)
+  ) => {
+    const newSorting =
+      typeof updatedSorting === 'function' ? updatedSorting(sorting) : updatedSorting;
+    setSorting(newSorting);
+    onSortingChange?.(newSorting);
+  };
+
   const table = useReactTable({
     data,
     columns: allColumns,
@@ -117,7 +130,7 @@ export default function MainTable<T extends Identifiable>({
     getPaginationRowModel: getPaginationRowModel(),
     enableSorting,
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
+    onSortingChange: handleSortingChange,
     state: {
       globalFilter,
       columnVisibility,

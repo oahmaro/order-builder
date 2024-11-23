@@ -3,6 +3,7 @@
 import { modals } from '@mantine/modals';
 import { OrderStatus } from '@prisma/client';
 import { useState, useMemo, useEffect } from 'react';
+import { SortingState } from '@tanstack/react-table';
 import { notifications } from '@mantine/notifications';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -170,6 +171,28 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     [router]
   );
 
+  // Add initial sorting state from URL
+  const [sorting, setSorting] = useState<SortingState>(() => {
+    const sortField = searchParams.get('sortBy');
+    const sortDir = searchParams.get('sortDir');
+    return sortField && sortDir ? [{ id: sortField, desc: sortDir === 'desc' }] : [];
+  });
+
+  const handleSortingChange = (newSorting: SortingState) => {
+    setSorting(newSorting);
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (newSorting.length > 0) {
+      params.set('sortBy', newSorting[0].id);
+      params.set('sortDir', newSorting[0].desc ? 'desc' : 'asc');
+    } else {
+      params.delete('sortBy');
+      params.delete('sortDir');
+    }
+
+    router.push(`/orders?${params.toString()}`);
+  };
+
   return (
     <MainTable<OrderDataType>
       data={filteredOrders}
@@ -179,6 +202,8 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
         <OrderStatusFilter selectedStatus={statusFilter} onStatusChange={handleStatusChange} />
       }
       initialColumnsVisibility={{ id: true, createdAt: false, updatedAt: false }}
+      onSortingChange={handleSortingChange}
+      initialSorting={sorting}
     />
   );
 }

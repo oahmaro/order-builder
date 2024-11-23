@@ -9,7 +9,7 @@ const menus = [
   {
     label: mainDrawerContent.t(MainDrawerPhrases.USERS),
     value: 'users',
-    url: '/users?page=1&pageSize=10&sort=firstName:ASC',
+    url: '/users?page=1&pageSize=10&sortBy=firstName&sortDir=asc',
     icon: <RiAdminLine style={{ width: rem(16), height: rem(16) }} />,
   },
   {

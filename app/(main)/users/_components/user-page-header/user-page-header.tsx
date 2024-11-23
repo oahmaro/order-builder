@@ -37,7 +37,7 @@ export default function UserPageHeader({
         color: 'green',
       });
 
-      router.push('/users?page=1&pageSize=10&sort=name:ASC');
+      router.push('/users?page=1&pageSize=10&sortBy=name&sortDir=asc');
     } else {
       notifications.show({
         title: commonContent.t(CommonPhrases.ERROR),
@@ -63,7 +63,7 @@ export default function UserPageHeader({
   return (
     <PageHeader
       title={name}
-      backPath="/users?page=1&pageSize=10&sort=name:ASC"
+      backPath="/users?page=1&pageSize=10&sortBy=name&sortDir=asc"
       actions={[
         {
           label: userPageHeaderContent.t(UserPageHeaderPhrases.DELETE_ACTION),

@@ -10,34 +10,37 @@ interface OrdersPageProps {
 }
 
 export default async function OrderPage({ searchParams }: OrdersPageProps) {
-  const orders = await db.order
-    .findMany({
-      where: {
-        status: searchParams.status ? (searchParams.status as OrderStatus) : undefined,
-      },
-      include: {
-        customer: {
-          select: {
-            id: true,
-            lastName: true,
-            firstName: true,
-            phones: true,
-          },
-        },
-        orderItems: true,
-      },
-    })
-    .then((rawOrders) =>
-      rawOrders.map((order) => ({
-        ...order,
-        customer: {
-          ...order.customer,
-          id: String(order.customer.id),
-        },
-      }))
-    );
+  const { sortBy, sortDir } = searchParams;
 
-  const ordersWithAudit = await withAuditInfo(orders, 'Order');
+  const orders = await db.order.findMany({
+    where: {
+      status: searchParams.status ? (searchParams.status as OrderStatus) : undefined,
+    },
+    orderBy: sortBy
+      ? {
+          [sortBy]: sortDir === 'desc' ? 'desc' : 'asc',
+        }
+      : undefined,
+    include: {
+      customer: {
+        select: {
+          id: true,
+          lastName: true,
+          firstName: true,
+          phones: true,
+        },
+      },
+      orderItems: true,
+    },
+  });
+
+  const ordersWithAudit = (await withAuditInfo(orders, 'Order')).map((order) => ({
+    ...order,
+    customer: {
+      ...order.customer,
+      id: String(order.customer.id),
+    },
+  }));
 
   return (
     <Stack gap="lg">

@@ -36,7 +36,7 @@ export default function FramePageHeader({
         color: 'green',
       });
 
-      router.push('/frames?page=1&pageSize=10&sort=name:ASC');
+      router.push('/frames?page=1&pageSize=10&sortBy=name&sortDir=asc');
     } else {
       notifications.show({
         title: commonContent.t(CommonPhrases.ERROR),
@@ -62,7 +62,7 @@ export default function FramePageHeader({
   return (
     <PageHeader
       title={name}
-      backPath="/frames?page=1&pageSize=10&sort=name:ASC"
+      backPath="/frames?page=1&pageSize=10&sortBy=name&sortDir=asc"
       actions={[
         {
           label: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_ACTION),

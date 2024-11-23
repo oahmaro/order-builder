@@ -43,7 +43,7 @@ export default function DescriptionPageHeader({
         color: 'green',
       });
 
-      router.push('/descriptions?page=1&pageSize=10&sort=name:ASC');
+      router.push('/descriptions?page=1&pageSize=10&sortBy=name&sortDir=asc');
     } else {
       notifications.show({
         title: commonContent.t(CommonPhrases.ERROR),
@@ -69,7 +69,7 @@ export default function DescriptionPageHeader({
   return (
     <PageHeader
       title={name}
-      backPath="/descriptions?page=1&pageSize=10&sort=name:ASC"
+      backPath="/descriptions?page=1&pageSize=10&sortBy=name&sortDir=asc"
       actions={[
         {
           label: descriptionPageHeaderContent.t(DescriptionPageHeaderPhrases.DELETE_ACTION),

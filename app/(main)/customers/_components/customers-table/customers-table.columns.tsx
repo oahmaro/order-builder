@@ -36,7 +36,7 @@ export const columns = [
   }),
 
   columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
-    id: 'fullName',
+    id: 'name',
     header: customersTableContent.t(CustomersTableContentPhrases.NAME),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/customers/${info.row.original.id}`}>
