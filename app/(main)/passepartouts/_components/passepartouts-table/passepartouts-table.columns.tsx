@@ -24,7 +24,9 @@ export const columns = [
   }),
 
   columnHelper.accessor('name', {
+    id: 'name',
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.NAME),
+    sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/passepartouts/${info.row.original.id}`}>
         {info.getValue()}

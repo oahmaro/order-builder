@@ -24,7 +24,9 @@ export const columns = [
   }),
 
   columnHelper.accessor('name', {
+    id: 'name',
     header: descriptionsTableContent.t(DescriptionsTableContentPhrases.NAME),
+    sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/descriptions/${info.row.original.id}`}>
         {info.getValue()}

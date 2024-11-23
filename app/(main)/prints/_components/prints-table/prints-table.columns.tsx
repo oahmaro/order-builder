@@ -4,8 +4,8 @@ import { Print } from '@prisma/client';
 import { Anchor } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
-import { printsTableContent, PrintsTableContentPhrases } from './prints-table.content';
 import { generateUserTitle } from '@/utils/get-user-title';
+import { printsTableContent, PrintsTableContentPhrases } from './prints-table.content';
 
 type PrintDataType = Partial<Print> & {
   createdByUser?: { id: number; firstName: string; lastName: string } | null;
@@ -21,12 +21,13 @@ export const columns = [
     cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor((row) => `${row.id} ${row.name}`, {
+  columnHelper.accessor('name', {
     id: 'name',
     header: printsTableContent.t(PrintsTableContentPhrases.NAME),
+    sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/prints/${info.row.original.id}`}>
-        {info.row.original.name}
+        {info.getValue()}
       </Anchor>
     ),
   }),

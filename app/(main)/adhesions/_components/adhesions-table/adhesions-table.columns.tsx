@@ -21,12 +21,13 @@ export const columns = [
     cell: (info) => info.getValue(),
   }),
 
-  columnHelper.accessor((row) => `${row.id} ${row.name}`, {
+  columnHelper.accessor('name', {
     id: 'name',
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.NAME),
+    sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
     cell: (info) => (
       <Anchor size="sm" component={Link} href={`/adhesions/${info.row.original.id}`}>
-        {info.row.original.name}
+        {info.getValue()}
       </Anchor>
     ),
   }),
