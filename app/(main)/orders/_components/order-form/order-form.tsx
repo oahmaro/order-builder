@@ -6,14 +6,16 @@ import { notifications } from '@mantine/notifications';
 import { Stack, Button, Group, Divider } from '@mantine/core';
 
 import {
-  Customer,
   Frame,
   Print,
+  Phone,
+  Order,
+  Company,
+  Address,
+  Customer,
   Adhesion,
   Description,
-  Phone,
   Passepartout,
-  Order,
 } from '@prisma/client';
 
 import { OrderItemCard } from '../order-item-card';
@@ -27,6 +29,7 @@ import { orderFormContent, OrderFormContentPhrases } from './order-form.content'
 interface OrderFormProps {
   customers: (Customer & {
     phones: Phone[];
+    address?: Address;
   })[];
   frames: Frame[];
   prints: Print[];
@@ -35,6 +38,10 @@ interface OrderFormProps {
   passepartouts: Passepartout[];
   isUpdate?: boolean;
   order?: Order;
+  company?: Company & {
+    phones: Phone[];
+    address?: Address;
+  };
 }
 
 export default function OrderForm({
@@ -46,6 +53,7 @@ export default function OrderForm({
   passepartouts,
   isUpdate,
   order,
+  company,
 }: OrderFormProps) {
   const form = useOrderFormContext();
   const router = useRouter();
@@ -142,7 +150,29 @@ export default function OrderForm({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
       <Stack gap="lg">
-        <OrderHeaderCard customers={customers} />
+        <OrderHeaderCard
+          customers={customers}
+          order={order}
+          company={
+            company
+              ? {
+                  name: company.name,
+                  email: company.email,
+                  phones: company.phones.map((phone) => ({
+                    number: phone.number,
+                    dialingCode: phone.dialingCode,
+                    isPrimary: phone.isPrimary,
+                  })),
+                  address: company.address
+                    ? {
+                        streetAddress: company.address.streetAddress || undefined,
+                        city: company.address.city || undefined,
+                      }
+                    : undefined,
+                }
+              : undefined
+          }
+        />
 
         {form.values.orderItems.map((_, index) => (
           <OrderItemCard

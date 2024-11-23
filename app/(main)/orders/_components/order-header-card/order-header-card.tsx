@@ -1,6 +1,11 @@
 'use client';
 
+import dayjs from 'dayjs';
+import { useEffect } from 'react';
+import { modals } from '@mantine/modals';
+import { IconPlus } from '@tabler/icons-react';
 import { Customer, Order, Phone } from '@prisma/client';
+
 import {
   Box,
   Text,
@@ -10,23 +15,33 @@ import {
   Stack,
   Select,
   NumberInput,
-  NumberFormatter,
   ComboboxItem,
+  NumberFormatter,
 } from '@mantine/core';
-import { useEffect } from 'react';
-import { modals } from '@mantine/modals';
-import { IconPlus } from '@tabler/icons-react';
 
 import { StaticField } from '@/components';
 import classes from './order-header-card.module.css';
+import { CreateCustomerForm } from '@/app/(main)/customers/_components';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { orderHeaderContent, OrderHeaderContentPhrases } from './order-header-card.content';
-import { CreateCustomerForm } from '@/app/(main)/customers/_components';
 import CustomerFormContainer from '@/app/(main)/customers/_components/customer-form/customer-form.container';
 
 export interface OrderHeaderCardProps {
   order?: Order;
   customers?: (Customer & { phones: Phone[] })[];
+  company?: {
+    name: string;
+    email: string;
+    phones: {
+      number: string;
+      dialingCode: string;
+      isPrimary: boolean;
+    }[];
+    address?: {
+      streetAddress?: string;
+      city?: string;
+    };
+  };
 }
 
 const formatPhoneNumber = (dialingCode: string, number: string): string => {
@@ -56,7 +71,7 @@ const handleCreateCustomer = () => {
   });
 };
 
-export default function OrderHeaderCard({ order, customers }: OrderHeaderCardProps) {
+export default function OrderHeaderCard({ order, customers, company }: OrderHeaderCardProps) {
   const form = useOrderFormContext();
 
   const customerItems = customers
@@ -106,6 +121,15 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
     label: orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER),
     value: 'create_new',
   };
+
+  const companyPhone = company?.phones?.find((phone) => phone.isPrimary);
+  const formattedCompanyPhone = companyPhone
+    ? formatPhoneNumber(companyPhone.dialingCode, companyPhone.number)
+    : orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_PHONE);
+
+  const companyAddress = company?.address
+    ? `${company.address.streetAddress || ''} ${company.address.city || ''}`
+    : orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_ADDRESS);
 
   return (
     <Paper className={classes.root} shadow="xs" radius="sm">
@@ -229,24 +253,33 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
         </Stack>
 
         <Stack flex={1} h="100%" gap={0}>
-          {/* <StaticField
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.TIME)}
-            value="Sat 9 Dec - 9:00"
-            separator=": "
-          /> */}
+          {order?.createdAt && (
+            <StaticField
+              label={orderHeaderContent.t(OrderHeaderContentPhrases.TIME)}
+              value={dayjs(order.createdAt).format('ddd D MMM - HH:mm')}
+              separator=": "
+            />
+          )}
+
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.ADDRESS)}
-            value={orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_ADDRESS)}
+            value={companyAddress}
             separator=": "
           />
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.EMAIL)}
-            value={orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_EMAIL)}
+            value={
+              company?.email || orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_EMAIL)
+            }
             separator=": "
           />
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE)}
-            value={orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_PHONE)}
+            value={
+              <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
+                {formattedCompanyPhone}
+              </span>
+            }
             separator=": "
           />
         </Stack>

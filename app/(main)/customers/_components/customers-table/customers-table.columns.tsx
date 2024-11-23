@@ -15,14 +15,25 @@ type CustomerDataType = Partial<Customer> & {
 
 const columnHelper = createColumnHelper<CustomerDataType>();
 
-const formatPhoneNumber = (countryCode: string, number: string): string => {
-  const cleanCountryCode = countryCode.replace(/\D/g, '');
+const formatPhoneNumber = (dialingCode: string, number: string): string => {
+  if (!number) return '—';
+
   const cleanNumber = number.replace(/\D/g, '');
 
-  return `(+${cleanCountryCode}) ${cleanNumber.slice(0, 4)}-${cleanNumber.slice(
-    4,
-    7
-  )}-${cleanNumber.slice(7)}`;
+  const cleanDialingCode = dialingCode.replace(/\D/g, '');
+
+  if (cleanNumber.length < 4) {
+    return `+${cleanDialingCode} ${cleanNumber}`;
+  }
+
+  if (cleanNumber.length < 7) {
+    return `+${cleanDialingCode} ${cleanNumber.slice(0, 3)}-${cleanNumber.slice(3)}`;
+  }
+
+  return `+${cleanDialingCode} ${cleanNumber.slice(0, 3)}-${cleanNumber.slice(
+    3,
+    6
+  )}-${cleanNumber.slice(6)}`;
 };
 
 export const columns = [
