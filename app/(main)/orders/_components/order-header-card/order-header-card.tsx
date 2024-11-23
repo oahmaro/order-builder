@@ -208,6 +208,17 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
             }
             label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE_NUMBER)}
           />
+
+          <StaticField
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL)}
+            value={
+              <Box component="span" c="red" fw="bold" fz="sm">
+                <NumberFormatter prefix="₪" value={total} thousandSeparator />
+              </Box>
+            }
+            separator=": "
+          />
+
           <NumberInput
             styles={{
               root: { display: 'flex', alignItems: 'center' },
@@ -219,11 +230,6 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
             label={orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}
             prefix="₪"
             {...form.getInputProps('amountPaid')}
-          />
-          <StaticField
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL)}
-            value={<NumberFormatter prefix="₪" value={total} thousandSeparator />}
-            separator=": "
           />
 
           <Box c="dimmed">-----------------------</Box>
