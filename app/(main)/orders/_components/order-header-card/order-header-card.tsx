@@ -153,7 +153,7 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
                 if (value === 'create_new') {
                   handleCreateCustomer();
                 } else {
-                  form.setFieldValue('customerId', value ? Number(value) : null);
+                  form.setFieldValue('customerId', value ? Number(value) : 0);
                 }
               }}
               placeholder={orderHeaderContent.t(OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER)}
