@@ -8,13 +8,19 @@ export const orderItemSchema = z.object({
       required_error: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
       invalid_type_error: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
     })
-    .min(1, orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED)),
+    .nullable()
+    .refine((val) => val !== null && val >= 1, {
+      message: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
+    }),
   width: z.coerce
     .number({
       required_error: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
       invalid_type_error: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
     })
-    .min(1, orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED)),
+    .nullable()
+    .refine((val) => val !== null && val >= 1, {
+      message: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
+    }),
   frameId: z.coerce.number().nullable(),
   passepartoutNum: z.coerce.number().nullable(),
   passepartoutWidth: z.coerce.number().nullable(),
