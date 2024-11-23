@@ -10,19 +10,19 @@ export default async function HomePage() {
   const totalOrders = await db.order.count();
 
   const pendingOrders = await db.order.count({
-    where: { status: 'PENDING' },
+    where: { status: 'NEW' },
   });
 
   const processingOrders = await db.order.count({
-    where: { status: 'PROCESSING' },
+    where: { status: 'IN_PROGRESS' },
   });
 
   const deliveredOrders = await db.order.count({
-    where: { status: 'DELIVERED' },
+    where: { status: 'COMPLETED' },
   });
 
   const shippedOrders = await db.order.count({
-    where: { status: 'SHIPPED' },
+    where: { status: 'READY' },
   });
 
   return (

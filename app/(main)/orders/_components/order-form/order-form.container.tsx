@@ -13,7 +13,7 @@ export type OrderFormValues = OrderFormInput;
 const initialValues: OrderFormValues = {
   customerId: 0,
   amountPaid: 0,
-  status: 'PENDING',
+  status: 'NEW',
   orderItems: [
     {
       height: null,

@@ -52,6 +52,6 @@ export const orderFormSchema = z.object({
     })
     .min(1, orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED)),
   amountPaid: z.coerce.number().min(0),
-  status: z.nativeEnum(OrderStatus).default('PENDING'),
+  status: z.nativeEnum(OrderStatus).default('NEW'),
   orderItems: z.array(orderItemSchema).min(1),
 });
