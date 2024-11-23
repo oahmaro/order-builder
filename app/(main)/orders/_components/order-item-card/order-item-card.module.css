@@ -1,3 +1,21 @@
 .root {
-  padding: 16px 24px;
+  padding: 0;
+}
+
+.root :global(.mantine-Accordion-control) {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-xl);
+  background-color: white;
+}
+
+.root :global(.mantine-Accordion-content) {
+  padding: 0 var(--mantine-spacing-xl) var(--mantine-spacing-xl);
+  background-color: white;
+}
+
+.root :global(.mantine-Accordion-panel) {
+  background-color: white;
+}
+
+.root :global(.mantine-Accordion-item) {
+  background-color: white;
 }

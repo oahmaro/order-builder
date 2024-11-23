@@ -149,7 +149,7 @@ export default function OrderForm({
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
-      <Stack gap="lg">
+      <Stack gap="sm">
         <OrderHeaderCard
           customers={customers}
           order={order}

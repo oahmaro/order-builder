@@ -44,6 +44,7 @@ export enum OrderItemCardContentPhrases {
   CREATE_PRINT = 'create-print',
   CREATE_NEW_DESCRIPTION = 'create-new-description',
   CREATE_DESCRIPTION = 'create-description',
+  ORDER_ITEM = 'order-item',
 }
 
 export const orderItemCardContent = new Polyglot({
@@ -90,5 +91,6 @@ export const orderItemCardContent = new Polyglot({
     [OrderItemCardContentPhrases.CREATE_PRINT]: 'יצירת הדפסה',
     [OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION]: 'צור תיאור חדש',
     [OrderItemCardContentPhrases.CREATE_DESCRIPTION]: 'יצירת תיאור',
+    [OrderItemCardContentPhrases.ORDER_ITEM]: 'פריט הזמנה',
   },
 });
