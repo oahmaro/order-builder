@@ -11,13 +11,17 @@ import {
   Select,
   NumberInput,
   NumberFormatter,
+  ComboboxItem,
 } from '@mantine/core';
 import { useEffect } from 'react';
+import { modals } from '@mantine/modals';
 
 import { StaticField } from '@/components';
 import classes from './order-header-card.module.css';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { orderHeaderContent, OrderHeaderContentPhrases } from './order-header-card.content';
+import { CreateCustomerForm } from '@/app/(main)/customers/_components';
+import CustomerFormContainer from '@/app/(main)/customers/_components/customer-form/customer-form.container';
 
 export interface OrderHeaderCardProps {
   order?: Order;
@@ -39,14 +43,36 @@ const formatPhoneNumber = (dialingCode: string, number: string): string => {
   )}-${cleanNumber.slice(7)}`;
 };
 
+const handleCreateCustomer = () => {
+  modals.open({
+    title: orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_CUSTOMER),
+    size: 'xl',
+    children: (
+      <CustomerFormContainer>
+        <CreateCustomerForm />
+      </CustomerFormContainer>
+    ),
+  });
+};
+
 export default function OrderHeaderCard({ order, customers }: OrderHeaderCardProps) {
   const form = useOrderFormContext();
 
   const customerItems = customers
-    ? customers.map((customer) => ({
-        label: `${customer.firstName} ${customer.lastName}`,
-        value: String(customer.id),
-      }))
+    ? customers.map((customer) => {
+        const phoneNumbers = customer.phones.map((phone) => ({
+          formatted: formatPhoneNumber(phone.dialingCode, phone.number),
+          raw: phone.number.replace(/\D/g, ''),
+        }));
+
+        return {
+          label: `${customer.firstName} ${customer.lastName}`,
+          value: String(customer.id),
+          searchValue: `${customer.firstName} ${customer.lastName} ${phoneNumbers
+            .map((p) => `${p.formatted} ${p.raw}`)
+            .join(' ')}`.toLowerCase(),
+        };
+      })
     : [];
 
   const selectedCustomer = customers?.find(
@@ -75,6 +101,11 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
   const amountPaid = form.values.amountPaid || 0;
   const remainingToPay = total - amountPaid;
 
+  const createNewCustomerOption = {
+    label: orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER),
+    value: 'create_new',
+  };
+
   return (
     <Paper className={classes.root} shadow="xs" radius="sm">
       <Group>
@@ -88,9 +119,33 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
               size="sm"
               searchable
               spellCheck="false"
-              data={customerItems}
-              nothingFoundMessage={orderHeaderContent.t(OrderHeaderContentPhrases.NOTHING_FOUND)}
-              {...form.getInputProps('customerId')}
+              data={[...customerItems, createNewCustomerOption]}
+              filter={({ options, search }) => {
+                const searchTerm = search.toLowerCase().trim();
+                return (options as ComboboxItem[]).filter(
+                  (item: any) =>
+                    item.searchValue?.includes(searchTerm) ||
+                    item.label.toLowerCase().includes(searchTerm)
+                );
+              }}
+              nothingFoundMessage={
+                <Box
+                  onClick={() => handleCreateCustomer()}
+                  style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
+                  fw={500}
+                  c="dark"
+                >
+                  {orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER)}
+                </Box>
+              }
+              value={form.values.customerId ? String(form.values.customerId) : ''}
+              onChange={(value) => {
+                if (value === 'create_new') {
+                  handleCreateCustomer();
+                } else {
+                  form.setFieldValue('customerId', value ? Number(value) : 0);
+                }
+              }}
             />
           </Group>
 
