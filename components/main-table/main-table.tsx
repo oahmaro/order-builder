@@ -3,24 +3,27 @@
 import { useState, ReactNode, useMemo } from 'react';
 import { Box, Paper, Stack, Table, TableProps } from '@mantine/core';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
+import { IconSortAscending, IconSortDescending } from '@tabler/icons-react';
 
 import {
   ColumnDef,
   FilterFn,
   flexRender,
+  SortingState,
+  useReactTable,
   getCoreRowModel,
+  PaginationState,
+  getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  PaginationState,
-  useReactTable,
 } from '@tanstack/react-table';
 
 import classes from './main-table.module.css';
 import { MainTableHeader } from './main-table-header';
 import { MainTablePagination } from './main-table-pagination';
 import { MainTableEmptyState } from './main-table-empty-state';
-import { mainTableContent, MainTableContentPhrases } from './main-table.content';
 import { MainTableActionsCell } from './main-table-actions-cell';
+import { mainTableContent, MainTableContentPhrases } from './main-table.content';
 
 declare module '@tanstack/react-table' {
   interface FilterFns {
@@ -48,6 +51,7 @@ export interface MainTableProps<T extends Identifiable> extends Omit<TableProps,
   actions?: TableAction<T>[];
   initialColumnsVisibility?: Record<string, boolean>;
   headerActions?: ReactNode;
+  enableSorting?: boolean;
 }
 
 export default function MainTable<T extends Identifiable>({
@@ -56,11 +60,13 @@ export default function MainTable<T extends Identifiable>({
   actions,
   initialColumnsVisibility = { id: false, createdAt: false, updatedAt: false },
   headerActions,
+  enableSorting = true,
   ...tableProps
 }: MainTableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnVisibility, setColumnVisibility] = useState(initialColumnsVisibility);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
     // Get the raw value
@@ -109,7 +115,15 @@ export default function MainTable<T extends Identifiable>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     getPaginationRowModel: getPaginationRowModel(),
-    state: { globalFilter, columnVisibility, pagination },
+    enableSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
+    state: {
+      globalFilter,
+      columnVisibility,
+      pagination,
+      sorting,
+    },
   });
 
   const hasData = data?.length !== 0;
@@ -135,11 +149,20 @@ export default function MainTable<T extends Identifiable>({
                 {table.getHeaderGroups().map((headerGroup) => (
                   <Table.Tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <Table.Th key={header.id} className={classes.th}>
-                        <Box>
+                      <Table.Th
+                        key={header.id}
+                        className={classes.th}
+                        onClick={header.column.getToggleSortingHandler()}
+                        style={{ cursor: header.column.getCanSort() ? 'pointer' : 'default' }}
+                      >
+                        <Box style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           {header.isPlaceholder
                             ? null
                             : flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getIsSorted() === 'asc' && <IconSortAscending size={16} />}
+                          {header.column.getIsSorted() === 'desc' && (
+                            <IconSortDescending size={16} />
+                          )}
                         </Box>
                       </Table.Th>
                     ))}

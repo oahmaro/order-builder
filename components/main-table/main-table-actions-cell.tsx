@@ -4,9 +4,10 @@ import { IconDotsVertical } from '@tabler/icons-react';
 
 interface TableAction<T> {
   label: string;
-  onClick: (row: T) => void;
   color?: string;
   icon?: ReactNode;
+  onClick: (row: T) => void;
+  show?: (row: T) => boolean;
 }
 
 interface MainTableActionsCellProps<T> {
@@ -15,6 +16,8 @@ interface MainTableActionsCellProps<T> {
 }
 
 export function MainTableActionsCell<T>({ row, actions }: MainTableActionsCellProps<T>) {
+  const visibleActions = actions.filter((action) => !action.show || action.show(row));
+
   return (
     <Menu position="bottom-end" withinPortal>
       <Menu.Target>
@@ -24,7 +27,7 @@ export function MainTableActionsCell<T>({ row, actions }: MainTableActionsCellPr
       </Menu.Target>
 
       <Menu.Dropdown>
-        {actions.map((action, index) => (
+        {visibleActions.map((action, index) => (
           <Menu.Item
             key={index}
             onClick={() => action.onClick(row)}

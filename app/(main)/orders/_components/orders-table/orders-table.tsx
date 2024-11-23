@@ -3,8 +3,8 @@
 import { modals } from '@mantine/modals';
 import { OrderStatus } from '@prisma/client';
 import { useState, useMemo, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
   IconEdit,
@@ -124,8 +124,8 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
   };
 
-  const tableActions = useMemo(() => {
-    const baseActions = [
+  const tableActions = useMemo(
+    () => [
       {
         label: ordersTableContent.t(OrdersTableContentPhrases.EDIT_ORDER),
         onClick: (order: OrderDataType) => router.push(`/orders/${order.id}`),
@@ -159,21 +159,16 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
         icon: <IconStatusChange size={16} />,
         color: 'orange',
       },
-    ];
-
-    // Filter orders to only show WhatsApp action for completed orders
-    return filteredOrders.some((order) => order.status === OrderStatus.COMPLETED)
-      ? [
-          ...baseActions,
-          {
-            label: ordersTableContent.t(OrdersTableContentPhrases.SEND_WHATSAPP),
-            onClick: handleSendWhatsapp,
-            icon: <IconBrandWhatsapp size={16} />,
-            color: 'green',
-          },
-        ]
-      : baseActions;
-  }, [router, filteredOrders]);
+      {
+        label: ordersTableContent.t(OrdersTableContentPhrases.SEND_WHATSAPP),
+        onClick: handleSendWhatsapp,
+        icon: <IconBrandWhatsapp size={16} />,
+        color: 'green',
+        show: (order: OrderDataType) => order.status === OrderStatus.COMPLETED,
+      },
+    ],
+    [router]
+  );
 
   return (
     <MainTable<OrderDataType>
