@@ -118,6 +118,8 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
             <Select
               size="sm"
               searchable
+              clearable
+              allowDeselect
               spellCheck="false"
               data={[...customerItems, createNewCustomerOption]}
               filter={({ options, search }) => {
@@ -146,6 +148,7 @@ export default function OrderHeaderCard({ order, customers }: OrderHeaderCardPro
                   form.setFieldValue('customerId', value ? Number(value) : 0);
                 }
               }}
+              placeholder={orderHeaderContent.t(OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER)}
             />
           </Group>
 

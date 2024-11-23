@@ -19,6 +19,7 @@ export enum OrderHeaderContentPhrases {
   PLACEHOLDER_EMAIL = 'placeholder-email',
   CREATE_CUSTOMER = 'create-customer',
   CREATE_NEW_CUSTOMER = 'create-new-customer',
+  CUSTOMER_PLACEHOLDER = 'customer-placeholder',
 }
 
 export const orderHeaderContent = new Polyglot({
@@ -40,5 +41,6 @@ export const orderHeaderContent = new Polyglot({
     [OrderHeaderContentPhrases.PLACEHOLDER_EMAIL]: 'omanut.hm@gmail.com',
     [OrderHeaderContentPhrases.CREATE_CUSTOMER]: 'הוסף לקוח חדש',
     [OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER]: '+ הוסף לקוח חדש',
+    [OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER]: 'בחר לקוח',
   },
 });

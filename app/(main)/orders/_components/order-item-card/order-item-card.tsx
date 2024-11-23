@@ -86,7 +86,9 @@ export default function OrderItemCard({
                       prefix="cm "
                       hideControls
                       clampBehavior="strict"
-                      placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.WIDTH)}
+                      placeholder={orderItemCardContent.t(
+                        OrderItemCardContentPhrases.WIDTH_PLACEHOLDER
+                      )}
                       error={!!form.errors[`orderItems.${index}.width`]}
                       {...form.getInputProps(`orderItems.${index}.width`, {
                         type: 'input',
@@ -106,7 +108,9 @@ export default function OrderItemCard({
                       prefix="cm "
                       hideControls
                       clampBehavior="strict"
-                      placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.HEIGHT)}
+                      placeholder={orderItemCardContent.t(
+                        OrderItemCardContentPhrases.HEIGHT_PLACEHOLDER
+                      )}
                       error={!!form.errors[`orderItems.${index}.height`]}
                       {...form.getInputProps(`orderItems.${index}.height`, {
                         type: 'input',
@@ -136,6 +140,9 @@ export default function OrderItemCard({
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.FRAME_NUMBER)}
                 data={frames.map((frame) => ({ value: frame.id.toString(), label: frame.name }))}
                 {...form.getInputProps(`orderItems.${index}.frameId`)}
+                placeholder={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.FRAME_NUMBER_PLACEHOLDER
+                )}
               />
 
               <Group>
@@ -154,6 +161,9 @@ export default function OrderItemCard({
                   hideControls
                   clampBehavior="strict"
                   {...form.getInputProps(`orderItems.${index}.passepartoutWidth`)}
+                  placeholder={orderItemCardContent.t(
+                    OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER
+                  )}
                 />
 
                 <Select
@@ -171,6 +181,9 @@ export default function OrderItemCard({
                     label: passepartout.name,
                   }))}
                   {...form.getInputProps(`orderItems.${index}.passepartoutNum`)}
+                  placeholder={orderItemCardContent.t(
+                    OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER_PLACEHOLDER
+                  )}
                 />
               </Group>
 
@@ -222,6 +235,9 @@ export default function OrderItemCard({
                   label: adhesion.name,
                 }))}
                 {...form.getInputProps(`orderItems.${index}.adhesionId`)}
+                placeholder={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.ADHESIONS_PLACEHOLDER
+                )}
               />
 
               <Select
@@ -236,6 +252,7 @@ export default function OrderItemCard({
                 label={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS)}
                 data={prints.map((print) => ({ value: print.id.toString(), label: print.name }))}
                 {...form.getInputProps(`orderItems.${index}.printId`)}
+                placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS_PLACEHOLDER)}
               />
 
               <Select
@@ -253,6 +270,9 @@ export default function OrderItemCard({
                   label: description.name,
                 }))}
                 {...form.getInputProps(`orderItems.${index}.descriptionId`)}
+                placeholder={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.DESCRIPTION_PLACEHOLDER
+                )}
               />
             </Stack>
           </Group>
@@ -268,6 +288,7 @@ export default function OrderItemCard({
               }}
               label={orderItemCardContent.t(OrderItemCardContentPhrases.QUANTITY)}
               {...form.getInputProps(`orderItems.${index}.quantity`)}
+              placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.QUANTITY_PLACEHOLDER)}
             />
 
             <Group align="flex-start">
@@ -279,6 +300,9 @@ export default function OrderItemCard({
                 prefix="₪"
                 hideControls
                 {...form.getInputProps(`orderItems.${index}.unitPrice`)}
+                placeholder={orderItemCardContent.t(
+                  OrderItemCardContentPhrases.UNIT_PRICE_PLACEHOLDER
+                )}
               />
             </Group>
 

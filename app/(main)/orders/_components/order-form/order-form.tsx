@@ -17,11 +17,11 @@ import {
 } from '@prisma/client';
 
 import { OrderItemCard } from '../order-item-card';
-import { createOrderAction, updateOrderAction } from '../../_actions';
 import { orderFormSchema } from './order-form.schema';
 import { OrderHeaderCard } from '../order-header-card';
 import { commonContent, CommonPhrases } from '@/content';
 import { useOrderFormContext } from './order-form.container';
+import { createOrderAction, updateOrderAction } from '../../_actions';
 import { orderFormContent, OrderFormContentPhrases } from './order-form.content';
 
 interface OrderFormProps {
@@ -126,11 +126,11 @@ export default function OrderForm({
 
   const addOrderItem = () => {
     form.insertListItem('orderItems', {
-      height: 0,
-      width: 0,
-      frameId: 0,
-      passepartoutNum: 0,
-      passepartoutWidth: 0,
+      height: null,
+      width: null,
+      frameId: null,
+      passepartoutNum: null,
+      passepartoutWidth: null,
       glassTypes: {
         transparent: false,
         matte: false,
@@ -138,7 +138,7 @@ export default function OrderForm({
         perspex: false,
         mirror: false,
       },
-      unitPrice: 0,
+      unitPrice: null,
       quantity: 1,
       price: 0,
       image: undefined,

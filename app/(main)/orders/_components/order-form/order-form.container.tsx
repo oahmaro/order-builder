@@ -16,11 +16,11 @@ const initialValues: OrderFormValues = {
   status: 'PENDING',
   orderItems: [
     {
-      height: 0,
-      width: 0,
-      frameId: 0,
-      passepartoutNum: 0,
-      passepartoutWidth: 0,
+      height: null,
+      width: null,
+      frameId: null,
+      passepartoutNum: null,
+      passepartoutWidth: null,
       glassTypes: {
         transparent: false,
         matte: false,
@@ -52,20 +52,14 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
           amountPaid: order.amountPaid,
           status: order.status,
           orderItems: order.orderItems.map((item) => ({
-            height: item.height,
-            width: item.width,
-            frameId: item.frameId ?? undefined,
-            passepartoutNum: item.passepartoutNum,
-            passepartoutWidth: item.passepartoutWidth,
+            height: item.height ?? null,
+            width: item.width ?? null,
+            frameId: item.frameId ?? null,
+            passepartoutNum: item.passepartoutNum ?? null,
+            passepartoutWidth: item.passepartoutWidth ?? null,
             glassTypes: item.glassTypes
               ? JSON.parse(item.glassTypes as string)
-              : {
-                  transparent: false,
-                  matte: false,
-                  none: false,
-                  perspex: false,
-                  mirror: false,
-                },
+              : initialValues.orderItems[0].glassTypes,
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,

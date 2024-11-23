@@ -24,6 +24,16 @@ export enum OrderItemCardContentPhrases {
   PRICE = 'price',
   DIMENSIONS_REQUIRED = 'dimensions-required',
   NOTHING_FOUND = 'nothing-found',
+  WIDTH_PLACEHOLDER = 'width-placeholder',
+  HEIGHT_PLACEHOLDER = 'height-placeholder',
+  FRAME_NUMBER_PLACEHOLDER = 'frame-number-placeholder',
+  PASSEPARTOUT_NUMBER_PLACEHOLDER = 'passepartout-number-placeholder',
+  PASSEPARTOUT_WIDTH_PLACEHOLDER = 'passepartout-width-placeholder',
+  ADHESIONS_PLACEHOLDER = 'adhesions-placeholder',
+  PRINTS_PLACEHOLDER = 'prints-placeholder',
+  DESCRIPTION_PLACEHOLDER = 'description-placeholder',
+  QUANTITY_PLACEHOLDER = 'quantity-placeholder',
+  UNIT_PRICE_PLACEHOLDER = 'unit-price-placeholder',
 }
 
 export const orderItemCardContent = new Polyglot({
@@ -50,5 +60,15 @@ export const orderItemCardContent = new Polyglot({
     [OrderItemCardContentPhrases.PRICE]: 'מחיר',
     [OrderItemCardContentPhrases.DIMENSIONS_REQUIRED]: 'רוחב וגובה נדרשים',
     [OrderItemCardContentPhrases.NOTHING_FOUND]: 'לא נמצאו תוצאות',
+    [OrderItemCardContentPhrases.WIDTH_PLACEHOLDER]: 'הזן רוחב',
+    [OrderItemCardContentPhrases.HEIGHT_PLACEHOLDER]: 'הזן גובה',
+    [OrderItemCardContentPhrases.FRAME_NUMBER_PLACEHOLDER]: 'בחר מספר מסגרת',
+    [OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER_PLACEHOLDER]: 'בחר מספר פספרטו',
+    [OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER]: 'הזן רוחב פספרטו',
+    [OrderItemCardContentPhrases.ADHESIONS_PLACEHOLDER]: 'בחר סוג הדבקה',
+    [OrderItemCardContentPhrases.PRINTS_PLACEHOLDER]: 'בחר סוג הדפסה',
+    [OrderItemCardContentPhrases.DESCRIPTION_PLACEHOLDER]: 'בחר תיאור',
+    [OrderItemCardContentPhrases.QUANTITY_PLACEHOLDER]: 'הזן כמות',
+    [OrderItemCardContentPhrases.UNIT_PRICE_PLACEHOLDER]: 'הזן מחיר יחידה',
   },
 });

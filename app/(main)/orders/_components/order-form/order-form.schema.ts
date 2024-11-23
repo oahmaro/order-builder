@@ -3,11 +3,11 @@ import { OrderStatus } from '@prisma/client';
 import { orderFormContent, OrderFormContentPhrases } from './order-form.content';
 
 export const orderItemSchema = z.object({
-  height: z.coerce.number().min(1).max(999),
-  width: z.coerce.number().min(1).max(999),
-  frameId: z.coerce.number().optional(),
-  passepartoutNum: z.coerce.number().optional(),
-  passepartoutWidth: z.coerce.number().optional(),
+  height: z.coerce.number().nullable(),
+  width: z.coerce.number().nullable(),
+  frameId: z.coerce.number().nullable(),
+  passepartoutNum: z.coerce.number().nullable(),
+  passepartoutWidth: z.coerce.number().nullable(),
   glassTypes: z.object({
     transparent: z.boolean().default(false),
     matte: z.boolean().default(false),
