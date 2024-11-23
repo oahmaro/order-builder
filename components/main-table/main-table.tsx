@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useMemo } from 'react';
 import { Box, Paper, Stack, Table, TableProps } from '@mantine/core';
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 
@@ -20,6 +20,7 @@ import { MainTableHeader } from './main-table-header';
 import { MainTablePagination } from './main-table-pagination';
 import { MainTableEmptyState } from './main-table-empty-state';
 import { mainTableContent, MainTableContentPhrases } from './main-table.content';
+import { MainTableActionsCell } from './main-table-actions-cell';
 
 declare module '@tanstack/react-table' {
   interface FilterFns {
@@ -34,10 +35,17 @@ interface Identifiable {
   id?: number;
 }
 
+interface TableAction<T> {
+  label: string;
+  onClick: (row: T) => void;
+  color?: string;
+  icon?: ReactNode;
+}
+
 export interface MainTableProps<T extends Identifiable> extends Omit<TableProps, 'data'> {
   data: T[];
   columns: ColumnDef<T, any>[];
-
+  actions?: TableAction<T>[];
   initialColumnsVisibility?: Record<string, boolean>;
   headerActions?: ReactNode;
 }
@@ -45,6 +53,7 @@ export interface MainTableProps<T extends Identifiable> extends Omit<TableProps,
 export default function MainTable<T extends Identifiable>({
   data = [],
   columns = [],
+  actions,
   initialColumnsVisibility = { id: false, createdAt: false, updatedAt: false },
   headerActions,
   ...tableProps
@@ -75,9 +84,23 @@ export default function MainTable<T extends Identifiable>({
     return itemRank.passed;
   };
 
+  const allColumns = useMemo(() => {
+    if (!actions?.length) return columns;
+
+    return [
+      ...columns,
+      {
+        id: 'actions',
+        header: mainTableContent.t(MainTableContentPhrases.ACTIONS),
+        cell: ({ row }) => <MainTableActionsCell row={row.original} actions={actions} />,
+        enableHiding: false,
+      },
+    ];
+  }, [columns, actions]);
+
   const table = useReactTable({
     data,
-    columns,
+    columns: allColumns,
     globalFilterFn: 'fuzzy',
     filterFns: { fuzzy: fuzzyFilter },
     onPaginationChange: setPagination,
