@@ -35,7 +35,7 @@ export const orderItemSchema = z.object({
   printId: z.coerce.number().optional(),
   descriptionId: z.coerce.number().optional(),
   notes: z.string().optional(),
-  image: z.string().optional(),
+  image: z.string().nullable().optional(),
   imageFile: z.any().optional(),
   unitPrice: z.coerce
     .number()

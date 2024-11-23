@@ -63,8 +63,8 @@ export default function OrderItemCard({
       form.setFieldValue(`orderItems.${index}.imageFile`, file);
       form.setFieldValue(`orderItems.${index}.image`, objectUrl);
     } else {
-      form.setFieldValue(`orderItems.${index}.imageFile`, undefined);
-      form.setFieldValue(`orderItems.${index}.image`, undefined);
+      form.setFieldValue(`orderItems.${index}.imageFile`, null);
+      form.setFieldValue(`orderItems.${index}.image`, null);
     }
   };
 
@@ -573,7 +573,7 @@ export default function OrderItemCard({
 
         <Stack flex={1} maw={400}>
           <MediaCapture
-            value={form.values.orderItems[index].image}
+            value={form.values.orderItems[index].image || undefined}
             onCapture={handleImageCapture}
           />
 

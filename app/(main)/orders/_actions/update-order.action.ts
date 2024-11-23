@@ -86,17 +86,13 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,
-            image: oldOrder.orderItems[index]?.image || undefined,
+            image: item.image === null ? null : oldOrder.orderItems[index]?.image || undefined,
             orderIndex: index,
           })),
         },
       },
       include: {
-        orderItems: {
-          orderBy: {
-            orderIndex: 'asc',
-          },
-        },
+        orderItems: true,
       },
     });
 

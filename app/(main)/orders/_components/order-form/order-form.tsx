@@ -67,7 +67,10 @@ export default function OrderForm({
       // Handle order items and their images separately
       const orderItemsWithoutFiles = validatedData.orderItems.map((item) => {
         const { imageFile, ...itemWithoutFile } = item;
-        return itemWithoutFile;
+        return {
+          ...itemWithoutFile,
+          image: item.image === undefined ? null : item.image,
+        };
       });
 
       formData.append('orderItems', JSON.stringify(orderItemsWithoutFiles));
