@@ -49,10 +49,10 @@ export default function StatCardList({
       const chartDataSetters: Record<string, (data: StatChartData[]) => void> = {
         customers: setCustomersChartData,
         orders: setOrdersChartData,
-        pending: setPendingChartData,
-        processing: setProcessingChartData,
-        shipped: setShippedChartData,
-        delivered: setDeliveredChartData,
+        new: setPendingChartData,
+        in_progress: setProcessingChartData,
+        ready: setShippedChartData,
+        completed: setDeliveredChartData,
       };
 
       const setter = chartDataSetters[metric];
@@ -68,7 +68,7 @@ export default function StatCardList({
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 7);
 
-    const metrics = ['customers', 'orders', 'pending', 'processing', 'shipped', 'delivered'];
+    const metrics = ['customers', 'orders', 'new', 'in_progress', 'ready', 'completed'];
 
     metrics.forEach((metric) => {
       const label = statCardListContent.t(
@@ -135,6 +135,7 @@ export default function StatCardList({
           <Accordion.Control>
             {statCardListContent.t(StatCardListPhrases.OVERVIEW)}
           </Accordion.Control>
+
           <Accordion.Panel>
             <SimpleGrid cols={{ base: 1, xs: 2 }}>
               <StatCard

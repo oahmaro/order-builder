@@ -12,7 +12,7 @@ export type ChartDataPoint = {
 };
 
 export async function getChartData(
-  metric: 'customers' | 'orders' | 'pending' | 'processing' | 'shipped' | 'delivered',
+  metric: 'customers' | 'orders' | OrderStatus,
   dateRange: [Date | null, Date | null],
   metricLabel: string = 'value'
 ): Promise<{ data: ChartDataPoint[]; error?: string }> {
@@ -88,10 +88,11 @@ export async function getChartData(
       return { data: formatResult(groupedData) };
     }
 
-    if (['pending', 'processing', 'shipped', 'delivered'].includes(metric)) {
+    // Handle order status metrics
+    if (Object.values(OrderStatus).includes(metric as OrderStatus)) {
       const orders = await db.order.findMany({
         where: {
-          status: metric.toUpperCase() as OrderStatus,
+          status: metric as OrderStatus,
           createdAt: {
             gte: startDate,
             lte: endDate,
