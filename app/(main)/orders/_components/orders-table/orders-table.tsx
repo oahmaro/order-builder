@@ -132,17 +132,20 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
         onClick: (order: OrderDataType) => router.push(`/orders/${order.id}`),
         icon: <IconEdit size={16} />,
         color: 'blue',
+        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
       },
       {
         label: ordersTableContent.t(OrdersTableContentPhrases.PREVIEW_ORDER),
         onClick: (order: OrderDataType) => router.push(`/orders/${order.id}/preview`),
         icon: <IconEye size={16} />,
+        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
       },
       {
         label: ordersTableContent.t(OrdersTableContentPhrases.PRINT_ORDER),
         onClick: handlePrintOrder,
         icon: <IconPrinter size={16} />,
         color: 'dark',
+        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
       },
       {
         label: ordersTableContent.t(OrdersTableContentPhrases.UPDATE_STATUS),

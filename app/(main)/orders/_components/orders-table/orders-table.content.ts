@@ -18,6 +18,7 @@ export enum OrdersTableContentPhrases {
   PRINT_ORDER = 'printOrder',
   UPDATE_STATUS = 'updateStatus',
   SEND_WHATSAPP = 'sendWhatsapp',
+  CANCELED_ORDER_TOOLTIP = 'canceledOrderTooltip',
 }
 
 export const ordersTableContent = new Polyglot({
@@ -38,5 +39,6 @@ export const ordersTableContent = new Polyglot({
     [OrdersTableContentPhrases.PRINT_ORDER]: 'הדפס הזמנה',
     [OrdersTableContentPhrases.UPDATE_STATUS]: 'עדכן סטטוס',
     [OrdersTableContentPhrases.SEND_WHATSAPP]: 'שלח בוואטסאפ',
+    [OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP]: 'הזמנה מבוטלת',
   },
 });

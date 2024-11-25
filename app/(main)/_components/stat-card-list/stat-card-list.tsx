@@ -68,7 +68,7 @@ export default function StatCardList({
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - 7);
 
-    const metrics = ['customers', 'orders', 'new', 'in_progress', 'ready', 'completed'];
+    const metrics = ['customers', 'orders', 'new', 'in_progress', 'ready', 'completed', 'canceled'];
 
     metrics.forEach((metric) => {
       const label = statCardListContent.t(

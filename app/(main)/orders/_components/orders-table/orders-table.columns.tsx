@@ -2,7 +2,7 @@
 
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor, Badge, NumberFormatter } from '@mantine/core';
+import { Anchor, Badge, NumberFormatter, Tooltip } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Order, OrderStatus, OrderItem } from '@prisma/client';
 
@@ -32,11 +32,24 @@ export const columns = [
   columnHelper.accessor((row) => String(row.id), {
     id: 'id',
     header: ordersTableContent.t(OrdersTableContentPhrases.ID),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
-        {`ORD-${info.getValue()}`}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+      const orderIdText = `ORD-${info.getValue()}`;
+
+      if (isCanceled) {
+        return (
+          <Tooltip label={ordersTableContent.t(OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP)}>
+            <span style={{ cursor: 'not-allowed' }}>{orderIdText}</span>
+          </Tooltip>
+        );
+      }
+
+      return (
+        <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
+          {orderIdText}
+        </Anchor>
+      );
+    },
   }),
 
   columnHelper.accessor((row) => `${row.customer.firstName} ${row.customer.lastName}`, {
