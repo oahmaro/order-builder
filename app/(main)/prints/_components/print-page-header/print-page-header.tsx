@@ -57,8 +57,9 @@ export default function PrintPageHeader({ name, printId, hasOrderItems }: PrintP
         confirm: printsPageHeaderContent.t(PrintsPageHeaderPhrases.DELETE_MODAL_CONFIRM),
         cancel: printsPageHeaderContent.t(PrintsPageHeaderPhrases.DELETE_MODAL_CANCEL),
       },
-      confirmProps: { color: 'red' },
       onConfirm: handleDelete,
+      closeOnClickOutside: false,
+      confirmProps: { color: 'red' },
     });
 
   return (

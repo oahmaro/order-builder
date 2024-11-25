@@ -23,6 +23,7 @@ export default function UsersPageHeader({ numberOfUsers }: UsersPageHeaderProps)
             modals.open({
               title: usersPageHeaderContent.t(UsersPageHeaderPhrases.MODAL_TITLE),
               size: 'xl',
+              closeOnClickOutside: false,
               children: (
                 <UserFormContainer>
                   <CreateUserForm />

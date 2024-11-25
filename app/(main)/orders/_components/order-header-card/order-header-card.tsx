@@ -63,6 +63,7 @@ const handleCreateCustomer = () => {
   modals.open({
     title: orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_CUSTOMER),
     size: 'xl',
+    closeOnClickOutside: false,
     children: (
       <CustomerFormContainer>
         <CreateCustomerForm />

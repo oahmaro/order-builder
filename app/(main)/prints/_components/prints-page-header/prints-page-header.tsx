@@ -24,6 +24,7 @@ export default function PrintsPageHeader({ numberOfPrints }: PrintsPageHeaderPro
             modals.open({
               title: printsPageHeaderContent.t(PrintsPageHeaderPhrases.MODAL_TITLE),
               size: 'lg',
+              closeOnClickOutside: false,
               children: (
                 <PrintFormContainer>
                   <CreatePrintForm />

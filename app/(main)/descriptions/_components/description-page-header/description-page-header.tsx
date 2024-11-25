@@ -62,8 +62,9 @@ export default function DescriptionPageHeader({
         confirm: descriptionPageHeaderContent.t(DescriptionPageHeaderPhrases.MODAL_CONFIRM),
         cancel: descriptionPageHeaderContent.t(CommonPhrases.CANCEL),
       },
-      confirmProps: { color: 'red' },
       onConfirm: handleDelete,
+      closeOnClickOutside: false,
+      confirmProps: { color: 'red' },
     });
 
   return (

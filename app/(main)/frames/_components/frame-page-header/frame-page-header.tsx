@@ -55,8 +55,9 @@ export default function FramePageHeader({
         confirm: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_MODAL_CONFIRM),
         cancel: framePageHeaderContent.t(FramePageHeaderPhrases.DELETE_MODAL_CANCEL),
       },
-      confirmProps: { color: 'red' },
       onConfirm: handleDelete,
+      closeOnClickOutside: false,
+      confirmProps: { color: 'red' },
     });
 
   return (

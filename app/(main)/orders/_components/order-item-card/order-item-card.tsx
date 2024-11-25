@@ -75,6 +75,7 @@ export default function OrderItemCard({
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_FRAME),
       size: 'xl',
+      closeOnClickOutside: false,
       children: (
         <FrameFormContainer>
           <CreateFrameForm />
@@ -87,6 +88,7 @@ export default function OrderItemCard({
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_ADHESION),
       size: 'xl',
+      closeOnClickOutside: false,
       children: (
         <AdhesionFormContainer>
           <CreateAdhesionForm />
@@ -99,6 +101,7 @@ export default function OrderItemCard({
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_PRINT),
       size: 'xl',
+      closeOnClickOutside: false,
       children: (
         <PrintFormContainer>
           <CreatePrintForm />
@@ -111,6 +114,7 @@ export default function OrderItemCard({
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_DESCRIPTION),
       size: 'xl',
+      closeOnClickOutside: false,
       children: (
         <DescriptionFormContainer>
           <CreateDescriptionForm />
@@ -123,6 +127,7 @@ export default function OrderItemCard({
     modals.open({
       title: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_PASSEPARTOUT),
       size: 'xl',
+      closeOnClickOutside: false,
       children: (
         <PassepartoutFormContainer>
           <CreatePassepartoutForm />

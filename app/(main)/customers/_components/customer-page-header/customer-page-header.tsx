@@ -65,6 +65,7 @@ export default function CustomerPageHeader({
         confirm: customerPageHeaderContent.t(CustomerPageHeaderPhrases.DELETE_MODAL_CONFIRM),
         cancel: customerPageHeaderContent.t(CustomerPageHeaderPhrases.DELETE_MODAL_CANCEL),
       },
+      closeOnClickOutside: false,
       confirmProps: { color: 'red' },
       onConfirm: handleDelete,
     });

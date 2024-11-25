@@ -32,6 +32,7 @@ export default function AdhesionsPageHeader({ numberOfAdhesions }: AdhesionsPage
             modals.open({
               title: adhesionsPageHeaderContent.t(AdhesionsPageHeaderPhrases.MODAL_TITLE),
               size: 'xl',
+              closeOnClickOutside: false,
               children: (
                 <AdhesionFormContainer>
                   <CreateAdhesionForm />

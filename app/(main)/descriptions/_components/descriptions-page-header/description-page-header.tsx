@@ -33,6 +33,7 @@ export default function DescriptionsPageHeader({
             modals.open({
               title: descriptionsPageHeaderContent.t(DescriptionsPageHeaderPhrases.MODAL_TITLE),
               size: 'xl',
+              closeOnClickOutside: false,
               children: (
                 <DescriptionFormContainer>
                   <CreateDescriptionForm />

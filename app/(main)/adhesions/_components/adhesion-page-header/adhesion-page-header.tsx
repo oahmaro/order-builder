@@ -61,6 +61,7 @@ export default function AdhesionPageHeader({
         confirm: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_MODAL_CONFIRM),
         cancel: adhesionPageHeaderContent.t(AdhesionPageHeaderPhrases.DELETE_MODAL_CANCEL),
       },
+      closeOnClickOutside: false,
       confirmProps: { color: 'red' },
       onConfirm: handleDelete,
     });

@@ -151,6 +151,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
         label: ordersTableContent.t(OrdersTableContentPhrases.UPDATE_STATUS),
         onClick: (order: OrderDataType) => {
           modals.open({
+            closeOnClickOutside: false,
             title: ordersTableContent.t(OrdersTableContentPhrases.UPDATE_STATUS),
             children: (
               <OrderStatusSelect

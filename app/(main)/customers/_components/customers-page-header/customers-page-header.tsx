@@ -31,6 +31,7 @@ export default function CustomersPageHeader({ numberOfCustomers }: CustomersPage
             modals.open({
               title: customersPageHeaderContent.t(CustomersPageHeaderPhrases.MODAL_TITLE),
               size: 'xl',
+              closeOnClickOutside: false,
               children: (
                 <CustomerFormContainer>
                   <CreateCustomerForm />

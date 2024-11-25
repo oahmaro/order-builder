@@ -64,8 +64,9 @@ export default function PassepartoutPageHeader({
         confirm: passepartoutFormContent.t(PassepartoutFormContentPhrases.DELETE_MODAL_CONFIRM),
         cancel: passepartoutFormContent.t(PassepartoutFormContentPhrases.DELETE_MODAL_CANCEL),
       },
-      confirmProps: { color: 'red' },
       onConfirm: handleDelete,
+      closeOnClickOutside: false,
+      confirmProps: { color: 'red' },
     });
 
   return (

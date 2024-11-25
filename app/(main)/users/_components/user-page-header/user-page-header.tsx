@@ -56,8 +56,9 @@ export default function UserPageHeader({
         confirm: userPageHeaderContent.t(UserPageHeaderPhrases.MODAL_CONFIRM),
         cancel: commonContent.t(CommonPhrases.CANCEL),
       },
-      confirmProps: { color: 'red' },
       onConfirm: handleDelete,
+      closeOnClickOutside: false,
+      confirmProps: { color: 'red' },
     });
 
   return (

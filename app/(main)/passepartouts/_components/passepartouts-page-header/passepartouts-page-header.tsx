@@ -33,6 +33,7 @@ export default function PassepartoutsPageHeader({
             modals.open({
               title: passepartoutsPageHeaderContent.t(PassepartoutsPageHeaderPhrases.MODAL_TITLE),
               size: 'lg',
+              closeOnClickOutside: false,
               children: (
                 <PassepartoutFormContainer>
                   <CreatePassepartoutForm />

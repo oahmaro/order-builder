@@ -20,6 +20,7 @@ export default function FramesPageHeader({ numberOfFrames }: { numberOfFrames: n
             modals.open({
               title: framesPageHeaderContent.t(FramesPageHeaderPhrases.MODAL_TITLE),
               size: 'xl',
+              closeOnClickOutside: false,
               children: (
                 <FrameFormContainer>
                   <CreateFrameForm />
