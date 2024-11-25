@@ -88,11 +88,10 @@ export async function getChartData(
       return { data: formatResult(groupedData) };
     }
 
-    // Handle order status metrics
-    if (Object.values(OrderStatus).includes(metric as OrderStatus)) {
+    if (Object.values(OrderStatus).includes(metric.toUpperCase() as OrderStatus)) {
       const orders = await db.order.findMany({
         where: {
-          status: metric as OrderStatus,
+          status: metric.toUpperCase() as OrderStatus,
           createdAt: {
             gte: startDate,
             lte: endDate,
