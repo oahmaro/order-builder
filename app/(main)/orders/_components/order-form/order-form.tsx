@@ -1,6 +1,7 @@
 'use client';
 
 import * as z from 'zod';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
 import { Stack, Button, Group, Divider } from '@mantine/core';
@@ -57,8 +58,12 @@ export default function OrderForm({
 }: OrderFormProps) {
   const form = useOrderFormContext();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (values: typeof form.values) => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       const validatedData = orderFormSchema.parse(values);
       const formData = new FormData();
@@ -123,6 +128,8 @@ export default function OrderForm({
           color: 'red',
         });
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -200,7 +207,8 @@ export default function OrderForm({
           <Button variant="default" onClick={() => router.push('/orders')}>
             {orderFormContent.t(OrderFormContentPhrases.CANCEL)}
           </Button>
-          <Button type="submit">
+
+          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
             {orderFormContent.t(
               isUpdate ? OrderFormContentPhrases.UPDATE_ORDER : OrderFormContentPhrases.CREATE_ORDER
             )}

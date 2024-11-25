@@ -92,7 +92,7 @@ export const orderItemCardContent = new Polyglot({
     [OrderItemCardContentPhrases.CREATE_PRINT]: 'יצירת הדפסה',
     [OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION]: 'צור תיאור חדש',
     [OrderItemCardContentPhrases.CREATE_DESCRIPTION]: 'יצירת תיאור',
-    [OrderItemCardContentPhrases.ORDER_ITEM]: 'פריט הזמנה',
+    [OrderItemCardContentPhrases.ORDER_ITEM]: 'פריט',
     [OrderItemCardContentPhrases.REMOVE_ORDER_DISABLED_TOOLTIP]: 'חייב להיות לפחות פריט הזמנה אחד',
   },
 });
