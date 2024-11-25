@@ -15,9 +15,9 @@ export default async function OrderPrintPage({ params }: { params: { orderId: st
       orderItems: {
         include: {
           frame: true,
-          print: true,
-          adhesion: true,
-          description: true,
+          prints: true,
+          adhesions: true,
+          descriptions: true,
         },
       },
     },
