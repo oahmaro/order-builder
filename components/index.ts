@@ -9,3 +9,4 @@ export * from './custom-table';
 export * from './modal-footer';
 export * from './address-form';
 export * from './nprogress-complete';
+export * from './nothing-found-button';

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ReactNode } from 'react';
 import { createFormContext, zodResolver } from '@mantine/form';
 
-import { Order, OrderItem } from '@prisma/client';
+import { Order, OrderItem, Adhesion, Print, Description, Passepartout } from '@prisma/client';
 import { orderFormSchema } from './order-form.schema';
 
 type OrderFormInput = z.input<typeof orderFormSchema>;
@@ -28,6 +28,9 @@ const initialValues: OrderFormValues = {
         perspex: false,
         mirror: false,
       },
+      adhesionIds: [],
+      printIds: [],
+      descriptionIds: [],
       unitPrice: 0,
       quantity: 1,
       price: 0,
@@ -41,7 +44,14 @@ export const [OrderFormProvider, useOrderFormContext, useOrderForm] =
 
 interface OrderFormContainerProps {
   children: ReactNode;
-  order?: Order & { orderItems: OrderItem[] };
+  order?: Order & {
+    orderItems: (OrderItem & {
+      adhesions: Adhesion[];
+      prints: Print[];
+      descriptions: Description[];
+      passepartouts: Passepartout[];
+    })[];
+  };
 }
 
 export default function OrderFormContainer({ children, order }: OrderFormContainerProps) {
@@ -63,9 +73,9 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,
-            adhesionId: item.adhesionId ?? undefined,
-            printId: item.printId ?? undefined,
-            descriptionId: item.descriptionId ?? undefined,
+            adhesionIds: item.adhesions?.map((a) => a.id) || [],
+            printIds: item.prints?.map((p) => p.id) || [],
+            descriptionIds: item.descriptions?.map((d) => d.id) || [],
             notes: item.notes ?? undefined,
             image: item.image ?? undefined,
           })),

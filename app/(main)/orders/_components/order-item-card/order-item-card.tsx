@@ -1,7 +1,6 @@
 'use client';
 
 import { modals } from '@mantine/modals';
-import { IconPlus } from '@tabler/icons-react';
 import { Adhesion, Description, Frame, Passepartout, Print } from '@prisma/client';
 
 import {
@@ -13,16 +12,16 @@ import {
   Select,
   Button,
   Divider,
+  Tooltip,
   Checkbox,
   Textarea,
-  NumberInput,
-  NumberFormatter,
-  ComboboxItem,
   Accordion,
-  Tooltip,
+  NumberInput,
+  MultiSelect,
+  NumberFormatter,
 } from '@mantine/core';
 
-import { StaticField } from '@/components';
+import { NothingFoundButton, StaticField } from '@/components';
 import { MediaCapture } from '../media-capture';
 import classes from './order-item-card.module.css';
 import { useOrderFormContext } from '../order-form/order-form.container';
@@ -70,31 +69,6 @@ export default function OrderItemCard({
       form.setFieldValue(`orderItems.${index}.imageFile`, null);
       form.setFieldValue(`orderItems.${index}.image`, null);
     }
-  };
-
-  const createNewFrameOption: ComboboxItem = {
-    value: 'create_new',
-    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_FRAME),
-  };
-
-  const createNewAdhesionOption: ComboboxItem = {
-    value: 'create_new',
-    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_ADHESION),
-  };
-
-  const createNewPrintOption: ComboboxItem = {
-    value: 'create_new',
-    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_PRINT),
-  };
-
-  const createNewDescriptionOption: ComboboxItem = {
-    value: 'create_new',
-    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION),
-  };
-
-  const createNewPassepartoutOption: ComboboxItem = {
-    value: 'create_new',
-    label: orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_PASSEPARTOUT),
   };
 
   const handleCreateFrame = () => {
@@ -272,21 +246,15 @@ export default function OrderItemCard({
                         root: { display: 'flex', alignItems: 'center' },
                         label: { marginLeft: '8px' },
                         input: { width: 200 },
+                        empty: { padding: 0 },
                       }}
                       nothingFoundMessage={
-                        <Box
-                          style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                          fw={500}
-                          c="dark"
-                          onClick={() => handleCreateFrame()}
-                        >
-                          <Group gap={8}>
-                            <IconPlus size={14} stroke={1.5} />
-                            <span>
-                              {orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_FRAME)}
-                            </span>
-                          </Group>
-                        </Box>
+                        <NothingFoundButton
+                          label={orderItemCardContent.t(
+                            OrderItemCardContentPhrases.CREATE_NEW_FRAME
+                          )}
+                          onClick={handleCreateFrame}
+                        />
                       }
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.FRAME_NUMBER)}
                       data={[
@@ -294,29 +262,8 @@ export default function OrderItemCard({
                           value: frame.id.toString(),
                           label: frame.name,
                         })),
-                        createNewFrameOption,
                       ]}
-                      renderOption={({ option }) =>
-                        option.value === 'create_new' ? (
-                          <Box
-                            style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                            fw={500}
-                            c="dark"
-                          >
-                            <Group gap={8}>
-                              <IconPlus size={14} stroke={1.5} />
-                              <span>{option.label}</span>
-                            </Group>
-                          </Box>
-                        ) : (
-                          <span>{option.label}</span>
-                        )
-                      }
                       onChange={(value) => {
-                        if (value === 'create_new') {
-                          handleCreateFrame();
-                          return;
-                        }
                         form.setFieldValue(`orderItems.${index}.frameId`, value);
                       }}
                       value={form.values.orderItems[index].frameId?.toString()}
@@ -332,24 +279,17 @@ export default function OrderItemCard({
                           root: { display: 'flex', alignItems: 'center' },
                           label: { marginLeft: '8px' },
                           input: { width: 200 },
+                          empty: { padding: 0 },
                         }}
                         nothingFoundMessage={
-                          <Box
-                            style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                            fw={500}
-                            c="dark"
-                            onClick={() => handleCreatePassepartout()}
-                          >
-                            <Group gap={8}>
-                              <IconPlus size={14} stroke={1.5} />
-                              <span>
-                                {orderItemCardContent.t(
-                                  OrderItemCardContentPhrases.CREATE_NEW_PASSEPARTOUT
-                                )}
-                              </span>
-                            </Group>
-                          </Box>
+                          <NothingFoundButton
+                            label={orderItemCardContent.t(
+                              OrderItemCardContentPhrases.CREATE_NEW_PASSEPARTOUT
+                            )}
+                            onClick={handleCreatePassepartout}
+                          />
                         }
+                        comboboxProps={{ shadow: 'md' }}
                         label={orderItemCardContent.t(
                           OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER
                         )}
@@ -358,29 +298,8 @@ export default function OrderItemCard({
                             value: passepartout.id.toString(),
                             label: passepartout.name,
                           })),
-                          createNewPassepartoutOption,
                         ]}
-                        renderOption={({ option }) =>
-                          option.value === 'create_new' ? (
-                            <Box
-                              style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                              fw={500}
-                              c="dark"
-                            >
-                              <Group gap={8}>
-                                <IconPlus size={14} stroke={1.5} />
-                                <span>{option.label}</span>
-                              </Group>
-                            </Box>
-                          ) : (
-                            <span>{option.label}</span>
-                          )
-                        }
                         onChange={(value) => {
-                          if (value === 'create_new') {
-                            handleCreatePassepartout();
-                            return;
-                          }
                           form.setFieldValue(`orderItems.${index}.passepartoutNum`, value);
                         }}
                         value={form.values.orderItems[index].passepartoutNum?.toString()}
@@ -413,6 +332,7 @@ export default function OrderItemCard({
 
                     <Group gap={40}>
                       <Checkbox
+                        size="xs"
                         label={orderItemCardContent.t(
                           OrderItemCardContentPhrases.GLASS_TRANSPARENT
                         )}
@@ -420,25 +340,33 @@ export default function OrderItemCard({
                           type: 'checkbox',
                         })}
                       />
+
                       <Checkbox
+                        size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_MATTE)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.matte`, {
                           type: 'checkbox',
                         })}
                       />
+
                       <Checkbox
+                        size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_NONE)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.none`, {
                           type: 'checkbox',
                         })}
                       />
+
                       <Checkbox
+                        size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_PERSPEX)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.perspex`, {
                           type: 'checkbox',
                         })}
                       />
+
                       <Checkbox
+                        size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_MIRROR)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.mirror`, {
                           type: 'checkbox',
@@ -446,182 +374,110 @@ export default function OrderItemCard({
                       />
                     </Group>
 
-                    <Select
+                    <MultiSelect
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },
                         label: { marginLeft: '8px', minWidth: 56 },
                         input: { width: 400 },
+                        empty: { padding: 0 },
                       }}
+                      comboboxProps={{ shadow: 'md' }}
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.ADHESIONS)}
                       nothingFoundMessage={
-                        <Box
-                          style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                          fw={500}
-                          c="dark"
-                          onClick={() => handleCreateAdhesion()}
-                        >
-                          <Group gap={8}>
-                            <IconPlus size={14} stroke={1.5} />
-                            <span>
-                              {orderItemCardContent.t(
-                                OrderItemCardContentPhrases.CREATE_NEW_ADHESION
-                              )}
-                            </span>
-                          </Group>
-                        </Box>
+                        <NothingFoundButton
+                          label={orderItemCardContent.t(
+                            OrderItemCardContentPhrases.CREATE_NEW_ADHESION
+                          )}
+                          onClick={handleCreateAdhesion}
+                        />
                       }
-                      data={[
-                        ...adhesions.map((adhesion) => ({
-                          value: adhesion.id.toString(),
-                          label: adhesion.name,
-                        })),
-                        createNewAdhesionOption,
-                      ]}
-                      renderOption={({ option }) =>
-                        option.value === 'create_new' ? (
-                          <Box
-                            style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                            fw={500}
-                            c="dark"
-                          >
-                            <Group gap={8}>
-                              <IconPlus size={14} stroke={1.5} />
-                              <span>{option.label}</span>
-                            </Group>
-                          </Box>
-                        ) : (
-                          <span>{option.label}</span>
-                        )
-                      }
-                      onChange={(value) => {
-                        if (value === 'create_new') {
-                          handleCreateAdhesion();
-                          return;
-                        }
-                        form.setFieldValue(`orderItems.${index}.adhesionId`, value);
+                      data={adhesions.map((adhesion) => ({
+                        value: adhesion.id.toString(),
+                        label: adhesion.name,
+                      }))}
+                      onChange={(values) => {
+                        form.setFieldValue(
+                          `orderItems.${index}.adhesionIds`,
+                          values.map((v) => parseInt(v, 10))
+                        );
                       }}
-                      value={form.values.orderItems[index].adhesionId?.toString()}
+                      value={
+                        form.values.orderItems[index].adhesionIds?.map((id) => id.toString()) || []
+                      }
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.ADHESIONS_PLACEHOLDER
                       )}
                     />
 
-                    <Select
+                    <MultiSelect
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },
                         label: { marginLeft: '8px', minWidth: 56 },
                         input: { width: 400 },
+                        empty: { padding: 0 },
                       }}
+                      comboboxProps={{ shadow: 'md' }}
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS)}
                       nothingFoundMessage={
-                        <Box
-                          style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                          fw={500}
-                          c="dark"
-                          onClick={() => handleCreatePrint()}
-                        >
-                          <Group gap={8}>
-                            <IconPlus size={14} stroke={1.5} />
-                            <span>
-                              {orderItemCardContent.t(OrderItemCardContentPhrases.CREATE_NEW_PRINT)}
-                            </span>
-                          </Group>
-                        </Box>
+                        <NothingFoundButton
+                          label={orderItemCardContent.t(
+                            OrderItemCardContentPhrases.CREATE_NEW_PRINT
+                          )}
+                          onClick={handleCreatePrint}
+                        />
                       }
-                      data={[
-                        ...prints.map((print) => ({
-                          value: print.id.toString(),
-                          label: print.name,
-                        })),
-                        createNewPrintOption,
-                      ]}
-                      renderOption={({ option }) =>
-                        option.value === 'create_new' ? (
-                          <Box
-                            style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                            fw={500}
-                            c="dark"
-                          >
-                            <Group gap={8}>
-                              <IconPlus size={14} stroke={1.5} />
-                              <span>{option.label}</span>
-                            </Group>
-                          </Box>
-                        ) : (
-                          <span>{option.label}</span>
-                        )
-                      }
-                      onChange={(value) => {
-                        if (value === 'create_new') {
-                          handleCreatePrint();
-                          return;
-                        }
-                        form.setFieldValue(`orderItems.${index}.printId`, value);
+                      data={prints.map((print) => ({
+                        value: print.id.toString(),
+                        label: print.name,
+                      }))}
+                      onChange={(values) => {
+                        form.setFieldValue(
+                          `orderItems.${index}.printIds`,
+                          values.map((v) => parseInt(v, 10))
+                        );
                       }}
-                      value={form.values.orderItems[index].printId?.toString()}
+                      value={
+                        form.values.orderItems[index].printIds?.map((id) => id.toString()) || []
+                      }
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.PRINTS_PLACEHOLDER
                       )}
                     />
 
-                    <Select
+                    <MultiSelect
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },
                         label: { marginLeft: '8px', minWidth: 56 },
                         input: { width: 400 },
+                        empty: { padding: 0 },
                       }}
+                      comboboxProps={{ shadow: 'md' }}
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.DESCRIPTION)}
                       nothingFoundMessage={
-                        <Box
-                          style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                          fw={500}
-                          c="dark"
-                          onClick={() => handleCreateDescription()}
-                        >
-                          <Group gap={8}>
-                            <IconPlus size={14} stroke={1.5} />
-                            <span>
-                              {orderItemCardContent.t(
-                                OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION
-                              )}
-                            </span>
-                          </Group>
-                        </Box>
+                        <NothingFoundButton
+                          label={orderItemCardContent.t(
+                            OrderItemCardContentPhrases.CREATE_NEW_DESCRIPTION
+                          )}
+                          onClick={handleCreateDescription}
+                        />
                       }
-                      data={[
-                        ...descriptions.map((description) => ({
-                          value: description.id.toString(),
-                          label: description.name,
-                        })),
-                        createNewDescriptionOption,
-                      ]}
-                      renderOption={({ option }) =>
-                        option.value === 'create_new' ? (
-                          <Box
-                            style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                            fw={500}
-                            c="dark"
-                          >
-                            <Group gap={8}>
-                              <IconPlus size={14} stroke={1.5} />
-                              <span>{option.label}</span>
-                            </Group>
-                          </Box>
-                        ) : (
-                          <span>{option.label}</span>
-                        )
-                      }
-                      onChange={(value) => {
-                        if (value === 'create_new') {
-                          handleCreateDescription();
-                          return;
-                        }
-                        form.setFieldValue(`orderItems.${index}.descriptionId`, value);
+                      data={descriptions.map((description) => ({
+                        value: description.id.toString(),
+                        label: description.name,
+                      }))}
+                      onChange={(values) => {
+                        form.setFieldValue(
+                          `orderItems.${index}.descriptionIds`,
+                          values.map((v) => parseInt(v, 10))
+                        );
                       }}
-                      value={form.values.orderItems[index].descriptionId?.toString()}
+                      value={
+                        form.values.orderItems[index].descriptionIds?.map((id) => id.toString()) ||
+                        []
+                      }
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.DESCRIPTION_PLACEHOLDER
                       )}

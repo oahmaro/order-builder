@@ -90,9 +90,15 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             passepartoutNum: item.passepartoutNum || 0,
             passepartoutWidth: item.passepartoutWidth || 0,
             glassTypes: JSON.stringify(item.glassTypes),
-            adhesion: item.adhesionId ? { connect: { id: item.adhesionId } } : undefined,
-            print: item.printId ? { connect: { id: item.printId } } : undefined,
-            description: item.descriptionId ? { connect: { id: item.descriptionId } } : undefined,
+            adhesions: {
+              connect: item.adhesionIds?.map((id) => ({ id })) || [],
+            },
+            prints: {
+              connect: item.printIds?.map((id) => ({ id })) || [],
+            },
+            descriptions: {
+              connect: item.descriptionIds?.map((id) => ({ id })) || [],
+            },
             notes: item.notes || undefined,
             unitPrice: item.unitPrice,
             quantity: item.quantity,
@@ -103,7 +109,14 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
         },
       },
       include: {
-        orderItems: true,
+        orderItems: {
+          include: {
+            adhesions: true,
+            prints: true,
+            descriptions: true,
+            passepartouts: true,
+          },
+        },
       },
     });
 

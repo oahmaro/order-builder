@@ -61,9 +61,15 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
             passepartoutNum: item.passepartoutNum || 0,
             passepartoutWidth: item.passepartoutWidth || 0,
             glassTypes: JSON.stringify(item.glassTypes),
-            adhesion: item.adhesionId ? { connect: { id: item.adhesionId } } : undefined,
-            print: item.printId ? { connect: { id: item.printId } } : undefined,
-            description: item.descriptionId ? { connect: { id: item.descriptionId } } : undefined,
+            adhesions: item.adhesionIds?.length
+              ? { connect: item.adhesionIds.map((id) => ({ id })) }
+              : undefined,
+            prints: item.printIds?.length
+              ? { connect: item.printIds.map((id) => ({ id })) }
+              : undefined,
+            descriptions: item.descriptionIds?.length
+              ? { connect: item.descriptionIds.map((id) => ({ id })) }
+              : undefined,
             notes: item.notes || undefined,
             unitPrice: item.unitPrice,
             quantity: item.quantity,

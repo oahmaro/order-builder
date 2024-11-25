@@ -3,7 +3,6 @@
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { modals } from '@mantine/modals';
-import { IconPlus } from '@tabler/icons-react';
 import { Customer, Order, Phone } from '@prisma/client';
 
 import {
@@ -25,6 +24,7 @@ import { CreateCustomerForm } from '@/app/(main)/customers/_components';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { orderHeaderContent, OrderHeaderContentPhrases } from './order-header-card.content';
 import CustomerFormContainer from '@/app/(main)/customers/_components/customer-form/customer-form.container';
+import { NothingFoundButton } from '@/components/nothing-found-button';
 
 export interface OrderHeaderCardProps {
   order?: Order;
@@ -117,11 +117,6 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
   const amountPaid = form.values.amountPaid || 0;
   const remainingToPay = total - amountPaid;
 
-  const createNewCustomerOption = {
-    label: orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER),
-    value: 'create_new',
-  };
-
   const companyPhone = company?.phones?.find((phone) => phone.isPrimary);
   const formattedCompanyPhone = companyPhone
     ? formatPhoneNumber(companyPhone.dialingCode, companyPhone.number)
@@ -146,8 +141,9 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
               clearable
               allowDeselect
               spellCheck="false"
+              data={customerItems}
               error={form.errors.customerId}
-              data={[...customerItems, createNewCustomerOption]}
+              styles={{ empty: { padding: 0 } }}
               filter={({ options, search }) => {
                 const searchTerm = search.toLowerCase().trim();
                 return (options as ComboboxItem[]).filter(
@@ -156,23 +152,8 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
                     item.label.toLowerCase().includes(searchTerm)
                 );
               }}
-              renderOption={({ option }) =>
-                option.value === 'create_new' ? (
-                  <Box
-                    style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                    fw={500}
-                    c="dark"
-                  >
-                    <Group gap={8}>
-                      <IconPlus size={14} stroke={1.5} />
-                      <span>{option.label}</span>
-                    </Group>
-                  </Box>
-                ) : (
-                  <span>{option.label}</span>
-                )
-              }
               value={form.values.customerId ? String(form.values.customerId) : null}
+              placeholder={orderHeaderContent.t(OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER)}
               onChange={(value) => {
                 if (value === 'create_new') {
                   handleCreateCustomer();
@@ -180,21 +161,11 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
                   form.setFieldValue('customerId', value ? Number(value) : 0);
                 }
               }}
-              placeholder={orderHeaderContent.t(OrderHeaderContentPhrases.CUSTOMER_PLACEHOLDER)}
               nothingFoundMessage={
-                <Box
-                  style={{ cursor: 'pointer', color: 'inherit', textAlign: 'right' }}
-                  fw={500}
-                  c="dark"
-                  onClick={() => handleCreateCustomer()}
-                >
-                  <Group gap={8}>
-                    <IconPlus size={14} stroke={1.5} />
-                    <span>
-                      {orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER)}
-                    </span>
-                  </Group>
-                </Box>
+                <NothingFoundButton
+                  label={orderHeaderContent.t(OrderHeaderContentPhrases.CREATE_NEW_CUSTOMER)}
+                  onClick={handleCreateCustomer}
+                />
               }
             />
           </Group>
@@ -233,6 +204,7 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
           />
 
           <Box c="dimmed">-----------------------</Box>
+
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL_TO_PAY)}
             value={<NumberFormatter prefix="₪" value={remainingToPay} thousandSeparator />}
@@ -272,6 +244,7 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
             value={companyAddress}
             separator=": "
           />
+
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.EMAIL)}
             value={
@@ -279,6 +252,7 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
             }
             separator=": "
           />
+
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE)}
             value={

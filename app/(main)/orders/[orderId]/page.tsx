@@ -16,7 +16,14 @@ export default async function OrderPage({ params }: OrderPageProps) {
       id: parseInt(params.orderId, 10),
     },
     include: {
-      orderItems: true,
+      orderItems: {
+        include: {
+          adhesions: true,
+          prints: true,
+          descriptions: true,
+          passepartouts: true,
+        },
+      },
     },
   });
 

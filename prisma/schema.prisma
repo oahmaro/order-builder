@@ -123,7 +123,7 @@ model Adhesion {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 
-  orderItems OrderItem[]
+  orderItems OrderItem[] @relation("AdhesionToOrderItem")
 }
 
 model Print {
@@ -134,7 +134,7 @@ model Print {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 
-  orderItems OrderItem[]
+  orderItems OrderItem[] @relation("PrintToOrderItem")
 }
 
 model Description {
@@ -145,7 +145,7 @@ model Description {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 
-  orderItems OrderItem[]
+  orderItems OrderItem[] @relation("DescriptionToOrderItem")
 }
 
 model Passepartout {
@@ -156,7 +156,7 @@ model Passepartout {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 
-  orderItems OrderItem[]
+  orderItems OrderItem[] @relation("PassepartoutToOrderItem")
 }
 
 enum OrderStatus {
@@ -188,17 +188,10 @@ model OrderItem {
   frameId     Int?
   frame       Frame? @relation(fields: [frameId], references: [id])
 
-  adhesionId  Int?
-  adhesion    Adhesion? @relation(fields: [adhesionId], references: [id])
-
-  printId     Int?
-  print       Print? @relation(fields: [printId], references: [id])
-
-  descriptionId Int?
-  description   Description? @relation(fields: [descriptionId], references: [id])
-
-  passepartoutId Int?
-  passepartout   Passepartout? @relation(fields: [passepartoutId], references: [id])
+  adhesions     Adhesion[]     @relation("AdhesionToOrderItem")
+  prints        Print[]        @relation("PrintToOrderItem")
+  descriptions  Description[]  @relation("DescriptionToOrderItem")
+  passepartouts Passepartout[] @relation("PassepartoutToOrderItem")
 
   height            Float
   width             Float
@@ -218,10 +211,6 @@ model OrderItem {
 
   @@index([orderId])
   @@index([frameId])
-  @@index([adhesionId])
-  @@index([printId])
-  @@index([descriptionId])
-  @@index([passepartoutId])
 }
 
 model Audit {
