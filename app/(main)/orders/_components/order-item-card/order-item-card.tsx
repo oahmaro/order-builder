@@ -240,6 +240,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <Select
+                      clearable
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },
@@ -273,6 +274,7 @@ export default function OrderItemCard({
 
                     <Group>
                       <Select
+                        clearable
                         searchable
                         styles={{
                           root: { display: 'flex', alignItems: 'center' },
@@ -374,6 +376,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <MultiSelect
+                      clearable
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },
@@ -410,6 +413,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
+                      clearable
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },
@@ -446,6 +450,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
+                      clearable
                       searchable
                       styles={{
                         root: { display: 'flex', alignItems: 'center' },

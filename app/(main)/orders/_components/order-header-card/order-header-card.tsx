@@ -138,8 +138,8 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
 
             <Select
               size="sm"
-              searchable
               clearable
+              searchable
               allowDeselect
               spellCheck="false"
               data={customerItems}

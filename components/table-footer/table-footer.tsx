@@ -16,6 +16,7 @@ const TableFooter = forwardRef<HTMLDivElement, TableFooterProps>((props, ref) =>
       <Text c="dimmed" fz="sm">
         {tableFooterContent.t(TableFooterContentPhrases.ITEMS_PER_PAGE)}
       </Text>
+
       <Select
         data={['10', '20', '50', '100']}
         defaultValue="10"
