@@ -144,14 +144,8 @@ export default function OrderItemCard({
             <Group justify="space-between" wrap="nowrap">
               <Group>
                 <Text fw={500}>
-                  {orderItemCardContent.t(OrderItemCardContentPhrases.ORDER_ITEM)} #{index + 1}
+                  {orderItemCardContent.t(OrderItemCardContentPhrases.ORDER_ITEM)} {index + 1}
                 </Text>
-                {form.values.orderItems[index].width && form.values.orderItems[index].height && (
-                  <Text c="dimmed" size="sm">
-                    {form.values.orderItems[index].width} x {form.values.orderItems[index].height}{' '}
-                    cm
-                  </Text>
-                )}
               </Group>
 
               <Tooltip
