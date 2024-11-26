@@ -20,11 +20,11 @@ import {
 
 import { StaticField } from '@/components';
 import classes from './order-header-card.module.css';
+import { NothingFoundButton } from '@/components/nothing-found-button';
 import { CreateCustomerForm } from '@/app/(main)/customers/_components';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { orderHeaderContent, OrderHeaderContentPhrases } from './order-header-card.content';
 import CustomerFormContainer from '@/app/(main)/customers/_components/customer-form/customer-form.container';
-import { NothingFoundButton } from '@/components/nothing-found-button';
 
 export interface OrderHeaderCardProps {
   order?: Order;
@@ -131,13 +131,14 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
     <Paper className={classes.root} shadow="xs" radius="sm">
       <Group>
         <Stack flex={1} h="100%" gap={4}>
-          <Group align="flex-start">
-            <Stack justify="center" h={36}>
-              <Text fz="sm">{orderHeaderContent.t(OrderHeaderContentPhrases.NAME)}</Text>
-            </Stack>
+          <Group align="flex-start" gap={0}>
+            <Text w={48} fz="sm">
+              {orderHeaderContent.t(OrderHeaderContentPhrases.NAME)}
+            </Text>
 
             <Select
-              size="sm"
+              flex={1}
+              size="xs"
               clearable
               searchable
               allowDeselect
@@ -171,44 +172,46 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
             />
           </Group>
 
-          <StaticField
-            separator=": "
-            value={
-              <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
-                {formattedPhone}
-              </span>
-            }
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE_NUMBER)}
-          />
+          <Group gap={0}>
+            <Text w={48} fz="sm">
+              {orderHeaderContent.t(OrderHeaderContentPhrases.PHONE_NUMBER)}
+            </Text>
 
-          <StaticField
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL)}
-            value={
-              <Box component="span" c="red" fw="bold" fz="sm">
-                <NumberFormatter prefix="₪" value={total} thousandSeparator />
-              </Box>
-            }
-            separator=": "
-          />
+            <Select
+              size="xs"
+              flex={1}
+              allowDeselect={false}
+              value={formattedPhone}
+              data={[formattedPhone]}
+            />
+          </Group>
 
           <NumberInput
-            styles={{
-              root: { display: 'flex', alignItems: 'center' },
-              label: { marginLeft: '8px' },
-              input: { width: 160 },
-            }}
+            size="xs"
+            prefix="₪"
+            max={total}
             hideControls
             allowLeadingZeros={false}
+            rightSectionWidth={40}
+            styles={{
+              wrapper: { flex: 1 },
+              root: { display: 'flex', alignItems: 'center' },
+              label: { marginLeft: '8px', width: 48, margin: 0 },
+              input: { width: '100%' },
+            }}
             label={orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}
-            prefix="₪"
             {...form.getInputProps('amountPaid')}
           />
 
-          <Box c="dimmed">-----------------------</Box>
+          <Box c="dimmed">-----------------------------------</Box>
 
           <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL_TO_PAY)}
-            value={<NumberFormatter prefix="₪" value={remainingToPay} thousandSeparator />}
+            value={
+              <Box component="span" c="red" fw="bold" fz="sm">
+                <NumberFormatter prefix="₪" value={remainingToPay} thousandSeparator />
+              </Box>
+            }
             separator=": "
           />
         </Stack>

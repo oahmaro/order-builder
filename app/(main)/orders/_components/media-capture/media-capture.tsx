@@ -322,6 +322,7 @@ export default function MediaCapture({
             />
             <Stack gap="xs">
               <Button
+                size="sm"
                 onClick={() => fileInputRef.current?.click()}
                 className={classes.uploadButton}
                 leftSection={<IconUpload size={16} />}
@@ -330,6 +331,7 @@ export default function MediaCapture({
               </Button>
 
               <Button
+                size="sm"
                 variant="outline"
                 onClick={startCamera}
                 className={classes.uploadButton}

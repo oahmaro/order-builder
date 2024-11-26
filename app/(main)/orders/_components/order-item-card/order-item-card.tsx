@@ -138,7 +138,7 @@ export default function OrderItemCard({
 
   return (
     <Paper className={classes.root} shadow="xs" radius="md">
-      <Accordion defaultValue="details" variant="contained">
+      <Accordion defaultValue="details" variant="contained" styles={{ label: { padding: 4 } }}>
         <Accordion.Item value="details">
           <Accordion.Control>
             <Group justify="space-between" wrap="nowrap">
@@ -189,7 +189,7 @@ export default function OrderItemCard({
                             w={120}
                             min={1}
                             max={999}
-                            size="sm"
+                            size="xs"
                             prefix="cm"
                             hideControls
                             clampBehavior="strict"
@@ -212,7 +212,7 @@ export default function OrderItemCard({
                             w={120}
                             min={1}
                             max={999}
-                            size="sm"
+                            size="xs"
                             prefix="cm"
                             hideControls
                             clampBehavior="strict"
@@ -240,6 +240,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <Select
+                      size="xs"
                       clearable
                       searchable
                       styles={{
@@ -274,6 +275,7 @@ export default function OrderItemCard({
 
                     <Group>
                       <Select
+                        size="xs"
                         clearable
                         searchable
                         styles={{
@@ -319,7 +321,7 @@ export default function OrderItemCard({
                         w={120}
                         min={1}
                         max={999}
-                        size="sm"
+                        size="xs"
                         prefix="cm"
                         hideControls
                         clampBehavior="strict"
@@ -376,6 +378,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <MultiSelect
+                      size="xs"
                       clearable
                       searchable
                       styles={{
@@ -413,6 +416,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
+                      size="xs"
                       clearable
                       searchable
                       styles={{
@@ -450,6 +454,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
+                      size="xs"
                       clearable
                       searchable
                       styles={{
@@ -493,6 +498,7 @@ export default function OrderItemCard({
 
                 <Group align="flex-start">
                   <NumberInput
+                    size="xs"
                     styles={{
                       root: { display: 'flex', alignItems: 'center' },
                       label: { marginLeft: '8px' },
@@ -511,6 +517,7 @@ export default function OrderItemCard({
                     </Stack>
 
                     <NumberInput
+                      size="xs"
                       prefix="₪"
                       hideControls
                       allowLeadingZeros={false}
