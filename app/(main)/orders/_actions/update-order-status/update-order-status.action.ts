@@ -5,6 +5,10 @@ import { OrderStatus } from '@prisma/client';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import {
+  updateOrderStatusContent,
+  UpdateOrderStatusContentPhrases,
+} from './update-order-status.content';
 
 type UpdateStatusResponse = {
   message: string;
@@ -19,8 +23,8 @@ export async function updateOrderStatusAction(
 
   if (!session?.user?.id) {
     return {
-      message: 'Unauthorized',
-      error: 'User must be logged in',
+      message: updateOrderStatusContent.t(UpdateOrderStatusContentPhrases.UNAUTHORIZED),
+      error: updateOrderStatusContent.t(UpdateOrderStatusContentPhrases.UNAUTHORIZED),
     };
   }
 
@@ -32,8 +36,8 @@ export async function updateOrderStatusAction(
 
     if (!oldOrder) {
       return {
-        message: 'Order not found',
-        error: 'Order not found',
+        message: updateOrderStatusContent.t(UpdateOrderStatusContentPhrases.ORDER_NOT_FOUND),
+        error: updateOrderStatusContent.t(UpdateOrderStatusContentPhrases.ORDER_NOT_FOUND),
       };
     }
 
@@ -60,11 +64,11 @@ export async function updateOrderStatusAction(
     revalidatePath('/orders');
 
     return {
-      message: 'Order status updated successfully',
+      message: updateOrderStatusContent.t(UpdateOrderStatusContentPhrases.STATUS_UPDATED),
     };
   } catch (error) {
     return {
-      message: 'Failed to update order status',
+      message: updateOrderStatusContent.t(UpdateOrderStatusContentPhrases.UPDATE_FAILED),
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }

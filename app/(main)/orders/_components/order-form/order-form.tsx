@@ -43,6 +43,7 @@ interface OrderFormProps {
     phones: Phone[];
     address?: Address;
   };
+  isDisabled?: boolean;
 }
 
 export default function OrderForm({
@@ -55,6 +56,7 @@ export default function OrderForm({
   isUpdate,
   order,
   company,
+  isDisabled,
 }: OrderFormProps) {
   const form = useOrderFormContext();
   const router = useRouter();
@@ -182,6 +184,7 @@ export default function OrderForm({
                 }
               : undefined
           }
+          disabled={isDisabled}
         />
 
         {form.values.orderItems.map((_, index) => (
@@ -194,13 +197,14 @@ export default function OrderForm({
             descriptions={descriptions}
             passepartouts={passepartouts}
             onRemove={() => form.removeListItem('orderItems', index)}
-            isRemoveDisabled={form.values.orderItems.length === 1}
+            isRemoveDisabled={form.values.orderItems.length === 1 || isDisabled}
+            disabled={isDisabled}
           />
         ))}
 
         <Group gap={56}>
           <Divider flex={1} />
-          <Button variant="subtle" color="gray" onClick={addOrderItem}>
+          <Button variant="subtle" color="gray" onClick={addOrderItem} disabled={isDisabled}>
             {orderFormContent.t(OrderFormContentPhrases.ADD_ORDER_ITEM)}
           </Button>
           <Divider flex={1} />
@@ -211,7 +215,7 @@ export default function OrderForm({
             {orderFormContent.t(OrderFormContentPhrases.CANCEL)}
           </Button>
 
-          <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+          <Button type="submit" loading={isSubmitting} disabled={isSubmitting || isDisabled}>
             {orderFormContent.t(
               isUpdate ? OrderFormContentPhrases.UPDATE_ORDER : OrderFormContentPhrases.CREATE_ORDER
             )}

@@ -16,6 +16,10 @@ export enum OrderFormContentPhrases {
   ORDER_UPDATED = 'order-updated',
   ERROR_WHILE_UPDATING = 'error-while-updating',
   DIMENSIONS_REQUIRED = 'dimensions-required',
+  ORDER_LOCKED = 'order-locked',
+  ORDER_LOCKED_MESSAGE = 'order-locked-message',
+  ENABLE_EDITING = 'enable-editing',
+  DISABLE_EDITING = 'disable-editing',
 }
 
 export const orderFormContent = new Polyglot({
@@ -34,5 +38,10 @@ export const orderFormContent = new Polyglot({
     [OrderFormContentPhrases.ORDER_UPDATED]: 'ההזמנה עודכנה בהצלחה',
     [OrderFormContentPhrases.ERROR_WHILE_UPDATING]: 'שגיאה בעדכון ההזמנה',
     [OrderFormContentPhrases.DIMENSIONS_REQUIRED]: 'גובה ורוחב נדרשים',
+    [OrderFormContentPhrases.ORDER_LOCKED]: 'הזמנה נעולה',
+    [OrderFormContentPhrases.ORDER_LOCKED_MESSAGE]:
+      'הזמנה זו נעולה לעריכה מכיוון שהיא מוכנה או הושלמה',
+    [OrderFormContentPhrases.ENABLE_EDITING]: 'אפשר עריכה',
+    [OrderFormContentPhrases.DISABLE_EDITING]: 'נעל עריכה',
   },
 });

@@ -42,6 +42,7 @@ export interface OrderHeaderCardProps {
       city?: string;
     };
   };
+  disabled?: boolean;
 }
 
 const formatPhoneNumber = (dialingCode: string, number: string): string => {
@@ -72,7 +73,12 @@ const handleCreateCustomer = () => {
   });
 };
 
-export default function OrderHeaderCard({ order, customers, company }: OrderHeaderCardProps) {
+export default function OrderHeaderCard({
+  order,
+  customers,
+  company,
+  disabled,
+}: OrderHeaderCardProps) {
   const form = useOrderFormContext();
 
   const customerItems = customers
@@ -169,6 +175,7 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
                   onClick={handleCreateCustomer}
                 />
               }
+              disabled={disabled}
             />
           </Group>
 
@@ -183,6 +190,7 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
               allowDeselect={false}
               value={formattedPhone}
               data={[formattedPhone]}
+              disabled={disabled}
             />
           </Group>
 
@@ -201,6 +209,7 @@ export default function OrderHeaderCard({ order, customers, company }: OrderHead
             }}
             label={orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}
             {...form.getInputProps('amountPaid')}
+            disabled={disabled}
           />
 
           <Box c="dimmed">-----------------------------------</Box>

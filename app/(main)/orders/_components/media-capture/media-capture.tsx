@@ -14,6 +14,7 @@ interface MediaCaptureProps {
   fallbackSrc?: string;
   width?: number | string;
   height?: number | string;
+  disabled?: boolean;
   onCapture: (file: File | undefined) => Promise<void>;
 }
 
@@ -22,6 +23,7 @@ export default function MediaCapture({
   onCapture,
   width = 400,
   height = 300,
+  disabled = false,
   fallbackSrc = 'https://placehold.co/600x400?text=Click+to+upload',
 }: MediaCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -327,6 +329,7 @@ export default function MediaCapture({
                 onClick={() => fileInputRef.current?.click()}
                 className={classes.uploadButton}
                 leftSection={<IconUpload size={16} />}
+                disabled={disabled}
               >
                 {mediaCaptureContent.t(MediaCaptureContentPhrases.UPLOAD_IMAGE)}
               </Button>
@@ -337,6 +340,7 @@ export default function MediaCapture({
                 onClick={startCamera}
                 className={classes.uploadButton}
                 leftSection={<IconCamera size={16} />}
+                disabled={disabled}
               >
                 {mediaCaptureContent.t(MediaCaptureContentPhrases.TAKE_PHOTO)}
               </Button>
@@ -367,6 +371,7 @@ export default function MediaCapture({
               size="md"
               radius="xl"
               className={classes.removeButton}
+              disabled={disabled}
               onClick={async () => {
                 if (fileInputRef.current) {
                   fileInputRef.current.value = '';

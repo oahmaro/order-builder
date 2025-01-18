@@ -1,9 +1,11 @@
+import { Stack } from '@mantine/core';
 import { notFound } from 'next/navigation';
 import { OrderStatus } from '@prisma/client';
 
 import { db } from '@/lib/db';
 import { OrderForm } from '../_components/order-form';
 import OrderFormContainer from '../_components/order-form/order-form.container';
+import { OrderStatusBanner } from '../_components/order-form/order-status-banner';
 
 interface OrderPageProps {
   params: {
@@ -47,18 +49,24 @@ export default async function OrderPage({ params }: OrderPageProps) {
     db.passepartout.findMany(),
   ]);
 
+  const isDisabled = order.status === OrderStatus.READY || order.status === OrderStatus.COMPLETED;
+
   return (
     <OrderFormContainer order={order}>
-      <OrderForm
-        isUpdate
-        order={order}
-        frames={frames}
-        prints={prints}
-        customers={customers}
-        adhesions={adhesions}
-        descriptions={descriptions}
-        passepartouts={passepartouts}
-      />
+      <Stack gap="md">
+        <OrderStatusBanner orderId={order.id} status={order.status} />
+        <OrderForm
+          isUpdate
+          order={order}
+          frames={frames}
+          prints={prints}
+          customers={customers}
+          adhesions={adhesions}
+          descriptions={descriptions}
+          passepartouts={passepartouts}
+          isDisabled={isDisabled}
+        />
+      </Stack>
     </OrderFormContainer>
   );
 }

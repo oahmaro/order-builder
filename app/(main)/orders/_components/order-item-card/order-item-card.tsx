@@ -46,6 +46,7 @@ export interface OrderItemCardProps {
   passepartouts: Passepartout[];
   onRemove: () => void;
   isRemoveDisabled?: boolean;
+  disabled?: boolean;
 }
 
 export default function OrderItemCard({
@@ -57,10 +58,13 @@ export default function OrderItemCard({
   passepartouts,
   onRemove,
   isRemoveDisabled,
+  disabled,
 }: OrderItemCardProps) {
   const form = useOrderFormContext();
 
   const handleImageCapture = async (file: File | undefined) => {
+    if (disabled) return;
+
     if (file) {
       const objectUrl = URL.createObjectURL(file);
       form.setFieldValue(`orderItems.${index}.imageFile`, file);
@@ -202,6 +206,7 @@ export default function OrderItemCard({
                               type: 'input',
                               withError: false,
                             })}
+                            disabled={disabled}
                           />
 
                           <Box fw="bold" h={36} lh={2.075}>
@@ -225,6 +230,7 @@ export default function OrderItemCard({
                               type: 'input',
                               withError: false,
                             })}
+                            disabled={disabled}
                           />
                         </Group>
 
@@ -271,6 +277,7 @@ export default function OrderItemCard({
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.FRAME_NUMBER_PLACEHOLDER
                       )}
+                      disabled={disabled}
                     />
 
                     <Group>
@@ -309,6 +316,7 @@ export default function OrderItemCard({
                         placeholder={orderItemCardContent.t(
                           OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER_PLACEHOLDER
                         )}
+                        disabled={disabled}
                       />
 
                       <Stack justify="center" h={36}>
@@ -330,6 +338,7 @@ export default function OrderItemCard({
                         placeholder={orderItemCardContent.t(
                           OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER
                         )}
+                        disabled={disabled}
                       />
                     </Group>
 
@@ -342,6 +351,7 @@ export default function OrderItemCard({
                         {...form.getInputProps(`orderItems.${index}.glassTypes.transparent`, {
                           type: 'checkbox',
                         })}
+                        disabled={disabled}
                       />
 
                       <Checkbox
@@ -350,6 +360,7 @@ export default function OrderItemCard({
                         {...form.getInputProps(`orderItems.${index}.glassTypes.matte`, {
                           type: 'checkbox',
                         })}
+                        disabled={disabled}
                       />
 
                       <Checkbox
@@ -358,6 +369,7 @@ export default function OrderItemCard({
                         {...form.getInputProps(`orderItems.${index}.glassTypes.none`, {
                           type: 'checkbox',
                         })}
+                        disabled={disabled}
                       />
 
                       <Checkbox
@@ -366,6 +378,7 @@ export default function OrderItemCard({
                         {...form.getInputProps(`orderItems.${index}.glassTypes.perspex`, {
                           type: 'checkbox',
                         })}
+                        disabled={disabled}
                       />
 
                       <Checkbox
@@ -374,6 +387,7 @@ export default function OrderItemCard({
                         {...form.getInputProps(`orderItems.${index}.glassTypes.mirror`, {
                           type: 'checkbox',
                         })}
+                        disabled={disabled}
                       />
                     </Group>
 
@@ -413,6 +427,7 @@ export default function OrderItemCard({
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.ADHESIONS_PLACEHOLDER
                       )}
+                      disabled={disabled}
                     />
 
                     <MultiSelect
@@ -451,6 +466,7 @@ export default function OrderItemCard({
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.PRINTS_PLACEHOLDER
                       )}
+                      disabled={disabled}
                     />
 
                     <MultiSelect
@@ -490,6 +506,7 @@ export default function OrderItemCard({
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.DESCRIPTION_PLACEHOLDER
                       )}
+                      disabled={disabled}
                     />
                   </Stack>
                 </Group>
@@ -509,6 +526,7 @@ export default function OrderItemCard({
                     placeholder={orderItemCardContent.t(
                       OrderItemCardContentPhrases.QUANTITY_PLACEHOLDER
                     )}
+                    disabled={disabled}
                   />
 
                   <Group align="flex-start">
@@ -526,6 +544,7 @@ export default function OrderItemCard({
                       placeholder={orderItemCardContent.t(
                         OrderItemCardContentPhrases.UNIT_PRICE_PLACEHOLDER
                       )}
+                      disabled={disabled}
                     />
                   </Group>
 
@@ -552,6 +571,7 @@ export default function OrderItemCard({
                 <MediaCapture
                   value={form.values.orderItems[index].image || undefined}
                   onCapture={handleImageCapture}
+                  disabled={disabled}
                 />
 
                 <Textarea
@@ -559,6 +579,7 @@ export default function OrderItemCard({
                   autosize
                   minRows={4}
                   {...form.getInputProps(`orderItems.${index}.notes`)}
+                  disabled={disabled}
                 />
               </Stack>
             </Group>

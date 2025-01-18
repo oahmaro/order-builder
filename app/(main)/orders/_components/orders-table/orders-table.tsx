@@ -19,7 +19,7 @@ import { MainTable } from '@/components/main-table';
 import { OrderStatusSelect } from './ order-status-select';
 import { OrderStatusFilter } from './orders-status-filter';
 import { columns, OrderDataType } from './orders-table.columns';
-import { updateOrderStatusAction } from '../../_actions/update-order-status.action';
+import { updateOrderStatusAction } from '../../_actions/update-order-status/update-order-status.action';
 import { ordersTableContent, OrdersTableContentPhrases } from './orders-table.content';
 
 export interface OrdersTableProps {
