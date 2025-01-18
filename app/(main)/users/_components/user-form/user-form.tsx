@@ -11,7 +11,7 @@ export default function UserForm() {
 
   return (
     <>
-      <Stack gap="xl">
+      <Stack gap="xl" mb={80}>
         <Stack component="section">
           <Title order={4}>{userFormContent.t(UserFormContentPhrases.USER_DETAILS)}</Title>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { modals } from '@mantine/modals';
 import { useRef, useState, useEffect } from 'react';
 import { notifications } from '@mantine/notifications';
 import { Button, Image, Stack, ActionIcon } from '@mantine/core';
@@ -343,11 +344,27 @@ export default function MediaCapture({
           </div>
         ) : (
           <div className={classes.imageContainer}>
-            <Image src={localImageUrl} fallbackSrc={fallbackSrc} className={classes.image} />
+            <Image
+              src={localImageUrl}
+              fallbackSrc={fallbackSrc}
+              className={classes.image}
+              onClick={() => {
+                if (localImageUrl) {
+                  modals.open({
+                    centered: true,
+                    styles: { header: { display: 'none' }, body: { padding: '0' } },
+                    size: 'lg',
+                    children: (
+                      <Image src={localImageUrl} fit="contain" pos="relative" top="0" bottom="0" />
+                    ),
+                  });
+                }
+              }}
+            />
             <ActionIcon
               variant="filled"
               color="red"
-              size="lg"
+              size="md"
               radius="xl"
               className={classes.removeButton}
               onClick={async () => {

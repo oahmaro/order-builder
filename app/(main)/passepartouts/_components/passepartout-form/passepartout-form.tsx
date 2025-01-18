@@ -13,7 +13,7 @@ export default function PassepartoutForm() {
 
   return (
     <>
-      <Stack gap="xl">
+      <Stack gap="xl" mb={80}>
         <Stack component="section">
           <Title order={4}>{passepartoutFormContent.t(PassepartoutFormContentPhrases.NAME)}</Title>
 

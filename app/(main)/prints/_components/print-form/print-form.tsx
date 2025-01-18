@@ -10,7 +10,7 @@ export default function PrintForm() {
 
   return (
     <>
-      <Stack gap="xl">
+      <Stack gap="xl" mb={80}>
         <Stack component="section">
           <Title order={4}>{printFormContent.t(PrintFormContentPhrases.NAME)}</Title>
 

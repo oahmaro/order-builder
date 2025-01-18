@@ -2,7 +2,6 @@
 
 import {
   Modal,
-  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
@@ -18,7 +17,6 @@ export const theme = createTheme({
   primaryColor: 'dark',
 
   components: {
-    ModalBody: ModalBody.extend({ defaultProps: { mb: 70 } }),
     ModalContent: ModalContent.extend({ defaultProps: { pos: 'relative' } }),
     ModalCloseButton: ModalCloseButton.extend({
       defaultProps: { size: 'md' },

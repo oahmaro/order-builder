@@ -12,7 +12,7 @@ export default function CustomerForm() {
 
   return (
     <>
-      <Stack gap="xl">
+      <Stack gap="xl" mb={80}>
         <Stack component="section">
           <Title order={4}>
             {customerFormContent.t(CustomerFormContentPhrases.CUSTOMER_DETAILS)}
