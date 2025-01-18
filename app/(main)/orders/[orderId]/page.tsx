@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { OrderStatus } from '@prisma/client';
 
 import { db } from '@/lib/db';
 import { OrderForm } from '../_components/order-form';
@@ -27,7 +28,8 @@ export default async function OrderPage({ params }: OrderPageProps) {
     },
   });
 
-  if (!order) {
+  // Return 404 if order doesn't exist or is canceled
+  if (!order || order.status === OrderStatus.CANCELED) {
     notFound();
   }
 
