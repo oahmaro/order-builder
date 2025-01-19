@@ -73,8 +73,8 @@ export default function PrintOrderPage({ params }: PrintOrderPageProps) {
 
   if (isLoading) {
     return (
-      <Center h="100vh">
-        <Loader size="xl" />
+      <Center h="calc(100vh - 180px)">
+        <Loader size="md" />
       </Center>
     );
   }
@@ -84,7 +84,18 @@ export default function PrintOrderPage({ params }: PrintOrderPageProps) {
   }
 
   return (
-    <PDFViewer style={{ width: '100%', height: '100vh' }}>
+    <PDFViewer
+      style={{
+        width: '100vw',
+        height: '100vh',
+        padding: 0,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 1000,
+      }}
+      showToolbar
+    >
       <OrderPDF order={data.order} company={data.company} />
     </PDFViewer>
   );

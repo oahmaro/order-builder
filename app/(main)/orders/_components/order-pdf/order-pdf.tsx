@@ -321,251 +321,269 @@ const getProxiedImageUrl = (originalUrl: string) => {
   return `/api/proxy-image?url=${encodeURIComponent(originalUrl)}&format=png&t=${Date.now()}`;
 };
 
+// Helper function to chunk array into groups
+const chunkArray = <T,>(array: T[], size: number): T[][] => {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
+};
+
 export function OrderPDF({ order, company }: OrderPDFProps) {
-  const total = order.orderItems.reduce((sum, item) => sum + item.price, 0);
-  const remaining = total - order.amountPaid;
+  const orderItemChunks = chunkArray(order.orderItems, 3);
+  const remaining =
+    order.orderItems.reduce((sum, item) => sum + (item.price || 0), 0) - (order.amountPaid || 0);
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.headerContainer}>
-          <View style={styles.leftSection}>
-            <View style={{ flexDirection: 'row-reverse' }}>
-              <Text style={styles.label}> :שם</Text>
-              <Text style={styles.value}>
-                {order.customer.firstName} {order.customer.lastName}
-              </Text>
-            </View>
-            {order.customer.phones?.map((phone) => (
-              <View key={phone.id} style={{ flexDirection: 'row-reverse' }}>
-                <Text style={styles.label}> :טלפון</Text>
-                <Text style={[styles.value, styles.phoneNumber]}>
-                  {formatPhoneForPDF(phone.number)}
-                </Text>
-              </View>
-            ))}
-            <View style={{ flexDirection: 'row-reverse' }}>
-              <Text style={styles.label}> :מקדמה</Text>
-              <Text style={[styles.value, { color: 'black' }]}>
-                <Text style={{ color: 'red' }}>₪{order.amountPaid}</Text>
-              </Text>
-            </View>
-            <View style={styles.separator} />
-            <View style={{ flexDirection: 'row-reverse' }}>
-              <Text style={styles.label}> :סה״כ לתשלום</Text>
-              <Text style={[styles.value, { fontWeight: 'medium', color: 'red' }]}>
-                ₪{remaining}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.middleSection}>
-            <Image src="/logo.png" style={styles.logo} />
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[styles.hebrewText, { color: 'red' }]}>{order.id}</Text>
-              <Text style={styles.hebrewText}> הזמנה מס׳</Text>
-            </View>
-          </View>
-
-          <View style={styles.rightSection}>
-            <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-              <Text style={styles.label}> :שעה</Text>
-              <Text style={styles.value}>
-                {order.createdAt
-                  ? `${new Date(order.createdAt).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      day: 'numeric',
-                      month: 'short',
-                    })} - ${new Date(order.createdAt).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false,
-                    })}`
-                  : '—'}
-              </Text>
-            </View>
-
-            <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-              <Text style={styles.label}> :כתובת</Text>
-              <Text style={styles.value}>{company.address?.streetAddress}</Text>
-            </View>
-
-            <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-              <Text style={styles.label}> :אימייל</Text>
-              <Text style={styles.value}>{company.email}</Text>
-            </View>
-
-            <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-              <Text style={styles.label}> :טלפון</Text>
-              {company.phones.map((phone) => (
-                <Text key={phone.id} style={[styles.value, styles.phoneNumber]}>
-                  {formatPhoneForPDF(phone.number)}
-                </Text>
-              ))}
-            </View>
-          </View>
-        </View>
-        <View style={styles.headerSeparator} />
-
-        {order.orderItems.map((item, index) => (
-          <View key={index} wrap={false} style={styles.orderItemCard}>
-            <View style={styles.itemContainer}>
-              <View>
-                {item.image ? (
-                  <>
-                    <Image
-                      src={getProxiedImageUrl(item.image)}
-                      style={styles.itemImage}
-                      cache={false}
-                    />
-                    <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
-                  </>
-                ) : (
-                  <>
-                    <View style={styles.imagePlaceholder} />
-                    <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
-                  </>
-                )}
-              </View>
-
-              <View style={styles.itemContent}>
-                <View style={styles.itemRow}>
-                  <Text style={styles.itemLabel}>:מידות תמונה</Text>
-                  <Text style={styles.itemValue}>
-                    {item.width ? `${item.width}` : '-'} x {item.height ? `${item.height}` : '-'}
-                  </Text>
-                </View>
-
-                <View style={styles.itemRow}>
-                  <Text style={styles.itemLabel}>:מספר מסגרת</Text>
-                  <Text style={styles.itemValue}>{item.frameId || '-'}</Text>
-                </View>
-
-                <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 20 }}>
-                    <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                      <Text style={styles.itemLabel}>:מספר פספרטו</Text>
-                      <Text style={styles.itemValue}>{item.passepartoutNum || '-'}</Text>
+      {orderItemChunks.map((chunk, pageIndex) => (
+        <Page key={pageIndex} size="A4" style={styles.page}>
+          {/* Render header only on first page */}
+          {pageIndex === 0 && (
+            <>
+              <View style={styles.headerContainer}>
+                <View style={styles.leftSection}>
+                  <View style={{ flexDirection: 'row-reverse' }}>
+                    <Text style={styles.label}> :שם</Text>
+                    <Text style={styles.value}>
+                      {order.customer.firstName} {order.customer.lastName}
+                    </Text>
+                  </View>
+                  {order.customer.phones?.map((phone) => (
+                    <View key={phone.id} style={{ flexDirection: 'row-reverse' }}>
+                      <Text style={styles.label}> :טלפון</Text>
+                      <Text style={[styles.value, styles.phoneNumber]}>
+                        {formatPhoneForPDF(phone.number)}
+                      </Text>
                     </View>
-                    <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                      <Text style={styles.itemLabel}>:רוחב פספרטו</Text>
-                      <Text style={styles.itemValue}>{item.passepartoutWidth || '-'}</Text>
-                    </View>
+                  ))}
+                  <View style={{ flexDirection: 'row-reverse' }}>
+                    <Text style={styles.label}> :מקדמה</Text>
+                    <Text style={[styles.value, { color: 'black' }]}>
+                      <Text style={{ color: 'red' }}>₪{order.amountPaid}</Text>
+                    </Text>
+                  </View>
+                  <View style={styles.separator} />
+                  <View style={{ flexDirection: 'row-reverse' }}>
+                    <Text style={styles.label}> :סה״כ לתשלום</Text>
+                    <Text style={[styles.value, { fontWeight: 'medium', color: 'red' }]}>
+                      ₪{remaining}
+                    </Text>
                   </View>
                 </View>
 
-                <View style={styles.checkboxRow}>
-                  {Object.entries(
-                    JSON.parse(String(item.glassTypes)) as Record<string, boolean>
-                  ).map(([key, value]) => (
-                    <View key={key} style={styles.checkboxContainer}>
-                      <Svg style={styles.checkboxIcon} viewBox="0 0 14 14">
-                        {value ? (
-                          <>
+                <View style={styles.middleSection}>
+                  <Image src="/logo.png" style={styles.logo} />
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={[styles.hebrewText, { color: 'red' }]}>{order.id}</Text>
+                    <Text style={styles.hebrewText}> הזמנה מס׳</Text>
+                  </View>
+                </View>
+
+                <View style={styles.rightSection}>
+                  <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
+                    <Text style={styles.label}> :שעה</Text>
+                    <Text style={styles.value}>
+                      {order.createdAt
+                        ? `${new Date(order.createdAt).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            day: 'numeric',
+                            month: 'short',
+                          })} - ${new Date(order.createdAt).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false,
+                          })}`
+                        : '—'}
+                    </Text>
+                  </View>
+
+                  <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
+                    <Text style={styles.label}> :כתובת</Text>
+                    <Text style={styles.value}>{company.address?.streetAddress}</Text>
+                  </View>
+
+                  <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
+                    <Text style={styles.label}> :אימייל</Text>
+                    <Text style={styles.value}>{company.email}</Text>
+                  </View>
+
+                  <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
+                    <Text style={styles.label}> :טלפון</Text>
+                    {company.phones.map((phone) => (
+                      <Text key={phone.id} style={[styles.value, styles.phoneNumber]}>
+                        {formatPhoneForPDF(phone.number)}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+              </View>
+              <View style={styles.headerSeparator} />
+            </>
+          )}
+
+          {/* Render the chunk of order items (max 3 per page) */}
+          {chunk.map((item, index) => (
+            <View key={index} wrap={false} style={styles.orderItemCard}>
+              <View style={styles.itemContainer}>
+                <View>
+                  {item.image ? (
+                    <>
+                      <Image
+                        src={getProxiedImageUrl(item.image)}
+                        style={styles.itemImage}
+                        cache={false}
+                      />
+                      <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
+                    </>
+                  ) : (
+                    <>
+                      <View style={styles.imagePlaceholder} />
+                      <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
+                    </>
+                  )}
+                </View>
+
+                <View style={styles.itemContent}>
+                  <View style={styles.itemRow}>
+                    <Text style={styles.itemLabel}>:מידות תמונה</Text>
+                    <Text style={styles.itemValue}>
+                      {item.width ? `${item.width}` : '-'} x {item.height ? `${item.height}` : '-'}
+                    </Text>
+                  </View>
+
+                  <View style={styles.itemRow}>
+                    <Text style={styles.itemLabel}>:מספר מסגרת</Text>
+                    <Text style={styles.itemValue}>{item.frameId || '-'}</Text>
+                  </View>
+
+                  <View style={styles.itemRow}>
+                    <View style={{ flexDirection: 'row-reverse', gap: 20 }}>
+                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                        <Text style={styles.itemLabel}>:מספר פספרטו</Text>
+                        <Text style={styles.itemValue}>{item.passepartoutNum || '-'}</Text>
+                      </View>
+                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                        <Text style={styles.itemLabel}>:רוחב פספרטו</Text>
+                        <Text style={styles.itemValue}>{item.passepartoutWidth || '-'}</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View style={styles.checkboxRow}>
+                    {Object.entries(
+                      JSON.parse(String(item.glassTypes)) as Record<string, boolean>
+                    ).map(([key, value]) => (
+                      <View key={key} style={styles.checkboxContainer}>
+                        <Svg style={styles.checkboxIcon} viewBox="0 0 14 14">
+                          {value ? (
+                            <>
+                              <Rect
+                                x="1"
+                                y="1"
+                                width="12"
+                                height="12"
+                                rx="2"
+                                fill="#000"
+                                stroke="#000"
+                                strokeWidth="1"
+                              />
+                              <Path
+                                d="M3.5 7L6 9.5L10.5 4"
+                                stroke="#fff"
+                                strokeWidth="1.5"
+                                fill="none"
+                              />
+                            </>
+                          ) : (
                             <Rect
                               x="1"
                               y="1"
                               width="12"
                               height="12"
                               rx="2"
-                              fill="#000"
                               stroke="#000"
                               strokeWidth="1"
-                            />
-                            <Path
-                              d="M3.5 7L6 9.5L10.5 4"
-                              stroke="#fff"
-                              strokeWidth="1.5"
                               fill="none"
                             />
-                          </>
-                        ) : (
-                          <Rect
-                            x="1"
-                            y="1"
-                            width="12"
-                            height="12"
-                            rx="2"
-                            stroke="#000"
-                            strokeWidth="1"
-                            fill="none"
-                          />
-                        )}
-                      </Svg>
-                      <Text style={styles.checkboxLabel}>
-                        {key === 'transparent'
-                          ? 'זכוכית שקופה'
-                          : key === 'matte'
-                          ? 'זכוכית מט'
-                          : key === 'none'
-                          ? 'ללא זכוכית'
-                          : key === 'perspex'
-                          ? 'פרספקס'
-                          : key === 'mirror'
-                          ? 'מראה'
-                          : key}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-
-                <View
-                  style={
-                    index === (item.adhesions?.length || 0) - 1
-                      ? styles.lastItemRow
-                      : styles.itemRow
-                  }
-                >
-                  <Text style={styles.itemLabel}>:הדבקות</Text>
-                  <Text style={styles.itemValue}>
-                    {item.adhesions?.length ? item.adhesions.map((a) => a.name).join(', ') : '-'}
-                  </Text>
-                </View>
-
-                <View
-                  style={
-                    index === (item.descriptions?.length || 0) - 1
-                      ? styles.lastItemRow
-                      : styles.itemRow
-                  }
-                >
-                  <Text style={styles.itemLabel}>:תיאור</Text>
-                  <Text style={styles.itemValue}>
-                    {item.descriptions?.length
-                      ? item.descriptions.map((d) => d.name).join(', ')
-                      : '-'}
-                  </Text>
-                </View>
-
-                <View style={styles.printSection}>
-                  <View style={styles.sectionRow}>
-                    <View
-                      style={{
-                        flexDirection: 'row-reverse',
-                        gap: 20,
-                        alignItems: 'center',
-                      }}
-                    >
-                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                        <Text style={styles.itemLabel}>:כמות</Text>
-                        <Text style={styles.itemValue}>{item.quantity}</Text>
+                          )}
+                        </Svg>
+                        <Text style={styles.checkboxLabel}>
+                          {key === 'transparent'
+                            ? 'זכוכית שקופה'
+                            : key === 'matte'
+                            ? 'זכוכית מט'
+                            : key === 'none'
+                            ? 'ללא זכוכית'
+                            : key === 'perspex'
+                            ? 'פרספקס'
+                            : key === 'mirror'
+                            ? 'מראה'
+                            : key}
+                        </Text>
                       </View>
-                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                        <Text style={styles.itemLabel}>:מחיר יחידה</Text>
-                        <Text style={styles.itemValue}>₪{item.unitPrice}</Text>
-                      </View>
-                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                        <Text style={styles.itemLabel}>:מחיר</Text>
-                        <Text style={styles.itemValue}>₪{item.unitPrice * item.quantity}</Text>
+                    ))}
+                  </View>
+
+                  <View
+                    style={
+                      index === (item.adhesions?.length || 0) - 1
+                        ? styles.lastItemRow
+                        : styles.itemRow
+                    }
+                  >
+                    <Text style={styles.itemLabel}>:הדבקות</Text>
+                    <Text style={styles.itemValue}>
+                      {item.adhesions?.length ? item.adhesions.map((a) => a.name).join(', ') : '-'}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={
+                      index === (item.descriptions?.length || 0) - 1
+                        ? styles.lastItemRow
+                        : styles.itemRow
+                    }
+                  >
+                    <Text style={styles.itemLabel}>:תיאור</Text>
+                    <Text style={styles.itemValue}>
+                      {item.descriptions?.length
+                        ? item.descriptions.map((d) => d.name).join(', ')
+                        : '-'}
+                    </Text>
+                  </View>
+
+                  <View style={styles.printSection}>
+                    <View style={styles.sectionRow}>
+                      <View
+                        style={{
+                          flexDirection: 'row-reverse',
+                          gap: 20,
+                          alignItems: 'center',
+                        }}
+                      >
+                        <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                          <Text style={styles.itemLabel}>:כמות</Text>
+                          <Text style={styles.itemValue}>{item.quantity}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                          <Text style={styles.itemLabel}>:מחיר יחידה</Text>
+                          <Text style={styles.itemValue}>₪{item.unitPrice}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                          <Text style={styles.itemLabel}>:מחיר</Text>
+                          <Text style={styles.itemValue}>₪{item.unitPrice * item.quantity}</Text>
+                        </View>
                       </View>
                     </View>
                   </View>
                 </View>
               </View>
             </View>
-          </View>
-        ))}
-      </Page>
+          ))}
+        </Page>
+      ))}
     </Document>
   );
 }
