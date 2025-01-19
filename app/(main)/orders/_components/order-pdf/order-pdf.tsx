@@ -1,4 +1,15 @@
-import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Font,
+  Svg,
+  Path,
+  Rect,
+} from '@react-pdf/renderer';
 import { Order, OrderItem, Customer, Company, Address, Phone } from '@prisma/client';
 
 const styles = StyleSheet.create({
@@ -10,9 +21,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row-reverse',
-    marginBottom: 10,
     borderRadius: 4,
-    padding: 16,
+    padding: 8,
     gap: 10,
   },
   leftSection: {
@@ -122,7 +132,7 @@ const styles = StyleSheet.create({
   headerSeparator: {
     borderBottomWidth: 1.5,
     borderBottomColor: '#000',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   orderItemCard: {
     marginBottom: 15,
@@ -130,6 +140,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 4,
+    breakInside: 'avoid',
   },
   itemHeader: {
     flexDirection: 'row-reverse',
@@ -145,8 +156,26 @@ const styles = StyleSheet.create({
   },
   itemRow: {
     flexDirection: 'row-reverse',
-    marginBottom: 4,
+    marginBottom: 12,
     gap: 20,
+  },
+  lastItemRow: {
+    flexDirection: 'row-reverse',
+    marginBottom: 0,
+    gap: 20,
+  },
+  imageDescription: {
+    fontSize: 10,
+    color: '#666',
+    marginTop: 4,
+    marginBottom: 8,
+    textAlign: 'left',
+    maxWidth: 120,
+    minHeight: 52,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: '#eee',
+    borderRadius: 4,
   },
   itemLabel: {
     color: '#666',
@@ -176,6 +205,7 @@ const styles = StyleSheet.create({
     objectFit: 'contain',
     marginBottom: 8,
     marginRight: 16,
+    borderRadius: 4,
   },
   itemContent: {
     flex: 1,
@@ -188,19 +218,66 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   checkbox: {
-    fontSize: 10,
+    width: 12,
+    height: 12,
+    border: '1px solid #000',
+    backgroundColor: '#fff',
     marginRight: 4,
+  },
+  checkedBox: {
+    backgroundColor: '#000',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  checkboxLabel: {
+    fontSize: 10,
+    marginLeft: 4,
   },
   checkboxRow: {
     flexDirection: 'row-reverse',
-    gap: 15,
-    marginVertical: 2,
+    marginBottom: 8,
+    gap: 20,
   },
   imagePlaceholder: {
     width: 120,
     height: 120,
     backgroundColor: '#f5f5f5',
     borderRadius: 4,
+  },
+  checkboxIcon: {
+    width: 12,
+    height: 12,
+    marginRight: 4,
+  },
+  printSection: {
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+  },
+  sectionRow: {
+    flexDirection: 'row-reverse',
+    gap: 5,
+    marginBottom: 8,
+  },
+  sectionLabel: {
+    color: '#666',
+    fontSize: 10,
+  },
+  sectionValue: {
+    fontSize: 10,
+  },
+  priceSection: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+    gap: 40,
   },
 });
 
@@ -226,6 +303,8 @@ interface OrderPDFProps {
     orderItems: (OrderItem & {
       adhesions: { name: string }[];
       frame?: { name: string } | null;
+      prints?: { name: string }[];
+      descriptions?: { name: string }[];
     })[];
   };
   company: Company & {
@@ -329,47 +408,49 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
         <View style={styles.headerSeparator} />
 
         {order.orderItems.map((item, index) => (
-          <View key={index} style={styles.orderItemCard}>
-            <View style={styles.itemHeader}>
-              <Text style={styles.itemTitle}>פריט {index + 1}</Text>
-              <Text style={[styles.itemValue, { color: 'red' }]}>₪{item.price}</Text>
-            </View>
-
+          <View key={index} wrap={false} style={styles.orderItemCard}>
             <View style={styles.itemContainer}>
-              {item.image ? (
-                <Image
-                  src={getProxiedImageUrl(item.image)}
-                  style={styles.itemImage}
-                  cache={false}
-                />
-              ) : (
-                <View style={styles.imagePlaceholder} />
-              )}
+              <View>
+                {item.image ? (
+                  <>
+                    <Image
+                      src={getProxiedImageUrl(item.image)}
+                      style={styles.itemImage}
+                      cache={false}
+                    />
+                    <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
+                  </>
+                ) : (
+                  <>
+                    <View style={styles.imagePlaceholder} />
+                    <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
+                  </>
+                )}
+              </View>
+
               <View style={styles.itemContent}>
                 <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:מידות תמונה</Text>
-                    <Text style={styles.itemValue}>
-                      {item.width ? `${item.width}` : '-'} x {item.height ? `${item.height}` : '-'}
-                    </Text>
-                  </View>
+                  <Text style={styles.itemLabel}>:מידות תמונה</Text>
+                  <Text style={styles.itemValue}>
+                    {item.width ? `${item.width}` : '-'} x {item.height ? `${item.height}` : '-'}
+                  </Text>
                 </View>
 
                 <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:מספר מסגרת</Text>
-                    <Text style={styles.itemValue}>{item.frameId || '-'}</Text>
-                  </View>
+                  <Text style={styles.itemLabel}>:מספר מסגרת</Text>
+                  <Text style={styles.itemValue}>{item.frameId || '-'}</Text>
                 </View>
 
                 <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:מספר פספרטו</Text>
-                    <Text style={styles.itemValue}>{item.passepartoutNum || '-'}</Text>
-                  </View>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:רוחב פספרטו</Text>
-                    <Text style={styles.itemValue}>{item.passepartoutWidth || '-'}</Text>
+                  <View style={{ flexDirection: 'row-reverse', gap: 20 }}>
+                    <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                      <Text style={styles.itemLabel}>:מספר פספרטו</Text>
+                      <Text style={styles.itemValue}>{item.passepartoutNum || '-'}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                      <Text style={styles.itemLabel}>:רוחב פספרטו</Text>
+                      <Text style={styles.itemValue}>{item.passepartoutWidth || '-'}</Text>
+                    </View>
                   </View>
                 </View>
 
@@ -377,9 +458,42 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   {Object.entries(
                     JSON.parse(String(item.glassTypes)) as Record<string, boolean>
                   ).map(([key, value]) => (
-                    <Text key={key} style={styles.glassType}>
-                      {`${value ? '☒' : '☐'} ${
-                        key === 'transparent'
+                    <View key={key} style={styles.checkboxContainer}>
+                      <Svg style={styles.checkboxIcon} viewBox="0 0 14 14">
+                        {value ? (
+                          <>
+                            <Rect
+                              x="1"
+                              y="1"
+                              width="12"
+                              height="12"
+                              rx="2"
+                              fill="#000"
+                              stroke="#000"
+                              strokeWidth="1"
+                            />
+                            <Path
+                              d="M3.5 7L6 9.5L10.5 4"
+                              stroke="#fff"
+                              strokeWidth="1.5"
+                              fill="none"
+                            />
+                          </>
+                        ) : (
+                          <Rect
+                            x="1"
+                            y="1"
+                            width="12"
+                            height="12"
+                            rx="2"
+                            stroke="#000"
+                            strokeWidth="1"
+                            fill="none"
+                          />
+                        )}
+                      </Svg>
+                      <Text style={styles.checkboxLabel}>
+                        {key === 'transparent'
                           ? 'זכוכית שקופה'
                           : key === 'matte'
                           ? 'זכוכית מט'
@@ -389,36 +503,62 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                           ? 'פרספקס'
                           : key === 'mirror'
                           ? 'מראה'
-                          : key
-                      }`}
-                    </Text>
+                          : key}
+                      </Text>
+                    </View>
                   ))}
                 </View>
 
-                <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:הדבקות</Text>
-                    <Text style={styles.itemValue}>
-                      {item.adhesions?.length ? item.adhesions.map((a) => a.name).join(', ') : '-'}
-                    </Text>
-                  </View>
+                <View
+                  style={
+                    index === (item.adhesions?.length || 0) - 1
+                      ? styles.lastItemRow
+                      : styles.itemRow
+                  }
+                >
+                  <Text style={styles.itemLabel}>:הדבקות</Text>
+                  <Text style={styles.itemValue}>
+                    {item.adhesions?.length ? item.adhesions.map((a) => a.name).join(', ') : '-'}
+                  </Text>
                 </View>
 
-                <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:תיאור</Text>
-                    <Text style={styles.itemValue}>{item.notes || '-'}</Text>
-                  </View>
+                <View
+                  style={
+                    index === (item.descriptions?.length || 0) - 1
+                      ? styles.lastItemRow
+                      : styles.itemRow
+                  }
+                >
+                  <Text style={styles.itemLabel}>:תיאור</Text>
+                  <Text style={styles.itemValue}>
+                    {item.descriptions?.length
+                      ? item.descriptions.map((d) => d.name).join(', ')
+                      : '-'}
+                  </Text>
                 </View>
 
-                <View style={styles.itemRow}>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:מחיר יחידה</Text>
-                    <Text style={styles.itemValue}>₪{item.unitPrice}</Text>
-                  </View>
-                  <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
-                    <Text style={styles.itemLabel}>:כמות</Text>
-                    <Text style={styles.itemValue}>{item.quantity}</Text>
+                <View style={styles.printSection}>
+                  <View style={styles.sectionRow}>
+                    <View
+                      style={{
+                        flexDirection: 'row-reverse',
+                        gap: 20,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                        <Text style={styles.itemLabel}>:כמות</Text>
+                        <Text style={styles.itemValue}>{item.quantity}</Text>
+                      </View>
+                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                        <Text style={styles.itemLabel}>:מחיר יחידה</Text>
+                        <Text style={styles.itemValue}>₪{item.unitPrice}</Text>
+                      </View>
+                      <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
+                        <Text style={styles.itemLabel}>:מחיר</Text>
+                        <Text style={styles.itemValue}>₪{item.unitPrice * item.quantity}</Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
               </View>

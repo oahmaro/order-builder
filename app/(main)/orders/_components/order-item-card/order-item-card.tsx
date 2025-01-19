@@ -14,7 +14,6 @@ import {
   Divider,
   Tooltip,
   Checkbox,
-  Textarea,
   Accordion,
   NumberInput,
   MultiSelect,
@@ -36,6 +35,7 @@ import PrintFormContainer from '@/app/(main)/prints/_components/print-form/print
 import DescriptionFormContainer from '@/app/(main)/descriptions/_components/description-form/description-form.container';
 import { CreatePassepartoutForm } from '@/app/(main)/passepartouts/_components/create-passepartout-form';
 import PassepartoutFormContainer from '@/app/(main)/passepartouts/_components/passepartout-form/passepartout-form.container';
+import { TextAreaWithCounter } from './text-area-with-counter/text-area-with-counter';
 
 export interface OrderItemCardProps {
   index: number;
@@ -574,10 +574,10 @@ export default function OrderItemCard({
                   disabled={disabled}
                 />
 
-                <Textarea
+                <TextAreaWithCounter
+                  label={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
                   placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
-                  autosize
-                  minRows={4}
+                  maxLength={45}
                   {...form.getInputProps(`orderItems.${index}.notes`)}
                   disabled={disabled}
                 />

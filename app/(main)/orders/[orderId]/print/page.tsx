@@ -44,35 +44,19 @@ export default function PrintOrderPage({ params }: PrintOrderPageProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching order data for PDF:', params.orderId);
         const response = await fetch(`/api/orders/${params.orderId}/print`);
         const json = await response.json();
 
-        console.log('Order data received:', {
-          orderItemsCount: json.order?.orderItems?.length,
-          hasImages: json.order?.orderItems?.map((item: any, index: number) => ({
-            itemIndex: index,
-            hasImage: !!item.image,
-            imageUrl: item.image,
-          })),
-        });
-
-        // Check if order status is not READY or COMPLETED
         if (
           json.order &&
           json.order.status !== OrderStatus.READY &&
           json.order.status !== OrderStatus.COMPLETED
         ) {
-          console.log('Order status check failed:', json.order.status);
           notFound();
         }
 
         setData(json);
       } catch (error) {
-        console.error('Error fetching order data:', {
-          error: error instanceof Error ? error.message : 'Unknown error',
-          stack: error instanceof Error ? error.stack : undefined,
-        });
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
           message: error instanceof Error ? error.message : 'Error fetching order data',
