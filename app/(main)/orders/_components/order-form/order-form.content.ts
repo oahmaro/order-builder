@@ -20,6 +20,7 @@ export enum OrderFormContentPhrases {
   ORDER_LOCKED_MESSAGE = 'order-locked-message',
   ENABLE_EDITING = 'enable-editing',
   DISABLE_EDITING = 'disable-editing',
+  NOTES_MAX_LENGTH = 'notes-max-length',
 }
 
 export const orderFormContent = new Polyglot({
@@ -43,5 +44,6 @@ export const orderFormContent = new Polyglot({
       'הזמנה זו נעולה לעריכה מכיוון שהיא מוכנה או הושלמה',
     [OrderFormContentPhrases.ENABLE_EDITING]: 'אפשר עריכה',
     [OrderFormContentPhrases.DISABLE_EDITING]: 'נעל עריכה',
+    [OrderFormContentPhrases.NOTES_MAX_LENGTH]: 'הערות לא יכולות לעלות על 45 תווים',
   },
 });

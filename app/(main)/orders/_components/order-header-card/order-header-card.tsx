@@ -19,6 +19,7 @@ import {
 } from '@mantine/core';
 
 import { StaticField } from '@/components';
+import { formatPhoneNumber } from '@/utils';
 import classes from './order-header-card.module.css';
 import { NothingFoundButton } from '@/components/nothing-found-button';
 import { CreateCustomerForm } from '@/app/(main)/customers/_components';
@@ -44,21 +45,6 @@ export interface OrderHeaderCardProps {
   };
   disabled?: boolean;
 }
-
-const formatPhoneNumber = (dialingCode: string, number: string): string => {
-  if (!number) return '—';
-
-  const cleanNumber = number.replace(/\D/g, '');
-  if (cleanNumber.length < 4) return `(${dialingCode}) ${cleanNumber}`;
-
-  if (cleanNumber.length < 7) {
-    return `(${dialingCode}) ${cleanNumber.slice(0, 4)}-${cleanNumber.slice(4)}`;
-  }
-  return `(${dialingCode}) ${cleanNumber.slice(0, 4)}-${cleanNumber.slice(
-    4,
-    7
-  )}-${cleanNumber.slice(7)}`;
-};
 
 const handleCreateCustomer = () => {
   modals.open({

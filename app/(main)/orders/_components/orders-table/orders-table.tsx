@@ -7,20 +7,14 @@ import { SortingState } from '@tanstack/react-table';
 import { notifications } from '@mantine/notifications';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import {
-  IconEdit,
-  IconEye,
-  IconPrinter,
-  IconStatusChange,
-  IconBrandWhatsapp,
-} from '@tabler/icons-react';
+import { IconEdit, IconPrinter, IconStatusChange, IconBrandWhatsapp } from '@tabler/icons-react';
 
 import { MainTable } from '@/components/main-table';
 import { OrderStatusSelect } from './ order-status-select';
 import { OrderStatusFilter } from './orders-status-filter';
 import { columns, OrderDataType } from './orders-table.columns';
-import { updateOrderStatusAction } from '../../_actions/update-order-status/update-order-status.action';
 import { ordersTableContent, OrdersTableContentPhrases } from './orders-table.content';
+import { updateOrderStatusAction } from '../../_actions/update-order-status/update-order-status.action';
 
 export interface OrdersTableProps {
   orders: OrderDataType[];
@@ -98,12 +92,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
 
   const handlePrintOrder = (order: OrderDataType) => {
     // Open print preview in new window
-    const printWindow = window.open(`/orders/${order.id}/print`, '_blank');
-    if (printWindow) {
-      printWindow.onload = () => {
-        printWindow.print();
-      };
-    }
+    window.open(`/orders/${order.id}/print`, '_blank');
   };
 
   const handleSendWhatsapp = (order: OrderDataType) => {
@@ -135,17 +124,13 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
         show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
       },
       {
-        label: ordersTableContent.t(OrdersTableContentPhrases.PREVIEW_ORDER),
-        onClick: (order: OrderDataType) => router.push(`/orders/${order.id}/preview`),
-        icon: <IconEye size={16} />,
-        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
-      },
-      {
         label: ordersTableContent.t(OrdersTableContentPhrases.PRINT_ORDER),
         onClick: handlePrintOrder,
         icon: <IconPrinter size={16} />,
         color: 'dark',
-        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
+        show: (order: OrderDataType) =>
+          order.status !== OrderStatus.CANCELED &&
+          (order.status === OrderStatus.READY || order.status === OrderStatus.COMPLETED),
       },
       {
         label: ordersTableContent.t(OrdersTableContentPhrases.UPDATE_STATUS),

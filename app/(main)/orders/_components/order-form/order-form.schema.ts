@@ -34,7 +34,10 @@ export const orderItemSchema = z.object({
   adhesionIds: z.array(z.coerce.number()).optional(),
   printIds: z.array(z.coerce.number()).optional(),
   descriptionIds: z.array(z.coerce.number()).optional(),
-  notes: z.string().optional(),
+  notes: z
+    .string()
+    .max(45, orderFormContent.t(OrderFormContentPhrases.NOTES_MAX_LENGTH))
+    .optional(),
   image: z.string().nullable().optional(),
   imageFile: z.any().optional(),
   unitPrice: z.coerce
