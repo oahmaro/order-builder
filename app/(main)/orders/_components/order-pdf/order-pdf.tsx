@@ -199,13 +199,20 @@ const styles = StyleSheet.create({
     padding: 4,
     backgroundColor: '#f9f9f9',
   },
-  itemImage: {
+  imageContainer: {
     width: 120,
     height: 120,
-    objectFit: 'contain',
-    marginBottom: 8,
-    marginRight: 16,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
     borderRadius: 4,
+    overflow: 'hidden',
+  },
+  itemImage: {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain',
   },
   itemContent: {
     flex: 1,
@@ -429,19 +436,15 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
               <View style={styles.itemContainer}>
                 <View>
                   {item.image ? (
-                    <>
+                    <View style={styles.imageContainer}>
                       <Image
                         src={getProxiedImageUrl(item.image)}
                         style={styles.itemImage}
                         cache={false}
                       />
-                      <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
-                    </>
+                    </View>
                   ) : (
-                    <>
-                      <View style={styles.imagePlaceholder} />
-                      <Text style={styles.imageDescription}>{item.notes || ' '}</Text>
-                    </>
+                    <View style={styles.imagePlaceholder} />
                   )}
                 </View>
 
