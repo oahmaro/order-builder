@@ -36,8 +36,7 @@ export async function GET(request: Request, { params }: { params: { orderId: str
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
-    // Check if order status is not READY or COMPLETED
-    if (order.status !== OrderStatus.READY && order.status !== OrderStatus.COMPLETED) {
+    if (order.status === OrderStatus.CANCELED) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 

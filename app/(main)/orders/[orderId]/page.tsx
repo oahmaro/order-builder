@@ -49,7 +49,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
     db.passepartout.findMany(),
   ]);
 
-  const isDisabled = order.status === OrderStatus.READY || order.status === OrderStatus.COMPLETED;
+  const isDisabled = order.status === OrderStatus.COMPLETED;
 
   return (
     <OrderFormContainer order={order}>

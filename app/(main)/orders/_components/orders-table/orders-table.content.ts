@@ -16,9 +16,11 @@ export enum OrdersTableContentPhrases {
   EDIT_ORDER = 'editOrder',
   PREVIEW_ORDER = 'previewOrder',
   PRINT_ORDER = 'printOrder',
-  UPDATE_STATUS = 'updateStatus',
+  COMPLETE_ORDER = 'completeOrder',
+  CANCEL_ORDER = 'cancelOrder',
   SEND_WHATSAPP = 'sendWhatsapp',
   CANCELED_ORDER_TOOLTIP = 'canceledOrderTooltip',
+  REVERT_CANCELED_ORDER = 'revert-canceled-order',
 }
 
 export const ordersTableContent = new Polyglot({
@@ -37,8 +39,10 @@ export const ordersTableContent = new Polyglot({
     [OrdersTableContentPhrases.EDIT_ORDER]: 'ערוך הזמנה',
     [OrdersTableContentPhrases.PREVIEW_ORDER]: 'תצוגה מקדימה',
     [OrdersTableContentPhrases.PRINT_ORDER]: 'הדפס הזמנה',
-    [OrdersTableContentPhrases.UPDATE_STATUS]: 'עדכן סטטוס',
+    [OrdersTableContentPhrases.COMPLETE_ORDER]: 'השלם הזמנה',
+    [OrdersTableContentPhrases.CANCEL_ORDER]: 'בטל הזמנה',
     [OrdersTableContentPhrases.SEND_WHATSAPP]: 'שלח בוואטסאפ',
     [OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP]: 'הזמנה מבוטלת',
+    [OrdersTableContentPhrases.REVERT_CANCELED_ORDER]: 'שחזר הזמנה מבוטלת',
   },
 });

@@ -7,10 +7,16 @@ import { SortingState } from '@tanstack/react-table';
 import { notifications } from '@mantine/notifications';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { IconEdit, IconPrinter, IconStatusChange, IconBrandWhatsapp } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconPrinter,
+  IconBrandWhatsapp,
+  IconCheck,
+  IconX,
+  IconArrowBack,
+} from '@tabler/icons-react';
 
 import { MainTable } from '@/components/main-table';
-import { OrderStatusSelect } from './ order-status-select';
 import { OrderStatusFilter } from './orders-status-filter';
 import { columns, OrderDataType } from './orders-table.columns';
 import { ordersTableContent, OrdersTableContentPhrases } from './orders-table.content';
@@ -128,26 +134,29 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
         onClick: handlePrintOrder,
         icon: <IconPrinter size={16} />,
         color: 'dark',
-        show: (order: OrderDataType) =>
-          order.status !== OrderStatus.CANCELED &&
-          (order.status === OrderStatus.READY || order.status === OrderStatus.COMPLETED),
+        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
       },
       {
-        label: ordersTableContent.t(OrdersTableContentPhrases.UPDATE_STATUS),
-        onClick: (order: OrderDataType) => {
-          modals.open({
-            closeOnClickOutside: false,
-            title: ordersTableContent.t(OrdersTableContentPhrases.UPDATE_STATUS),
-            children: (
-              <OrderStatusSelect
-                currentStatus={order.status as OrderStatus}
-                onStatusChange={(status) => handleUpdateStatus(order, status)}
-              />
-            ),
-          });
-        },
-        icon: <IconStatusChange size={16} />,
-        color: 'orange',
+        label: ordersTableContent.t(OrdersTableContentPhrases.COMPLETE_ORDER),
+        onClick: (order: OrderDataType) => handleUpdateStatus(order, OrderStatus.COMPLETED),
+        icon: <IconCheck size={16} />,
+        color: 'green',
+        show: (order: OrderDataType) =>
+          order.status !== OrderStatus.COMPLETED && order.status !== OrderStatus.CANCELED,
+      },
+      {
+        label: ordersTableContent.t(OrdersTableContentPhrases.CANCEL_ORDER),
+        onClick: (order: OrderDataType) => handleUpdateStatus(order, OrderStatus.CANCELED),
+        icon: <IconX size={16} />,
+        color: 'red',
+        show: (order: OrderDataType) => order.status !== OrderStatus.CANCELED,
+      },
+      {
+        label: ordersTableContent.t(OrdersTableContentPhrases.REVERT_CANCELED_ORDER),
+        onClick: (order: OrderDataType) => handleUpdateStatus(order, OrderStatus.NEW),
+        icon: <IconArrowBack size={16} />,
+        color: 'blue',
+        show: (order: OrderDataType) => order.status === OrderStatus.CANCELED,
       },
       {
         label: ordersTableContent.t(OrdersTableContentPhrases.SEND_WHATSAPP),
