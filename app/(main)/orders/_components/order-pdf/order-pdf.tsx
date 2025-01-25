@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   logo: {
-    width: 140,
+    width: 160,
     height: 'auto',
     marginBottom: 10,
   },
