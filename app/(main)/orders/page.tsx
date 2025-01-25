@@ -17,9 +17,15 @@ export default async function OrderPage({ searchParams }: OrdersPageProps) {
       status: searchParams.status ? (searchParams.status as OrderStatus) : undefined,
     },
     orderBy: sortBy
-      ? {
-          [sortBy]: sortDir === 'desc' ? 'desc' : 'asc',
-        }
+      ? sortBy === 'customerName'
+        ? { customer: { firstName: sortDir === 'desc' ? 'desc' : 'asc' } }
+        : sortBy === 'itemsCount'
+        ? { orderItems: { _count: sortDir === 'desc' ? 'desc' : 'asc' } }
+        : sortBy === 'createdBy'
+        ? { createdAt: sortDir === 'desc' ? 'desc' : 'asc' }
+        : sortBy === 'updatedBy'
+        ? { updatedAt: sortDir === 'desc' ? 'desc' : 'asc' }
+        : { [sortBy]: sortDir === 'desc' ? 'desc' : 'asc' }
       : undefined,
     include: {
       customer: {
@@ -34,18 +40,22 @@ export default async function OrderPage({ searchParams }: OrdersPageProps) {
     },
   });
 
-  const ordersWithAudit = (await withAuditInfo(orders, 'Order')).map((order) => ({
-    ...order,
+  const ordersWithAudit = await withAuditInfo(orders, 'Order');
+  const mappedOrders = ordersWithAudit.map((order, index) => ({
+    ...orders[index],
+    createdByUser: order.createdByUser,
+    updatedByUser: order.updatedByUser,
     customer: {
-      ...order.customer,
-      id: String(order.customer.id),
+      ...orders[index].customer,
+      id: String(orders[index].customer.id),
     },
+    orderItems: orders[index].orderItems,
   }));
 
   return (
     <Stack gap="lg">
-      <OrdersPageHeader numberOfOrders={ordersWithAudit.length} />
-      <OrdersTable orders={ordersWithAudit} />
+      <OrdersPageHeader numberOfOrders={mappedOrders.length} />
+      <OrdersTable orders={mappedOrders} />
     </Stack>
   );
 }

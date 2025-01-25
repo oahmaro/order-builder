@@ -88,35 +88,45 @@ export const columns = [
     header: ordersTableContent.t(OrdersTableContentPhrases.ITEMS_COUNT),
   }),
 
-  columnHelper.accessor((row) => (row.createdByUser ? generateUserTitle(row.createdByUser) : '-'), {
-    id: 'createdBy',
-    header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_BY),
-    cell: (info) => {
-      const user = info.row.original.createdByUser;
-      return user ? (
-        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {info.getValue()}
-        </Anchor>
-      ) : (
-        '-'
-      );
-    },
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.createdByUser ? `${row.createdByUser.id} ${generateUserTitle(row.createdByUser)}` : '-',
+    {
+      id: 'createdBy',
+      enableSorting: false,
+      header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_BY),
+      cell: (info) => {
+        const user = info.row.original.createdByUser;
+        return user ? (
+          <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+            {info.getValue()}
+          </Anchor>
+        ) : (
+          '-'
+        );
+      },
+    }
+  ),
 
-  columnHelper.accessor((row) => (row.updatedByUser ? generateUserTitle(row.updatedByUser) : '-'), {
-    id: 'updatedBy',
-    header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_BY),
-    cell: (info) => {
-      const user = info.row.original.updatedByUser;
-      return user ? (
-        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-          {info.getValue()}
-        </Link>
-      ) : (
-        '-'
-      );
-    },
-  }),
+  columnHelper.accessor(
+    (row) =>
+      row.updatedByUser ? `${row.updatedByUser.id} ${generateUserTitle(row.updatedByUser)}` : '-',
+    {
+      id: 'updatedBy',
+      enableSorting: false,
+      header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_BY),
+      cell: (info) => {
+        const user = info.row.original.updatedByUser;
+        return user ? (
+          <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            {info.getValue()}
+          </Link>
+        ) : (
+          '-'
+        );
+      },
+    }
+  ),
 
   columnHelper.accessor(
     (row) =>
