@@ -97,7 +97,6 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
   };
 
   const handlePrintOrder = (order: OrderDataType) => {
-    // Open print preview in new window
     window.open(`/orders/${order.id}/print`, '_blank');
   };
 
