@@ -110,7 +110,7 @@ export default function OrderForm({
           color: 'green',
         });
         form.resetDirty();
-        router.push('/orders');
+        router.push('/orders?page=1&pageSize=10&sortBy=id&sortDir=asc');
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),
@@ -141,7 +141,7 @@ export default function OrderForm({
       height: null,
       width: null,
       frameId: null,
-      passepartoutNum: null,
+      passepartoutId: null,
       passepartoutWidth: null,
       glassTypes: {
         transparent: false,
