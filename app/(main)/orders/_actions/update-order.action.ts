@@ -67,7 +67,11 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
         const newItemImage = orderItems[index]?.image;
 
         // If old item had an image and new item either has no image or a different image
-        if (oldItem.image && (!newItemImage || newItemImage === null)) {
+        if (
+          oldItem.image &&
+          typeof oldItem.image === 'string' &&
+          (!newItemImage || newItemImage === null)
+        ) {
           await deleteImageAction(oldItem.image);
         }
       })
@@ -94,8 +98,9 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
         }
 
         // If there was an old image, delete it since we're uploading a new one
-        if (oldOrder.orderItems[index]?.image) {
-          await deleteImageAction(oldOrder.orderItems[index].image);
+        const oldImage = oldOrder.orderItems[index]?.image;
+        if (oldImage && typeof oldImage === 'string') {
+          await deleteImageAction(oldImage);
         }
 
         return uploadResult.url;
