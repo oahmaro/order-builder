@@ -229,8 +229,8 @@ export default function OrderHeaderCard({
         <Stack flex={1} h="100%" gap={0}>
           {order?.createdAt && (
             <StaticField
-              label={orderHeaderContent.t(OrderHeaderContentPhrases.TIME)}
-              value={dayjs(order.createdAt).format('ddd D MMM - HH:mm')}
+              label={orderHeaderContent.t(OrderHeaderContentPhrases.DATE)}
+              value={dayjs(order.createdAt).format('DD-M-YYYY')}
               separator=": "
             />
           )}

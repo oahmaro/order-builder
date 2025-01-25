@@ -390,18 +390,12 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
 
                 <View style={styles.rightSection}>
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-                    <Text style={styles.label}> :שעה</Text>
+                    <Text style={styles.label}> :תאריך</Text>
                     <Text style={styles.value}>
                       {order.createdAt
-                        ? `${new Date(order.createdAt).toLocaleDateString('en-US', {
-                            weekday: 'short',
-                            day: 'numeric',
-                            month: 'short',
-                          })} - ${new Date(order.createdAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false,
-                          })}`
+                        ? `${new Date(order.createdAt).getDate()}-${
+                            new Date(order.createdAt).getMonth() + 1
+                          }-${new Date(order.createdAt).getFullYear()}`
                         : '—'}
                     </Text>
                   </View>
