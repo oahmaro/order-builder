@@ -46,11 +46,7 @@ export default function PrintOrderPage({ params }: PrintOrderPageProps) {
         const response = await fetch(`/api/orders/${params.orderId}/print`);
         const json = await response.json();
 
-        if (
-          json.order &&
-          json.order.status !== OrderStatus.READY &&
-          json.order.status !== OrderStatus.COMPLETED
-        ) {
+        if (json.order && json.order.status === OrderStatus.CANCELED) {
           notFound();
         }
 

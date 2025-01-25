@@ -17,10 +17,10 @@ interface OrderStatusBannerProps {
 
 export function OrderStatusBanner({ orderId, status }: OrderStatusBannerProps) {
   const router = useRouter();
-  const isLocked = status === OrderStatus.READY || status === OrderStatus.COMPLETED;
+  const isLocked = status === OrderStatus.COMPLETED;
 
   const handleToggleStatus = async () => {
-    const newStatus = isLocked ? OrderStatus.IN_PROGRESS : OrderStatus.READY;
+    const newStatus = isLocked ? OrderStatus.NEW : OrderStatus.COMPLETED;
 
     const response = await updateOrderStatusAction(orderId, newStatus);
 

@@ -159,8 +159,6 @@ model Passepartout {
 
 enum OrderStatus {
   NEW         // Order has just been created and needs to be started
-  IN_PROGRESS // Work on the frame/order has begun
-  READY       // Order is complete and ready for pickup/delivery
   COMPLETED   // Order has been delivered/picked up by customer
   CANCELED    // Order has been canceled
 }

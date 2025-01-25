@@ -9,20 +9,12 @@ export default async function HomePage() {
   const totalCustomers = await db.customer.count();
   const totalOrders = await db.order.count();
 
-  const pendingOrders = await db.order.count({
+  const newOrders = await db.order.count({
     where: { status: 'NEW' },
   });
 
-  const processingOrders = await db.order.count({
-    where: { status: 'IN_PROGRESS' },
-  });
-
-  const deliveredOrders = await db.order.count({
+  const completedOrders = await db.order.count({
     where: { status: 'COMPLETED' },
-  });
-
-  const shippedOrders = await db.order.count({
-    where: { status: 'READY' },
   });
 
   return (
@@ -32,10 +24,8 @@ export default async function HomePage() {
       <StatCardList
         customers={totalCustomers}
         orders={totalOrders}
-        pendingOrders={pendingOrders}
-        processingOrders={processingOrders}
-        deliveredOrders={deliveredOrders}
-        shippedOrders={shippedOrders}
+        newOrders={newOrders}
+        completedOrders={completedOrders}
         onFetchChartData={
           getChartData as unknown as (
             metric: string,
