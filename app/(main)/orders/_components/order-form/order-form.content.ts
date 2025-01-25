@@ -21,6 +21,7 @@ export enum OrderFormContentPhrases {
   ENABLE_EDITING = 'enable-editing',
   DISABLE_EDITING = 'disable-editing',
   NOTES_MAX_LENGTH = 'notes-max-length',
+  PRINT_ORDER = 'PRINT_ORDER',
 }
 
 export const orderFormContent = new Polyglot({
@@ -45,5 +46,9 @@ export const orderFormContent = new Polyglot({
     [OrderFormContentPhrases.ENABLE_EDITING]: 'אפשר עריכה',
     [OrderFormContentPhrases.DISABLE_EDITING]: 'נעל עריכה',
     [OrderFormContentPhrases.NOTES_MAX_LENGTH]: 'הערות לא יכולות לעלות על 45 תווים',
+    [OrderFormContentPhrases.PRINT_ORDER]: {
+      en: 'Print Order',
+      he: 'הדפס הזמנה',
+    },
   },
 });

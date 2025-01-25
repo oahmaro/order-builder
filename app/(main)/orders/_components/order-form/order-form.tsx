@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
 import { Stack, Button, Group, Divider } from '@mantine/core';
+import { IconPrinter } from '@tabler/icons-react';
 
 import {
   Frame,
@@ -159,6 +160,12 @@ export default function OrderForm({
     });
   };
 
+  const handlePrint = () => {
+    if (order?.id) {
+      window.open(`/orders/${order.id}/print`, '_blank');
+    }
+  };
+
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
       <Stack gap="sm">
@@ -213,6 +220,17 @@ export default function OrderForm({
           <Button variant="default" onClick={() => router.push('/orders')}>
             {orderFormContent.t(OrderFormContentPhrases.CANCEL)}
           </Button>
+
+          {isUpdate && order?.id && (
+            <Button
+              variant="light"
+              leftSection={<IconPrinter size={16} />}
+              onClick={handlePrint}
+              disabled={isDisabled}
+            >
+              {orderFormContent.t(OrderFormContentPhrases.PRINT_ORDER)}
+            </Button>
+          )}
 
           <Button type="submit" loading={isSubmitting} disabled={isSubmitting || isDisabled}>
             {orderFormContent.t(
