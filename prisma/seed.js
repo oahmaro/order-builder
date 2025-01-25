@@ -63,8 +63,6 @@ async function load() {
         },
         phones: {
           create: company.phones.map((phone) => ({
-            countryCode: phone.countryCode,
-            dialingCode: phone.dialingCode,
             number: phone.number,
             type: phone.type,
             isPrimary: phone.isPrimary,

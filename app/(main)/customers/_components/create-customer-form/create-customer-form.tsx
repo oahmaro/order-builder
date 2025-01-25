@@ -35,18 +35,10 @@ export default function CreateCustomerForm() {
       formData.append('firstName', validatedData.firstName);
       formData.append('lastName', validatedData.lastName);
 
-      const modifiedPhones = validatedData.phones.map((phone, index) => {
-        if (!phone.countryCode) {
-          return phone;
-        }
-        const [, code] = phone.countryCode.split(':');
-
-        return {
-          ...phone,
-          countryCode: code || phone.countryCode,
-          isPrimary: index === 0,
-        };
-      });
+      const modifiedPhones = validatedData.phones.map((phone, index) => ({
+        ...phone,
+        isPrimary: index === 0,
+      }));
 
       formData.append('phones', JSON.stringify(modifiedPhones));
 

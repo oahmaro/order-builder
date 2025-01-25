@@ -22,7 +22,6 @@ interface PrintOrderData {
       phones?: {
         id: number;
         number: string;
-        dialingCode: string;
         isPrimary: boolean;
       }[];
     };

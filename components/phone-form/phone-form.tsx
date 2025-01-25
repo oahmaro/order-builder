@@ -2,16 +2,10 @@
 
 import { z } from 'zod';
 import { UseFormReturnType } from '@mantine/form';
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js';
 import { Button, Group, Select, Stack, TextInput } from '@mantine/core';
 
 import { phoneSchema } from '@/schemas';
 import { phoneFormContent, PhoneFormContentPhrases } from './phone-form.content';
-
-const countryCodes = getCountries().map((country) => ({
-  value: `${country}:+${getCountryCallingCode(country)}`,
-  label: `${country} (+${getCountryCallingCode(country)})`,
-}));
 
 type PhoneFields = {
   phones: z.infer<typeof phoneSchema>[];
@@ -22,34 +16,10 @@ interface PhoneFormProps<T extends PhoneFields> {
 }
 
 export default function PhoneForm<T extends PhoneFields>({ form }: PhoneFormProps<T>) {
-  const setPhoneField = (
-    index: number,
-    field: keyof PhoneFields['phones'][number],
-    value: string
-  ) => {
-    form.setFieldValue(`phones.${index}.${field}`, value as any);
-  };
-
   return (
     <Stack>
       {form.values.phones.map((_, index) => (
         <Group key={index} grow align="flex-start">
-          <Select
-            label={phoneFormContent.t(PhoneFormContentPhrases.COUNTRY_CODE_LABEL)}
-            placeholder={phoneFormContent.t(PhoneFormContentPhrases.COUNTRY_CODE_PLACEHOLDER)}
-            required
-            data={countryCodes}
-            searchable
-            value={`${form.values.phones[index].countryCode}:${form.values.phones[index].dialingCode}`}
-            onChange={(value) => {
-              if (value) {
-                const [countryCode, dialingCode] = value.split(':');
-                setPhoneField(index, 'countryCode', countryCode);
-                setPhoneField(index, 'dialingCode', dialingCode);
-              }
-            }}
-          />
-
           <TextInput
             label={phoneFormContent.t(PhoneFormContentPhrases.PHONE_NUMBER_LABEL)}
             placeholder={phoneFormContent.t(PhoneFormContentPhrases.PHONE_NUMBER_PLACEHOLDER)}
@@ -100,8 +70,6 @@ export default function PhoneForm<T extends PhoneFields>({ form }: PhoneFormProp
         variant="light"
         onClick={() =>
           form.insertListItem('phones', {
-            countryCode: 'IL',
-            dialingCode: '+972',
             number: '',
             type: 'MOBILE',
             isPrimary: false,

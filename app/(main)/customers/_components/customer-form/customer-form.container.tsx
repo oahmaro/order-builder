@@ -23,14 +23,10 @@ export default function CustomerFormContainer({ children, customer }: CustomerFo
       firstName: customer?.firstName || '',
       lastName: customer?.lastName || '',
       phones: customer?.phones.map((phone) => ({
-        countryCode: phone.countryCode,
-        dialingCode: phone.dialingCode,
         number: phone.number,
         isPrimary: phone.isPrimary,
         type: phone.type,
-      })) || [
-        { countryCode: 'IL', dialingCode: '+972', number: '', isPrimary: true, type: 'MOBILE' },
-      ],
+      })) || [{ number: '', isPrimary: true, type: 'MOBILE' }],
       email: customer?.email || '',
       dateOfBirth: customer?.dateOfBirth
         ? new Date(customer.dateOfBirth).toISOString().split('T')[0]

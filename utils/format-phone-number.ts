@@ -1,19 +1,15 @@
-export const formatPhoneNumber = (dialingCode: string, number: string): string => {
+export const formatPhoneNumber = (number: string): string => {
   if (!number) return '—';
 
   const cleanNumber = number.replace(/\D/g, '');
-  const cleanDialingCode = dialingCode.replace(/\D/g, '');
 
   if (cleanNumber.length < 4) {
-    return `+${cleanDialingCode} ${cleanNumber}`;
+    return cleanNumber;
   }
 
   if (cleanNumber.length < 7) {
-    return `+${cleanDialingCode} ${cleanNumber.slice(0, 3)}-${cleanNumber.slice(3)}`;
+    return `${cleanNumber.slice(0, 3)}-${cleanNumber.slice(3)}`;
   }
 
-  return `+${cleanDialingCode} ${cleanNumber.slice(0, 3)}-${cleanNumber.slice(
-    3,
-    6
-  )}-${cleanNumber.slice(6)}`;
+  return `${cleanNumber.slice(0, 3)}-${cleanNumber.slice(3, 6)}-${cleanNumber.slice(6)}`;
 };

@@ -172,7 +172,6 @@ export default function OrderForm({
                   email: company.email,
                   phones: company.phones.map((phone) => ({
                     number: phone.number,
-                    dialingCode: phone.dialingCode,
                     isPrimary: phone.isPrimary,
                   })),
                   address: company.address

@@ -46,20 +46,18 @@ model Customer {
 }
 
 model Phone {
-  id          Int       @id @default(autoincrement())
-  countryCode String
-  dialingCode String
-  number      String
-  type        PhoneType @default(MOBILE)
-  isPrimary   Boolean   @default(false)
+  id        Int       @id @default(autoincrement())
+  number    String
+  type      PhoneType @default(MOBILE)
+  isPrimary Boolean   @default(false)
   
-  customerId  Int?
-  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId Int?
+  customer  Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
   
-  companyId   Int?
-  company     Company?  @relation(fields: [companyId], references: [id])
+  companyId Int?
+  company   Company?  @relation(fields: [companyId], references: [id])
 
-  @@unique([countryCode, dialingCode, number])
+  @@unique([number])
   @@index([customerId])
   @@index([companyId])
 }

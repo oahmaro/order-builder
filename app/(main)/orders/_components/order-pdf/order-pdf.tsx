@@ -303,7 +303,6 @@ interface OrderPDFProps {
       phones?: {
         id: number;
         number: string;
-        dialingCode: string;
         isPrimary: boolean;
       }[];
     };

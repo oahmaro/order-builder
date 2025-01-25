@@ -36,7 +36,6 @@ export async function updateCustomerAction(data: FormData): Promise<FormState> {
     ...formData,
     phones: parsedPhones.map((phone: any, index: number) => ({
       ...phone,
-      countryCode: phone.countryCode,
       isPrimary: index === 0,
     })),
     address: parsedAddress,
@@ -100,11 +99,9 @@ export async function updateCustomerAction(data: FormData): Promise<FormState> {
         phones: {
           deleteMany: {},
           create: phones.map((phone: any) => ({
-            countryCode: phone.countryCode,
             number: phone.number,
-            isPrimary: phone.isPrimary,
-            dialingCode: phone.dialingCode,
             type: phone.type,
+            isPrimary: phone.isPrimary,
           })),
         },
       },
