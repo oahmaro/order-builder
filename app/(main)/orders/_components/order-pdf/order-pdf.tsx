@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   middleSection: {
     flex: 1.6,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   rightSection: {
     flex: 1.2,
@@ -381,6 +382,9 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                 </View>
 
                 <View style={styles.middleSection}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={[styles.hebrewText, { color: 'red' }]}>PDF</Text>
+                  </View>
                   <Image src="/logo.png" style={styles.logo} />
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={[styles.hebrewText, { color: 'red' }]}>{order.id}</Text>
@@ -401,13 +405,13 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   </View>
 
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-                    <Text style={styles.label}> :כתובת</Text>
-                    <Text style={styles.value}>{company.address?.streetAddress}</Text>
+                    <Text style={styles.label}> :אימייל</Text>
+                    <Text style={styles.value}>{company.email}</Text>
                   </View>
 
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-                    <Text style={styles.label}> :אימייל</Text>
-                    <Text style={styles.value}>{company.email}</Text>
+                    <Text style={styles.label}> :כתובת</Text>
+                    <Text style={styles.value}>{company.address?.streetAddress}</Text>
                   </View>
 
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
@@ -428,7 +432,7 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
           {chunk.map((item, index) => (
             <View key={index} wrap={false} style={styles.orderItemCard}>
               <View style={styles.itemContainer}>
-                <View>
+                <View style={{ gap: 8 }}>
                   {item.image ? (
                     <View style={styles.imageContainer}>
                       <Image
@@ -440,6 +444,9 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   ) : (
                     <View style={styles.imagePlaceholder} />
                   )}
+                  <View style={[styles.imageDescription, { margin: 0 }]}>
+                    <Text>{item.notes || ''}</Text>
+                  </View>
                 </View>
 
                 <View style={styles.itemContent}>
