@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   itemRow: {
     flexDirection: 'row-reverse',
-    marginBottom: 12,
+    marginBottom: 10,
     gap: 20,
   },
   lastItemRow: {
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   sectionRow: {
     flexDirection: 'row-reverse',
     gap: 5,
-    marginBottom: 8,
+    marginBottom: 0,
   },
   sectionLabel: {
     color: '#666',
