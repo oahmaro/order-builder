@@ -20,9 +20,10 @@ import {
   NumberFormatter,
 } from '@mantine/core';
 
-import { NothingFoundButton, StaticField } from '@/components';
+import { useFormNavigation } from '@/hooks';
 import { MediaCapture } from '../media-capture';
 import classes from './order-item-card.module.css';
+import { NothingFoundButton, StaticField } from '@/components';
 import { useOrderFormContext } from '../order-form/order-form.container';
 import { CreateFrameForm } from '@/app/(main)/frames/_components/create-frame-form';
 import { orderItemCardContent, OrderItemCardContentPhrases } from './order-item-card.content';
@@ -61,6 +62,7 @@ export default function OrderItemCard({
   disabled,
 }: OrderItemCardProps) {
   const form = useOrderFormContext();
+  const { registerRef, handleEnterKey } = useFormNavigation();
 
   const handleImageCapture = async (file: File | undefined) => {
     if (disabled) return;
@@ -190,6 +192,7 @@ export default function OrderItemCard({
                       <Stack gap={0}>
                         <Group align="flex-end">
                           <NumberInput
+                            ref={registerRef(0)}
                             w={120}
                             min={1}
                             max={999}
@@ -207,6 +210,7 @@ export default function OrderItemCard({
                               withError: false,
                             })}
                             disabled={disabled}
+                            onKeyDown={handleEnterKey(0)}
                           />
 
                           <Box fw="bold" h={36} lh={2.075}>
@@ -214,6 +218,7 @@ export default function OrderItemCard({
                           </Box>
 
                           <NumberInput
+                            ref={registerRef(1)}
                             w={120}
                             min={1}
                             max={999}
@@ -231,6 +236,7 @@ export default function OrderItemCard({
                               withError: false,
                             })}
                             disabled={disabled}
+                            onKeyDown={handleEnterKey(1)}
                           />
                         </Group>
 
@@ -246,6 +252,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <Select
+                      ref={registerRef(2)}
                       size="xs"
                       clearable
                       searchable
@@ -255,6 +262,7 @@ export default function OrderItemCard({
                         input: { width: 200 },
                         empty: { padding: 0 },
                       }}
+                      onKeyDown={handleEnterKey(2)}
                       nothingFoundMessage={
                         <NothingFoundButton
                           label={orderItemCardContent.t(
@@ -282,6 +290,7 @@ export default function OrderItemCard({
 
                     <Group>
                       <Select
+                        ref={registerRef(3)}
                         size="xs"
                         clearable
                         searchable
@@ -291,6 +300,7 @@ export default function OrderItemCard({
                           input: { width: 200 },
                           empty: { padding: 0 },
                         }}
+                        onKeyDown={handleEnterKey(3)}
                         nothingFoundMessage={
                           <NothingFoundButton
                             label={orderItemCardContent.t(
@@ -326,6 +336,7 @@ export default function OrderItemCard({
                       </Stack>
 
                       <NumberInput
+                        ref={registerRef(4)}
                         w={120}
                         min={1}
                         max={999}
@@ -339,11 +350,13 @@ export default function OrderItemCard({
                           OrderItemCardContentPhrases.PASSEPARTOUT_WIDTH_PLACEHOLDER
                         )}
                         disabled={disabled}
+                        onKeyDown={handleEnterKey(4)}
                       />
                     </Group>
 
                     <Group gap={40}>
                       <Checkbox
+                        ref={registerRef(5)}
                         size="xs"
                         label={orderItemCardContent.t(
                           OrderItemCardContentPhrases.GLASS_TRANSPARENT
@@ -352,46 +365,56 @@ export default function OrderItemCard({
                           type: 'checkbox',
                         })}
                         disabled={disabled}
+                        onKeyDown={handleEnterKey(5)}
                       />
 
                       <Checkbox
+                        ref={registerRef(6)}
                         size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_MATTE)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.matte`, {
                           type: 'checkbox',
                         })}
                         disabled={disabled}
+                        onKeyDown={handleEnterKey(6)}
                       />
 
                       <Checkbox
+                        ref={registerRef(7)}
                         size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_NONE)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.none`, {
                           type: 'checkbox',
                         })}
                         disabled={disabled}
+                        onKeyDown={handleEnterKey(7)}
                       />
 
                       <Checkbox
+                        ref={registerRef(8)}
                         size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_PERSPEX)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.perspex`, {
                           type: 'checkbox',
                         })}
                         disabled={disabled}
+                        onKeyDown={handleEnterKey(8)}
                       />
 
                       <Checkbox
+                        ref={registerRef(9)}
                         size="xs"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_MIRROR)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.mirror`, {
                           type: 'checkbox',
                         })}
                         disabled={disabled}
+                        onKeyDown={handleEnterKey(9)}
                       />
                     </Group>
 
                     <MultiSelect
+                      ref={registerRef(10)}
                       size="xs"
                       clearable
                       searchable
@@ -403,6 +426,7 @@ export default function OrderItemCard({
                       }}
                       comboboxProps={{ shadow: 'md' }}
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.ADHESIONS)}
+                      onKeyDown={handleEnterKey(10)}
                       nothingFoundMessage={
                         <NothingFoundButton
                           label={orderItemCardContent.t(
@@ -431,6 +455,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
+                      ref={registerRef(11)}
                       size="xs"
                       clearable
                       searchable
@@ -442,6 +467,7 @@ export default function OrderItemCard({
                       }}
                       comboboxProps={{ shadow: 'md' }}
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.PRINTS)}
+                      onKeyDown={handleEnterKey(11)}
                       nothingFoundMessage={
                         <NothingFoundButton
                           label={orderItemCardContent.t(
@@ -470,6 +496,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
+                      ref={registerRef(12)}
                       size="xs"
                       clearable
                       searchable
@@ -481,6 +508,7 @@ export default function OrderItemCard({
                       }}
                       comboboxProps={{ shadow: 'md' }}
                       label={orderItemCardContent.t(OrderItemCardContentPhrases.DESCRIPTION)}
+                      onKeyDown={handleEnterKey(12)}
                       nothingFoundMessage={
                         <NothingFoundButton
                           label={orderItemCardContent.t(
@@ -515,6 +543,7 @@ export default function OrderItemCard({
 
                 <Group align="flex-start">
                   <NumberInput
+                    ref={registerRef(13)}
                     size="xs"
                     styles={{
                       root: { display: 'flex', alignItems: 'center' },
@@ -527,6 +556,7 @@ export default function OrderItemCard({
                       OrderItemCardContentPhrases.QUANTITY_PLACEHOLDER
                     )}
                     disabled={disabled}
+                    onKeyDown={handleEnterKey(13)}
                   />
 
                   <Group align="flex-start">
@@ -535,6 +565,7 @@ export default function OrderItemCard({
                     </Stack>
 
                     <NumberInput
+                      ref={registerRef(14)}
                       size="xs"
                       prefix="₪"
                       hideControls
@@ -545,6 +576,7 @@ export default function OrderItemCard({
                         OrderItemCardContentPhrases.UNIT_PRICE_PLACEHOLDER
                       )}
                       disabled={disabled}
+                      onKeyDown={handleEnterKey(14)}
                     />
                   </Group>
 
@@ -575,11 +607,13 @@ export default function OrderItemCard({
                 />
 
                 <TextAreaWithCounter
+                  ref={registerRef(15)}
                   label={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
                   placeholder={orderItemCardContent.t(OrderItemCardContentPhrases.NOTES)}
                   maxLength={45}
                   {...form.getInputProps(`orderItems.${index}.notes`)}
                   disabled={disabled}
+                  onKeyDown={handleEnterKey(15)}
                 />
               </Stack>
             </Group>
