@@ -141,7 +141,7 @@ export default function OrderItemCard({
   };
 
   return (
-    <Paper className={classes.root} shadow="xs" radius="md">
+    <Paper className={classes.root} shadow="sm" radius="md">
       <Accordion defaultValue="details" variant="contained" styles={{ label: { padding: 4 } }}>
         <Accordion.Item value="details">
           <Accordion.Control>
@@ -161,7 +161,7 @@ export default function OrderItemCard({
                 <Button
                   variant="outline"
                   color="red"
-                  size="xs"
+                  size="sm"
                   ml="xl"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -193,7 +193,7 @@ export default function OrderItemCard({
                             w={120}
                             min={1}
                             max={999}
-                            size="xs"
+                            size="sm"
                             prefix="cm"
                             hideControls
                             clampBehavior="strict"
@@ -217,7 +217,7 @@ export default function OrderItemCard({
                             w={120}
                             min={1}
                             max={999}
-                            size="xs"
+                            size="sm"
                             prefix="cm"
                             hideControls
                             clampBehavior="strict"
@@ -236,7 +236,7 @@ export default function OrderItemCard({
 
                         {(form.errors[`orderItems.${index}.width`] ||
                           form.errors[`orderItems.${index}.height`]) && (
-                          <Text c="red" size="xs" mt={5}>
+                          <Text c="red" size="sm" mt={5}>
                             {orderItemCardContent.t(
                               OrderItemCardContentPhrases.DIMENSIONS_REQUIRED
                             )}
@@ -246,7 +246,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <Select
-                      size="xs"
+                      size="sm"
                       clearable
                       searchable
                       styles={{
@@ -282,7 +282,7 @@ export default function OrderItemCard({
 
                     <Group>
                       <Select
-                        size="xs"
+                        size="sm"
                         clearable
                         searchable
                         styles={{
@@ -325,7 +325,7 @@ export default function OrderItemCard({
                         w={120}
                         min={1}
                         max={999}
-                        size="xs"
+                        size="sm"
                         prefix="cm"
                         hideControls
                         clampBehavior="strict"
@@ -340,7 +340,7 @@ export default function OrderItemCard({
 
                     <Group gap={40}>
                       <Checkbox
-                        size="xs"
+                        size="sm"
                         label={orderItemCardContent.t(
                           OrderItemCardContentPhrases.GLASS_TRANSPARENT
                         )}
@@ -351,7 +351,7 @@ export default function OrderItemCard({
                       />
 
                       <Checkbox
-                        size="xs"
+                        size="sm"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_MATTE)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.matte`, {
                           type: 'checkbox',
@@ -360,7 +360,7 @@ export default function OrderItemCard({
                       />
 
                       <Checkbox
-                        size="xs"
+                        size="sm"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_NONE)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.none`, {
                           type: 'checkbox',
@@ -369,7 +369,7 @@ export default function OrderItemCard({
                       />
 
                       <Checkbox
-                        size="xs"
+                        size="sm"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_PERSPEX)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.perspex`, {
                           type: 'checkbox',
@@ -378,7 +378,7 @@ export default function OrderItemCard({
                       />
 
                       <Checkbox
-                        size="xs"
+                        size="sm"
                         label={orderItemCardContent.t(OrderItemCardContentPhrases.GLASS_MIRROR)}
                         {...form.getInputProps(`orderItems.${index}.glassTypes.mirror`, {
                           type: 'checkbox',
@@ -388,7 +388,7 @@ export default function OrderItemCard({
                     </Group>
 
                     <MultiSelect
-                      size="xs"
+                      size="sm"
                       clearable
                       searchable
                       styles={{
@@ -427,7 +427,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
-                      size="xs"
+                      size="sm"
                       clearable
                       searchable
                       styles={{
@@ -466,7 +466,7 @@ export default function OrderItemCard({
                     />
 
                     <MultiSelect
-                      size="xs"
+                      size="sm"
                       clearable
                       searchable
                       styles={{
@@ -511,7 +511,7 @@ export default function OrderItemCard({
 
                 <Group align="flex-start">
                   <NumberInput
-                    size="xs"
+                    size="sm"
                     styles={{
                       root: { display: 'flex', alignItems: 'center' },
                       label: { marginLeft: '8px' },
@@ -531,7 +531,7 @@ export default function OrderItemCard({
                     </Stack>
 
                     <NumberInput
-                      size="xs"
+                      size="sm"
                       prefix="₪"
                       hideControls
                       allowLeadingZeros={false}
