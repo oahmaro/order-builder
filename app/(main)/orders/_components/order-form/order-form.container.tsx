@@ -18,7 +18,7 @@ const initialValues: OrderFormValues = {
     {
       height: null,
       width: null,
-      frameId: 0,
+      frameId: null,
       passepartoutId: null,
       passepartoutWidth: null,
       glassTypes: {
