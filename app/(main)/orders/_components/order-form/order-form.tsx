@@ -222,12 +222,7 @@ export default function OrderForm({
           </Button>
 
           {isUpdate && order?.id && (
-            <Button
-              variant="light"
-              leftSection={<IconPrinter size={16} />}
-              onClick={handlePrint}
-              disabled={isDisabled}
-            >
+            <Button variant="light" leftSection={<IconPrinter size={16} />} onClick={handlePrint}>
               {orderFormContent.t(OrderFormContentPhrases.PRINT_ORDER)}
             </Button>
           )}

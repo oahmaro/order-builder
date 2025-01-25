@@ -87,7 +87,9 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             height: item.height || 0,
             width: item.width || 0,
             frame: item.frameId ? { connect: { id: item.frameId } } : undefined,
-            passepartoutNum: item.passepartoutNum || 0,
+            passepartout: item.passepartoutId
+              ? { connect: { id: item.passepartoutId } }
+              : undefined,
             passepartoutWidth: item.passepartoutWidth || 0,
             glassTypes: JSON.stringify(item.glassTypes),
             adhesions: {
@@ -114,7 +116,6 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             adhesions: true,
             prints: true,
             descriptions: true,
-            passepartouts: true,
           },
         },
       },

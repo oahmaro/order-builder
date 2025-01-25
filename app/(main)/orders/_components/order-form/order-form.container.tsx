@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ReactNode } from 'react';
 import { createFormContext, zodResolver } from '@mantine/form';
 
-import { Order, OrderItem, Adhesion, Print, Description, Passepartout } from '@prisma/client';
+import { Order, OrderItem, Adhesion, Print, Description } from '@prisma/client';
 import { orderFormSchema } from './order-form.schema';
 
 type OrderFormInput = z.input<typeof orderFormSchema>;
@@ -19,7 +19,7 @@ const initialValues: OrderFormValues = {
       height: null,
       width: null,
       frameId: 0,
-      passepartoutNum: null,
+      passepartoutId: null,
       passepartoutWidth: null,
       glassTypes: {
         transparent: false,
@@ -49,7 +49,6 @@ interface OrderFormContainerProps {
       adhesions: Adhesion[];
       prints: Print[];
       descriptions: Description[];
-      passepartouts: Passepartout[];
     })[];
   };
 }
@@ -65,7 +64,7 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
             height: item.height ?? null,
             width: item.width ?? null,
             frameId: item.frameId ?? null,
-            passepartoutNum: item.passepartoutNum ?? null,
+            passepartoutId: item.passepartoutId ?? null,
             passepartoutWidth: item.passepartoutWidth ?? null,
             glassTypes: item.glassTypes
               ? JSON.parse(item.glassTypes as string)

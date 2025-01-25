@@ -154,7 +154,7 @@ model Passepartout {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
 
-  orderItems OrderItem[] @relation("PassepartoutToOrderItem")
+  orderItems OrderItem[]
 }
 
 enum OrderStatus {
@@ -185,14 +185,15 @@ model OrderItem {
   frameId     Int?
   frame       Frame? @relation(fields: [frameId], references: [id])
 
+  passepartoutId Int?
+  passepartout  Passepartout? @relation(fields: [passepartoutId], references: [id])
+
   adhesions     Adhesion[]     @relation("AdhesionToOrderItem")
   prints        Print[]        @relation("PrintToOrderItem")
   descriptions  Description[]  @relation("DescriptionToOrderItem")
-  passepartouts Passepartout[] @relation("PassepartoutToOrderItem")
 
   height            Float
   width             Float
-  passepartoutNum   Int
   passepartoutWidth Float
   glassTypes        Json
   unitPrice         Float
@@ -208,6 +209,7 @@ model OrderItem {
 
   @@index([orderId])
   @@index([frameId])
+  @@index([passepartoutId])
 }
 
 model Audit {

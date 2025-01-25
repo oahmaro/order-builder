@@ -22,7 +22,7 @@ export const orderItemSchema = z.object({
       message: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
     }),
   frameId: z.coerce.number().nullable(),
-  passepartoutNum: z.coerce.number().nullable(),
+  passepartoutId: z.coerce.number().nullable(),
   passepartoutWidth: z.coerce.number().nullable(),
   glassTypes: z.object({
     transparent: z.boolean().default(false),

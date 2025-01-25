@@ -24,7 +24,6 @@ export default async function OrderPage({ params }: OrderPageProps) {
           adhesions: true,
           prints: true,
           descriptions: true,
-          passepartouts: true,
         },
       },
     },

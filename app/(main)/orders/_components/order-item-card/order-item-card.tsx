@@ -291,6 +291,8 @@ export default function OrderItemCard({
                           input: { width: 200 },
                           empty: { padding: 0 },
                         }}
+                        comboboxProps={{ shadow: 'md' }}
+                        label={orderItemCardContent.t(OrderItemCardContentPhrases.PASSEPARTOUT)}
                         nothingFoundMessage={
                           <NothingFoundButton
                             label={orderItemCardContent.t(
@@ -299,22 +301,16 @@ export default function OrderItemCard({
                             onClick={handleCreatePassepartout}
                           />
                         }
-                        comboboxProps={{ shadow: 'md' }}
-                        label={orderItemCardContent.t(
-                          OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER
-                        )}
-                        data={[
-                          ...passepartouts.map((passepartout) => ({
-                            value: passepartout.id.toString(),
-                            label: passepartout.name,
-                          })),
-                        ]}
+                        data={passepartouts.map((passepartout) => ({
+                          value: passepartout.id.toString(),
+                          label: passepartout.name,
+                        }))}
                         onChange={(value) => {
-                          form.setFieldValue(`orderItems.${index}.passepartoutNum`, value);
+                          form.setFieldValue(`orderItems.${index}.passepartoutId`, value);
                         }}
-                        value={form.values.orderItems[index].passepartoutNum?.toString()}
+                        value={form.values.orderItems[index].passepartoutId?.toString()}
                         placeholder={orderItemCardContent.t(
-                          OrderItemCardContentPhrases.PASSEPARTOUT_NUMBER_PLACEHOLDER
+                          OrderItemCardContentPhrases.PASSEPARTOUT_PLACEHOLDER
                         )}
                         disabled={disabled}
                       />

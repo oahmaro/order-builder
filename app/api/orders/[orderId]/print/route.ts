@@ -19,6 +19,7 @@ export async function GET(request: Request, { params }: { params: { orderId: str
               prints: true,
               adhesions: true,
               descriptions: true,
+              passepartout: true,
             },
           },
         },

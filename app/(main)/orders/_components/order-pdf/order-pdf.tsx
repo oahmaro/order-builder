@@ -309,6 +309,7 @@ interface OrderPDFProps {
     orderItems: (OrderItem & {
       adhesions: { name: string }[];
       frame?: { name: string } | null;
+      passepartout?: { name: string } | null;
       prints?: { name: string }[];
       descriptions?: { name: string }[];
     })[];
@@ -451,24 +452,27 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   <View style={styles.itemRow}>
                     <Text style={styles.itemLabel}>:מידות תמונה</Text>
                     <Text style={styles.itemValue}>
-                      {item.width ? `${item.width}` : '-'} x {item.height ? `${item.height}` : '-'}
+                      {item.width ? `${item.width}cm` : '-'} x{' '}
+                      {item.height ? `${item.height}cm` : '-'}
                     </Text>
                   </View>
 
                   <View style={styles.itemRow}>
                     <Text style={styles.itemLabel}>:מספר מסגרת</Text>
-                    <Text style={styles.itemValue}>{item.frameId || '-'}</Text>
+                    <Text style={styles.itemValue}>{item.frame?.name || '-'}</Text>
                   </View>
 
                   <View style={styles.itemRow}>
                     <View style={{ flexDirection: 'row-reverse', gap: 20 }}>
                       <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
                         <Text style={styles.itemLabel}>:מספר פספרטו</Text>
-                        <Text style={styles.itemValue}>{item.passepartoutNum || '-'}</Text>
+                        <Text style={styles.itemValue}>{item.passepartout?.name || '-'}</Text>
                       </View>
                       <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
                         <Text style={styles.itemLabel}>:רוחב פספרטו</Text>
-                        <Text style={styles.itemValue}>{item.passepartoutWidth || '-'}</Text>
+                        <Text style={styles.itemValue}>
+                          {item.passepartoutWidth ? `${item.passepartoutWidth}cm` : '-'}
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -538,6 +542,17 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     <Text style={styles.itemLabel}>:הדבקות</Text>
                     <Text style={styles.itemValue}>
                       {item.adhesions?.length ? item.adhesions.map((a) => a.name).join(', ') : '-'}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={
+                      index === (item.prints?.length || 0) - 1 ? styles.lastItemRow : styles.itemRow
+                    }
+                  >
+                    <Text style={styles.itemLabel}>:הדפסות</Text>
+                    <Text style={styles.itemValue}>
+                      {item.prints?.length ? item.prints.map((p) => p.name).join(', ') : '-'}
                     </Text>
                   </View>
 
