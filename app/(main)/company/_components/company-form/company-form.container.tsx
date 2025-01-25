@@ -35,16 +35,12 @@ export default function CompanyFormContainer({ children, company }: CompanyFormC
       },
       phones: company?.phones?.length
         ? company.phones.map((phone) => ({
-            countryCode: phone.countryCode,
-            dialingCode: phone.dialingCode,
             number: phone.number,
             type: phone.type,
             isPrimary: phone.isPrimary,
           }))
         : [
             {
-              countryCode: 'IL',
-              dialingCode: '+972',
               number: '',
               type: 'MOBILE',
               isPrimary: true,

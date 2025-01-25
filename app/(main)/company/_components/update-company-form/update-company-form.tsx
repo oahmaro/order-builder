@@ -33,19 +33,10 @@ export default function UpdateCompanyForm({ company }: { company: Company }) {
       formData.append('name', validatedData.name);
       formData.append('email', validatedData.email);
 
-      const modifiedPhones = validatedData.phones.map((phone, index) => {
-        if (!phone.countryCode) {
-          return phone;
-        }
-
-        const [, code] = phone.countryCode.split(':');
-
-        return {
-          ...phone,
-          countryCode: code || phone.countryCode,
-          isPrimary: index === 0,
-        };
-      });
+      const modifiedPhones = validatedData.phones.map((phone, index) => ({
+        ...phone,
+        isPrimary: index === 0,
+      }));
 
       formData.append('phones', JSON.stringify(modifiedPhones));
 

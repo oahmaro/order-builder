@@ -17,7 +17,6 @@ export type OrderDataType = Partial<Order> & {
     phones?: {
       id: number;
       number: string;
-      dialingCode: string;
       isPrimary: boolean;
     }[];
   };

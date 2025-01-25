@@ -5,6 +5,5 @@ export * from './get-user-title';
 export * from './with-audit-info';
 export * from './get-user-initials';
 export * from './format-phone-number';
-export * from './phone-number-validator';
 export * from './get-order-status-mapping';
 export * from './format-date-to-iso-string';

@@ -35,7 +35,6 @@ export interface OrderHeaderCardProps {
     email: string;
     phones: {
       number: string;
-      dialingCode: string;
       isPrimary: boolean;
     }[];
     address?: {
@@ -70,7 +69,7 @@ export default function OrderHeaderCard({
   const customerItems = customers
     ? customers.map((customer) => {
         const phoneNumbers = customer.phones.map((phone) => ({
-          formatted: formatPhoneNumber(phone.dialingCode, phone.number),
+          formatted: formatPhoneNumber(phone.number),
           raw: phone.number.replace(/\D/g, ''),
         }));
 
@@ -89,9 +88,7 @@ export default function OrderHeaderCard({
   );
 
   const primaryPhone = selectedCustomer?.phones?.find((phone) => phone.isPrimary);
-  const formattedPhone = primaryPhone
-    ? formatPhoneNumber(primaryPhone.dialingCode, primaryPhone.number)
-    : '—';
+  const formattedPhone = primaryPhone ? formatPhoneNumber(primaryPhone.number) : '—';
 
   // Calculate total
   const total = form.values.orderItems.reduce((sum, item) => {
@@ -112,7 +109,7 @@ export default function OrderHeaderCard({
 
   const companyPhone = company?.phones?.find((phone) => phone.isPrimary);
   const formattedCompanyPhone = companyPhone
-    ? formatPhoneNumber(companyPhone.dialingCode, companyPhone.number)
+    ? formatPhoneNumber(companyPhone.number)
     : orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_PHONE);
 
   const companyAddress = company?.address
