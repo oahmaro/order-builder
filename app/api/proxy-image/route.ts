@@ -14,16 +14,15 @@ export async function GET(request: Request) {
     const arrayBuffer = await response.arrayBuffer();
 
     const convertedImage = await sharp(Buffer.from(arrayBuffer))
-      .flatten({ background: { r: 255, g: 255, b: 255 } })
-      .jpeg({
+      .png({
         quality: 80,
-        progressive: true,
+        compressionLevel: 8,
       })
       .toBuffer();
 
     return new NextResponse(convertedImage, {
       headers: {
-        'Content-Type': 'image/jpeg',
+        'Content-Type': 'image/png',
         'Cache-Control': 'public, max-age=31536000',
       },
     });
