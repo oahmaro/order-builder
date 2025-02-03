@@ -1,7 +1,19 @@
 'use server';
 
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import Sharp from 'sharp';
 import { auth } from '@/auth';
-import { uploadImageAction } from './upload-image.action';
+import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
+
+const IMAGE_CONFIG = {
+  maxWidth: 1200,
+  maxHeight: 1200,
+  format: 'png',
+  quality: 80,
+  compressionLevel: 6,
+  adaptiveFiltering: true,
+  palette: true,
+} as const;
 
 type BatchUploadResult = {
   urls: (string | null)[];
@@ -19,25 +31,60 @@ export async function batchUploadImagesAction(
   }
 
   try {
-    const uploadPromises = [];
     const orderItems = JSON.parse(formData.get('orderItems') as string);
+    const urls: (string | null)[] = new Array(orderItems.length).fill(null);
 
-    for (let index = 0; index < orderItems.length; index += 1) {
+    // Process all images in parallel
+    const uploadPromises = orderItems.map(async (_: unknown, index: number) => {
       const imageFile = formData.get(`orderItem${index}Image`) as File;
+      if (!imageFile) return;
 
-      if (!imageFile) {
-        uploadPromises.push(Promise.resolve(null));
-      } else {
-        const imageFormData = new FormData();
-        imageFormData.append('file', imageFile);
-        imageFormData.append('orderItemIndex', index.toString());
-        imageFormData.append('orderId', orderId.toString());
+      try {
+        // Convert File to Buffer
+        const buffer = Buffer.from(await imageFile.arrayBuffer());
 
-        uploadPromises.push(uploadImageAction(imageFormData).then((result) => result.url ?? null));
+        // Process image
+        const processedImageBuffer = await Sharp(buffer, {
+          failOnError: false,
+          sequentialRead: true,
+        })
+          .rotate()
+          .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
+            fit: 'inside',
+            withoutEnlargement: true,
+            fastShrinkOnLoad: true,
+          })
+          .png({
+            quality: IMAGE_CONFIG.quality,
+            compressionLevel: IMAGE_CONFIG.compressionLevel,
+            adaptiveFiltering: IMAGE_CONFIG.adaptiveFiltering,
+            palette: IMAGE_CONFIG.palette,
+          })
+          .toBuffer();
+
+        const timestamp = Date.now();
+        const filename = `order-images/${orderId}/item-${index}-${timestamp}.png`;
+
+        // Upload to S3
+        await spacesClient.send(
+          new PutObjectCommand({
+            Bucket: SPACES_BUCKET,
+            Key: filename,
+            Body: processedImageBuffer,
+            ACL: 'public-read',
+            ContentType: 'image/png',
+            CacheControl: 'public, max-age=31536000',
+            ContentEncoding: 'gzip',
+          })
+        );
+
+        urls[index] = `${SPACES_CDN_ENDPOINT}/${filename}`;
+      } catch (error) {
+        console.error(`Failed to process image ${index}:`, error);
       }
-    }
+    });
 
-    const urls = await Promise.all(uploadPromises);
+    await Promise.all(uploadPromises);
     return { urls };
   } catch (error) {
     return { urls: [], error: 'Failed to process image uploads' };
