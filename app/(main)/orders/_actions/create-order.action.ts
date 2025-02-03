@@ -54,7 +54,8 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
         status: parsed.data.status,
         amountPaid: parsed.data.amountPaid,
         orderItems: {
-          create: parsed.data.orderItems.map((item) => ({
+          create: parsed.data.orderItems.map((item, index) => ({
+            orderIndex: index,
             height: item.height ?? 0,
             width: item.width ?? 0,
             frame: item.frameId ? { connect: { id: item.frameId } } : undefined,
@@ -80,7 +81,16 @@ export async function createOrderAction(data: FormData): Promise<FormState> {
         },
       },
       include: {
-        orderItems: true,
+        orderItems: {
+          include: {
+            adhesions: true,
+            prints: true,
+            descriptions: true,
+          },
+          orderBy: {
+            orderIndex: 'asc',
+          },
+        },
       },
     });
 

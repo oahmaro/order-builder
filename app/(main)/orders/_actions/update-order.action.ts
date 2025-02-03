@@ -51,7 +51,11 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
     const oldOrder = await db.order.findUnique({
       where: { id: orderId },
       include: {
-        orderItems: true,
+        orderItems: {
+          orderBy: {
+            orderIndex: 'asc',
+          },
+        },
       },
     });
 
@@ -117,6 +121,7 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
         orderItems: {
           deleteMany: {},
           create: parsed.data.orderItems.map((item, index) => ({
+            orderIndex: index,
             height: item.height || 0,
             width: item.width || 0,
             frame: item.frameId ? { connect: { id: item.frameId } } : undefined,
@@ -139,7 +144,6 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             quantity: item.quantity,
             price: item.price,
             image: imageResults[index],
-            orderIndex: index,
           })),
         },
       },
@@ -149,6 +153,9 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             adhesions: true,
             prints: true,
             descriptions: true,
+          },
+          orderBy: {
+            orderIndex: 'asc',
           },
         },
       },

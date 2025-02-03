@@ -25,6 +25,9 @@ export default async function OrderPage({ params }: OrderPageProps) {
           prints: true,
           descriptions: true,
         },
+        orderBy: {
+          orderIndex: 'asc',
+        },
       },
     },
   });
