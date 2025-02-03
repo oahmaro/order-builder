@@ -7,8 +7,8 @@ import { auth } from '@/auth';
 import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
 
 const IMAGE_CONFIG = {
-  width: 800,
-  height: 600,
+  maxWidth: 1200,
+  maxHeight: 1200,
   format: 'png',
   quality: 80,
 } as const;
@@ -41,14 +41,16 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
     // Process image with Sharp
     const processedImageBuffer = await Sharp(buffer)
       .rotate()
-      .resize(IMAGE_CONFIG.width, IMAGE_CONFIG.height, {
-        fit: 'cover',
-        position: 'center',
+      .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
+        fit: 'inside',
+        withoutEnlargement: true,
       })
       .png({ quality: IMAGE_CONFIG.quality })
       .toBuffer();
 
-    const filename = `order-images/${orderId}/item-${orderItemIndex}.png`;
+    // Add timestamp to filename
+    const timestamp = Date.now();
+    const filename = `order-images/${orderId}/item-${orderItemIndex}-${timestamp}.png`;
 
     try {
       await spacesClient.send(
