@@ -5,7 +5,6 @@ import { OrderStatus } from '@prisma/client';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
-import { uploadImageAction } from './upload-image.action';
 import { orderFormSchema } from '../_components/order-form/order-form.schema';
 
 import {
@@ -13,6 +12,7 @@ import {
   OrderFormContentPhrases,
 } from '../_components/order-form/order-form.content';
 import { deleteImageAction } from './delete-image.action';
+import { batchUploadImagesAction } from './batch-upload-images.action';
 
 type FormState = {
   message: string;
@@ -65,49 +65,19 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
       };
     }
 
-    // First check for removed images and delete them from storage
+    // Handle new image uploads
+    const imageResults = await batchUploadImagesAction(data, orderId);
+    if (imageResults.error) {
+      throw new Error(`Image upload failed: ${imageResults.error}`);
+    }
+
+    // Delete old images that are being replaced or removed
     await Promise.all(
       oldOrder.orderItems.map(async (oldItem, index) => {
-        const newItemImage = orderItems[index]?.image;
-
-        // If old item had an image and new item either has no image or a different image
-        if (
-          oldItem.image &&
-          typeof oldItem.image === 'string' &&
-          (!newItemImage || newItemImage === null)
-        ) {
+        const newUrl = imageResults.urls[index];
+        if (oldItem.image && (newUrl || orderItems[index].image === null)) {
           await deleteImageAction(oldItem.image);
         }
-      })
-    );
-
-    // Then handle new image uploads and get URLs
-    const imageResults = await Promise.all(
-      orderItems.map(async (item: any, index: number) => {
-        const imageFile = data.get(`orderItem${index}Image`) as File;
-
-        // If no new image file, keep existing image (unless explicitly set to null)
-        if (!imageFile) {
-          return item.image === null ? null : oldOrder.orderItems[index]?.image;
-        }
-
-        const imageFormData = new FormData();
-        imageFormData.append('file', imageFile);
-        imageFormData.append('orderItemIndex', index.toString());
-        imageFormData.append('orderId', orderId.toString());
-
-        const uploadResult = await uploadImageAction(imageFormData);
-        if (uploadResult.error) {
-          throw new Error(`Image upload failed: ${uploadResult.error}`);
-        }
-
-        // If there was an old image, delete it since we're uploading a new one
-        const oldImage = oldOrder.orderItems[index]?.image;
-        if (oldImage && typeof oldImage === 'string') {
-          await deleteImageAction(oldImage);
-        }
-
-        return uploadResult.url;
       })
     );
 
@@ -143,7 +113,9 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
             unitPrice: item.unitPrice,
             quantity: item.quantity,
             price: item.price,
-            image: imageResults[index],
+            image:
+              imageResults.urls[index] ||
+              (orderItems[index].image === null ? null : oldOrder.orderItems[index]?.image),
           })),
         },
       },

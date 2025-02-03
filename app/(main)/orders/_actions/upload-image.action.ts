@@ -11,6 +11,9 @@ const IMAGE_CONFIG = {
   maxHeight: 1200,
   format: 'png',
   quality: 80,
+  compressionLevel: 6,
+  adaptiveFiltering: true,
+  palette: true,
 } as const;
 
 type UploadImageResponse = {
@@ -34,24 +37,32 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
       return { error: 'No file provided' };
     }
 
-    // Convert File to Buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // Convert File to Buffer more efficiently
+    const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Process image with Sharp
-    const processedImageBuffer = await Sharp(buffer)
+    // Optimize Sharp pipeline
+    const processedImageBuffer = await Sharp(buffer, {
+      failOnError: false,
+      sequentialRead: true,
+    })
       .rotate()
       .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
         fit: 'inside',
         withoutEnlargement: true,
+        fastShrinkOnLoad: true,
       })
-      .png({ quality: IMAGE_CONFIG.quality })
-      .toBuffer();
+      .png({
+        quality: IMAGE_CONFIG.quality,
+        compressionLevel: IMAGE_CONFIG.compressionLevel,
+        adaptiveFiltering: IMAGE_CONFIG.adaptiveFiltering,
+        palette: IMAGE_CONFIG.palette,
+      })
+      .toBuffer({ resolveWithObject: false });
 
-    // Add timestamp to filename
     const timestamp = Date.now();
     const filename = `order-images/${orderId}/item-${orderItemIndex}-${timestamp}.png`;
 
+    // Upload to S3 with optimized settings
     try {
       await spacesClient.send(
         new PutObjectCommand({
@@ -60,21 +71,18 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
           Body: processedImageBuffer,
           ACL: 'public-read',
           ContentType: 'image/png',
+          CacheControl: 'public, max-age=31536000',
+          ContentEncoding: 'gzip',
         })
       );
     } catch (uploadError) {
       if (uploadError instanceof Error) {
-        return {
-          error: `S3 Upload Error: ${uploadError.message}`,
-        };
+        return { error: `S3 Upload Error: ${uploadError.message}` };
       }
-      return {
-        error: 'Failed to upload to S3',
-      };
+      return { error: 'Failed to upload to S3' };
     }
 
-    const imageUrl = `${SPACES_CDN_ENDPOINT}/${filename}`;
-    return { url: imageUrl };
+    return { url: `${SPACES_CDN_ENDPOINT}/${filename}` };
   } catch (error) {
     return { error: 'Failed to process or upload image' };
   }
