@@ -1,9 +1,17 @@
 'use server';
 
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import Sharp from 'sharp';
 
 import { auth } from '@/auth';
 import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
+
+const IMAGE_CONFIG = {
+  width: 800,
+  height: 600,
+  format: 'png',
+  quality: 80,
+} as const;
 
 type UploadImageResponse = {
   url?: string;
@@ -26,21 +34,30 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
       return { error: 'No file provided' };
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    // Convert File to Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-    const timestamp = Date.now();
-    const fileExtension = file.name.split('.').pop() || 'jpg';
-    const filename = `order-images/${orderItemIndex}-${orderId}-${timestamp}.${fileExtension}`;
+    // Process image with Sharp
+    const processedImageBuffer = await Sharp(buffer)
+      .rotate()
+      .resize(IMAGE_CONFIG.width, IMAGE_CONFIG.height, {
+        fit: 'cover',
+        position: 'center',
+      })
+      .png({ quality: IMAGE_CONFIG.quality })
+      .toBuffer();
+
+    const filename = `order-images/${orderId}/item-${orderItemIndex}.png`;
 
     try {
       await spacesClient.send(
         new PutObjectCommand({
           Bucket: SPACES_BUCKET,
           Key: filename,
-          Body: buffer,
+          Body: processedImageBuffer,
           ACL: 'public-read',
-          ContentType: file.type,
+          ContentType: 'image/png',
         })
       );
     } catch (uploadError) {
@@ -57,6 +74,6 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
     const imageUrl = `${SPACES_CDN_ENDPOINT}/${filename}`;
     return { url: imageUrl };
   } catch (error) {
-    return { error: 'Failed to upload image' };
+    return { error: 'Failed to process or upload image' };
   }
 }
