@@ -44,10 +44,7 @@ export async function batchUploadImagesAction(
       if (!imageFile) return;
 
       try {
-        // Convert File to Buffer
         const buffer = Buffer.from(await imageFile.arrayBuffer());
-
-        // Process image
         const processedImageBuffer = await Sharp(buffer, {
           failOnError: false,
           sequentialRead: true,
@@ -68,7 +65,6 @@ export async function batchUploadImagesAction(
 
         const filename = `${orderFolderPath}/item-${index}.png`;
 
-        // Upload to S3
         await spacesClient.send(
           new PutObjectCommand({
             Bucket: SPACES_BUCKET,
@@ -77,7 +73,6 @@ export async function batchUploadImagesAction(
             ACL: 'public-read',
             ContentType: 'image/png',
             CacheControl: 'public, max-age=31536000',
-            ContentEncoding: 'gzip',
           })
         );
 

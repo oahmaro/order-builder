@@ -72,7 +72,6 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
           ACL: 'public-read',
           ContentType: 'image/png',
           CacheControl: 'public, max-age=31536000',
-          ContentEncoding: 'gzip',
         })
       );
     } catch (uploadError) {

@@ -35,9 +35,7 @@ export default function MediaCapture({
   const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(value);
 
   useEffect(() => {
-    if (!localImageUrl) {
-      setLocalImageUrl(value);
-    }
+    setLocalImageUrl(value);
   }, [value]);
 
   const initializeCamera = async () => {
@@ -352,6 +350,10 @@ export default function MediaCapture({
               src={localImageUrl}
               fallbackSrc={fallbackSrc}
               className={classes.image}
+              onError={(e) => {
+                console.error('Error loading image:', localImageUrl);
+                e.currentTarget.src = fallbackSrc;
+              }}
               onClick={() => {
                 if (localImageUrl) {
                   modals.open({
@@ -359,7 +361,16 @@ export default function MediaCapture({
                     styles: { header: { display: 'none' }, body: { padding: '0' } },
                     size: 'lg',
                     children: (
-                      <Image src={localImageUrl} fit="contain" pos="relative" top="0" bottom="0" />
+                      <Image
+                        src={localImageUrl}
+                        fit="contain"
+                        pos="relative"
+                        top="0"
+                        bottom="0"
+                        onError={(e) => {
+                          e.currentTarget.src = fallbackSrc;
+                        }}
+                      />
                     ),
                   });
                 }

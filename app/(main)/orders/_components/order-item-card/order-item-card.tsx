@@ -66,9 +66,8 @@ export default function OrderItemCard({
     if (disabled) return;
 
     if (file) {
-      const objectUrl = URL.createObjectURL(file);
       form.setFieldValue(`orderItems.${index}.imageFile`, file);
-      form.setFieldValue(`orderItems.${index}.image`, objectUrl);
+      form.setFieldValue(`orderItems.${index}.image`, null);
     } else {
       form.setFieldValue(`orderItems.${index}.imageFile`, null);
       form.setFieldValue(`orderItems.${index}.image`, null);
