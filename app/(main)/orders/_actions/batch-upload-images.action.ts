@@ -34,6 +34,10 @@ export async function batchUploadImagesAction(
     const orderItems = JSON.parse(formData.get('orderItems') as string);
     const urls: (string | null)[] = new Array(orderItems.length).fill(null);
 
+    // Create a single timestamp for the entire order
+    const timestamp = Date.now();
+    const orderFolderPath = `order-images/${orderId}-${timestamp}`;
+
     // Process all images in parallel
     const uploadPromises = orderItems.map(async (_: unknown, index: number) => {
       const imageFile = formData.get(`orderItem${index}Image`) as File;
@@ -62,8 +66,7 @@ export async function batchUploadImagesAction(
           })
           .toBuffer();
 
-        const timestamp = Date.now();
-        const filename = `order-images/${orderId}-${timestamp}/item-${index}.png`;
+        const filename = `${orderFolderPath}/item-${index}.png`;
 
         // Upload to S3
         await spacesClient.send(
