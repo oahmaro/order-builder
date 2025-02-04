@@ -60,7 +60,7 @@ export async function uploadImageAction(data: FormData): Promise<UploadImageResp
       .toBuffer({ resolveWithObject: false });
 
     const timestamp = Date.now();
-    const filename = `order-images/${orderId}/item-${orderItemIndex}-${timestamp}.png`;
+    const filename = `order-images/${orderId}-${timestamp}/item-${orderItemIndex}.png`;
 
     // Upload to S3 with optimized settings
     try {

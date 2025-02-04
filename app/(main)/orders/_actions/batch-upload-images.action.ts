@@ -63,7 +63,7 @@ export async function batchUploadImagesAction(
           .toBuffer();
 
         const timestamp = Date.now();
-        const filename = `order-images/${orderId}/item-${index}-${timestamp}.png`;
+        const filename = `order-images/${orderId}-${timestamp}/item-${index}.png`;
 
         // Upload to S3
         await spacesClient.send(
