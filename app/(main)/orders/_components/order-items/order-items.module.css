@@ -1,0 +1,6 @@
+.root {
+  padding: 0;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
+}

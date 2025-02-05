@@ -2,16 +2,14 @@
 
 import * as z from 'zod';
 import { useState } from 'react';
+import { Stack } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
-import { Stack, Button, Group, Divider } from '@mantine/core';
-import { IconPrinter } from '@tabler/icons-react';
 
 import {
   Frame,
   Print,
   Phone,
-  Order,
   Company,
   Address,
   Customer,
@@ -20,11 +18,13 @@ import {
   Passepartout,
 } from '@prisma/client';
 
-import { OrderItemCard } from '../order-item-card';
+import { OrderItems } from '../order-items';
 import { orderFormSchema } from './order-form.schema';
 import { OrderHeaderCard } from '../order-header-card';
+import { OrderFormFooter } from '../order-form-footer';
 import { commonContent, CommonPhrases } from '@/content';
 import { useOrderFormContext } from './order-form.container';
+import { OrderFormAddSection } from '../order-form-add-section';
 import { createOrderAction, updateOrderAction } from '../../_actions';
 import { orderFormContent, OrderFormContentPhrases } from './order-form.content';
 
@@ -39,13 +39,29 @@ interface OrderFormProps {
   descriptions: Description[];
   passepartouts: Passepartout[];
   isUpdate?: boolean;
-  order?: Order;
   company?: Company & {
     phones: Phone[];
     address?: Address;
   };
   isDisabled?: boolean;
 }
+
+const mapCompanyData = (company?: Company & { phones: Phone[]; address?: Address }) => {
+  if (!company) return undefined;
+
+  return {
+    name: company.name,
+    email: company.email,
+    phones: company.phones.map(({ number, isPrimary }) => ({
+      number,
+      isPrimary,
+    })),
+    address: company.address && {
+      streetAddress: company.address.streetAddress || undefined,
+      city: company.address.city || undefined,
+    },
+  };
+};
 
 export default function OrderForm({
   customers,
@@ -55,7 +71,6 @@ export default function OrderForm({
   descriptions,
   passepartouts,
   isUpdate,
-  order,
   company,
   isDisabled,
 }: OrderFormProps) {
@@ -71,8 +86,8 @@ export default function OrderForm({
       const validatedData = orderFormSchema.parse(values);
       const formData = new FormData();
 
-      if (isUpdate && order?.id) {
-        formData.append('orderId', order.id.toString());
+      if (isUpdate && form.values?.id) {
+        formData.append('orderId', form.values.id.toString());
       }
 
       // Add basic order data
@@ -136,106 +151,26 @@ export default function OrderForm({
     }
   };
 
-  const addOrderItem = () => {
-    form.insertListItem('orderItems', {
-      height: null,
-      width: null,
-      frameId: null,
-      passepartoutId: null,
-      passepartoutWidth: null,
-      glassTypes: {
-        transparent: false,
-        matte: false,
-        none: false,
-        perspex: false,
-        mirror: false,
-      },
-      adhesionIds: [],
-      printIds: [],
-      descriptionIds: [],
-      unitPrice: null,
-      quantity: 1,
-      price: 0,
-      image: undefined,
-    });
-  };
-
-  const handlePrint = () => {
-    if (order?.id) {
-      window.open(`/orders/${order.id}/print`, '_blank');
-    }
-  };
-
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} noValidate>
       <Stack gap="sm">
         <OrderHeaderCard
           customers={customers}
-          order={order}
-          company={
-            company
-              ? {
-                  name: company.name,
-                  email: company.email,
-                  phones: company.phones.map((phone) => ({
-                    number: phone.number,
-                    isPrimary: phone.isPrimary,
-                  })),
-                  address: company.address
-                    ? {
-                        streetAddress: company.address.streetAddress || undefined,
-                        city: company.address.city || undefined,
-                      }
-                    : undefined,
-                }
-              : undefined
-          }
+          company={mapCompanyData(company)}
           disabled={isDisabled}
         />
 
-        {form.values.orderItems.map((_, index) => (
-          <OrderItemCard
-            key={index}
-            index={index}
-            frames={frames}
-            prints={prints}
-            adhesions={adhesions}
-            descriptions={descriptions}
-            passepartouts={passepartouts}
-            onRemove={() => form.removeListItem('orderItems', index)}
-            isRemoveDisabled={form.values.orderItems.length === 1 || isDisabled}
-            disabled={isDisabled}
-          />
-        ))}
+        <OrderItems
+          frames={frames}
+          prints={prints}
+          adhesions={adhesions}
+          descriptions={descriptions}
+          passepartouts={passepartouts}
+          isDisabled={isDisabled}
+        />
 
-        <Group gap={56}>
-          <Divider flex={1} />
-          <Button variant="subtle" color="gray" onClick={addOrderItem} disabled={isDisabled}>
-            {orderFormContent.t(OrderFormContentPhrases.ADD_ORDER_ITEM)}
-          </Button>
-          <Divider flex={1} />
-        </Group>
-
-        <Group justify="flex-end" gap="md">
-          <Button
-            variant="default"
-            onClick={() => router.push('/orders?page=1&pageSize=10&sortBy=id&sortDir=asc')}
-          >
-            {orderFormContent.t(OrderFormContentPhrases.CANCEL)}
-          </Button>
-
-          {isUpdate && order?.id && (
-            <Button variant="light" leftSection={<IconPrinter size={16} />} onClick={handlePrint}>
-              {orderFormContent.t(OrderFormContentPhrases.PRINT_ORDER)}
-            </Button>
-          )}
-
-          <Button type="submit" loading={isSubmitting} disabled={isSubmitting || isDisabled}>
-            {orderFormContent.t(
-              isUpdate ? OrderFormContentPhrases.UPDATE_ORDER : OrderFormContentPhrases.CREATE_ORDER
-            )}
-          </Button>
-        </Group>
+        <OrderFormAddSection isDisabled={isDisabled} />
+        <OrderFormFooter isUpdate={isUpdate} isSubmitting={isSubmitting} isDisabled={isDisabled} />
       </Stack>
     </form>
   );

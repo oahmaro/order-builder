@@ -57,9 +57,9 @@ export default async function OrderPage({ params }: OrderPageProps) {
     <OrderFormContainer order={order}>
       <Stack gap="md">
         <OrderStatusBanner orderId={order.id} status={order.status} />
+
         <OrderForm
           isUpdate
-          order={order}
           frames={frames}
           prints={prints}
           customers={customers}

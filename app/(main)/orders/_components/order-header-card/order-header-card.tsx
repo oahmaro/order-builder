@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { modals } from '@mantine/modals';
-import { Customer, Order, Phone } from '@prisma/client';
+import { Customer, Phone } from '@prisma/client';
 
 import {
   Box,
@@ -28,7 +28,6 @@ import { orderHeaderContent, OrderHeaderContentPhrases } from './order-header-ca
 import CustomerFormContainer from '@/app/(main)/customers/_components/customer-form/customer-form.container';
 
 export interface OrderHeaderCardProps {
-  order?: Order;
   customers?: (Customer & { phones: Phone[] })[];
   company?: {
     name: string;
@@ -58,12 +57,7 @@ const handleCreateCustomer = () => {
   });
 };
 
-export default function OrderHeaderCard({
-  order,
-  customers,
-  company,
-  disabled,
-}: OrderHeaderCardProps) {
+export default function OrderHeaderCard({ customers, company, disabled }: OrderHeaderCardProps) {
   const form = useOrderFormContext();
 
   const customerItems = customers
@@ -214,7 +208,7 @@ export default function OrderHeaderCard({
               {orderHeaderContent.t(OrderHeaderContentPhrases.ORDER_NUMBER)}
             </Box>{' '}
             <Box component="span" c="red.8">
-              {order?.id ?? '—'}
+              {form.values?.id ?? '—'}
             </Box>
           </Box>
 
@@ -227,10 +221,10 @@ export default function OrderHeaderCard({
         </Stack>
 
         <Stack flex={1} h="100%" gap={0}>
-          {order?.createdAt && (
+          {form.values?.createdAt && (
             <StaticField
               label={orderHeaderContent.t(OrderHeaderContentPhrases.DATE)}
-              value={dayjs(order.createdAt).format('DD-M-YYYY')}
+              value={dayjs(form.values.createdAt).format('DD-M-YYYY')}
               separator=": "
             />
           )}

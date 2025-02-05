@@ -3,6 +3,7 @@ import { OrderStatus } from '@prisma/client';
 import { orderFormContent, OrderFormContentPhrases } from './order-form.content';
 
 export const orderItemSchema = z.object({
+  id: z.number().optional(),
   height: z.coerce
     .number({
       required_error: orderFormContent.t(OrderFormContentPhrases.DIMENSIONS_REQUIRED),
@@ -48,6 +49,7 @@ export const orderItemSchema = z.object({
 });
 
 export const orderFormSchema = z.object({
+  id: z.number().optional(),
   customerId: z
     .number({
       required_error: orderFormContent.t(OrderFormContentPhrases.CUSTOMER_REQUIRED),
@@ -57,4 +59,5 @@ export const orderFormSchema = z.object({
   amountPaid: z.coerce.number().min(0),
   status: z.nativeEnum(OrderStatus).default('NEW'),
   orderItems: z.array(orderItemSchema).min(1),
+  createdAt: z.string().optional(),
 });

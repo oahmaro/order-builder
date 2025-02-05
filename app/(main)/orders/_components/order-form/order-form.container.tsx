@@ -11,11 +11,14 @@ type OrderFormInput = z.input<typeof orderFormSchema>;
 export type OrderFormValues = OrderFormInput;
 
 const initialValues: OrderFormValues = {
+  id: undefined,
   customerId: 0,
   amountPaid: 0,
   status: 'NEW',
+  createdAt: new Date().toISOString(),
   orderItems: [
     {
+      id: undefined,
       height: null,
       width: null,
       frameId: null,
@@ -57,10 +60,13 @@ export default function OrderFormContainer({ children, order }: OrderFormContain
   const form = useOrderForm({
     initialValues: order
       ? {
+          id: order.id,
           customerId: order.customerId,
           amountPaid: order.amountPaid,
           status: order.status,
+          createdAt: order.createdAt?.toISOString(),
           orderItems: order.orderItems.map((item) => ({
+            id: item.id,
             height: item.height ?? null,
             width: item.width ?? null,
             frameId: item.frameId ?? null,

@@ -46,9 +46,6 @@ export const orderFormContent = new Polyglot({
     [OrderFormContentPhrases.ENABLE_EDITING]: 'אפשר עריכה',
     [OrderFormContentPhrases.DISABLE_EDITING]: 'נעל עריכה',
     [OrderFormContentPhrases.NOTES_MAX_LENGTH]: 'הערות לא יכולות לעלות על 45 תווים',
-    [OrderFormContentPhrases.PRINT_ORDER]: {
-      en: 'Print Order',
-      he: 'הדפס הזמנה',
-    },
+    [OrderFormContentPhrases.PRINT_ORDER]: 'הדפס הזמנה',
   },
 });

@@ -1,21 +1,13 @@
-.root {
-  padding: 0;
+.item {
+  margin-top: 0 !important;
+  overflow: hidden;
+  background-color: white;
+  border: 1px solid var(--mantine-color-gray-3);
+  border-radius: var(--mantine-radius-sm);
+  box-shadow: var(--mantine-shadow-xs);
 }
 
-.root :global(.mantine-Accordion-control) {
-  padding: var(--mantine-spacing-md) var(--mantine-spacing-xl);
-  background-color: white;
-}
-
-.root :global(.mantine-Accordion-content) {
-  padding: 0 var(--mantine-spacing-xl) var(--mantine-spacing-xl);
-  background-color: white;
-}
-
-.root :global(.mantine-Accordion-panel) {
-  background-color: white;
-}
-
-.root :global(.mantine-Accordion-item) {
-  background-color: white;
+.header {
+  width: 100%;
+  transition: background-color 150ms ease;
 }
