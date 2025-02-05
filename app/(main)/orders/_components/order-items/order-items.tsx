@@ -1,7 +1,8 @@
 'use client';
 
-import { Stack } from '@mantine/core';
+import { Accordion } from '@mantine/core';
 import { Frame, Print, Adhesion, Description, Passepartout } from '@prisma/client';
+import { useState, useEffect } from 'react';
 
 import classes from './order-items.module.css';
 import { OrderItemCard } from '../order-item-card';
@@ -25,6 +26,11 @@ export default function OrderItems({
   passepartouts,
 }: OrderItemsProps) {
   const form = useOrderFormContext();
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    setOpenItems(form.values.orderItems.map((_, index) => `item-${index}`));
+  }, [form.values.orderItems.length]);
 
   const items = form.values.orderItems.map((_, index) => (
     <OrderItemCard
@@ -41,5 +47,15 @@ export default function OrderItems({
     />
   ));
 
-  return <Stack className={classes.root}>{items}</Stack>;
+  return (
+    <Accordion
+      multiple
+      value={openItems}
+      variant="separated"
+      onChange={setOpenItems}
+      classNames={{ root: classes.root, item: classes.item }}
+    >
+      {items}
+    </Accordion>
+  );
 }
