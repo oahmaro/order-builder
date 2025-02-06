@@ -1,15 +1,22 @@
 'use server';
 
-import { PutObjectCommand } from '@aws-sdk/client-s3';
 import Sharp from 'sharp';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+
 import { auth } from '@/auth';
-import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
 import { IMAGE_CONFIG } from '@/config/image.config';
+import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
 
 type BatchUploadResult = {
   urls: (string | null)[];
   error?: string;
 };
+
+interface OrderItem {
+  id?: number;
+  image: string | null;
+  [key: string]: any;
+}
 
 export async function batchUploadImagesAction(
   formData: FormData,
@@ -22,21 +29,21 @@ export async function batchUploadImagesAction(
   }
 
   try {
-    const orderItems = JSON.parse(formData.get('orderItems') as string);
+    const orderItems = JSON.parse(formData.get('orderItems') as string) as OrderItem[];
     const urls: (string | null)[] = new Array(orderItems.length).fill(null);
     const timestamp = Date.now();
     const orderFolderPath = `order-images/${orderId}-${timestamp}`;
 
-    const uploadPromises = orderItems.map(async (_: any, index: number) => {
+    // Process all images in parallel with optimized Sharp configuration
+    const processPromises = orderItems.map(async (_: OrderItem, index: number) => {
       const imageFile = formData.get(`orderItem${index}Image`) as File;
-      if (!imageFile) return null;
+      if (!imageFile) return { index, url: null };
 
       try {
         const buffer = Buffer.from(await imageFile.arrayBuffer());
         const processedImageBuffer = await Sharp(buffer, {
           failOnError: false,
           sequentialRead: true,
-          limitInputPixels: 268402689, // 16384 x 16384
         })
           .rotate()
           .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
@@ -47,12 +54,10 @@ export async function batchUploadImagesAction(
           .png({
             quality: IMAGE_CONFIG.quality,
             compressionLevel: IMAGE_CONFIG.compressionLevel,
-            adaptiveFiltering: IMAGE_CONFIG.adaptiveFiltering,
-            palette: IMAGE_CONFIG.palette,
-            effort: IMAGE_CONFIG.effort,
-            progressive: IMAGE_CONFIG.progressive,
+            adaptiveFiltering: true,
+            palette: true,
           })
-          .toBuffer();
+          .toBuffer({ resolveWithObject: false });
 
         const filename = `${orderFolderPath}/item-${index}.png`;
 
@@ -74,7 +79,7 @@ export async function batchUploadImagesAction(
       }
     });
 
-    const results = await Promise.all(uploadPromises);
+    const results = await Promise.all(processPromises);
 
     // Update urls array with results
     results.forEach((result) => {
@@ -85,6 +90,10 @@ export async function batchUploadImagesAction(
 
     return { urls };
   } catch (error) {
-    return { urls: [], error: 'Failed to process image uploads' };
+    console.error('Batch upload error:', error);
+    return {
+      urls: [],
+      error: error instanceof Error ? error.message : 'Failed to process image uploads',
+    };
   }
 }
