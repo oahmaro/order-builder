@@ -4,16 +4,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import Sharp from 'sharp';
 import { auth } from '@/auth';
 import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
-
-const IMAGE_CONFIG = {
-  maxWidth: 1200,
-  maxHeight: 1200,
-  format: 'png',
-  quality: 80,
-  compressionLevel: 6,
-  adaptiveFiltering: true,
-  palette: true,
-} as const;
+import { IMAGE_CONFIG } from '@/config/image.config';
 
 type BatchUploadResult = {
   urls: (string | null)[];
@@ -33,21 +24,19 @@ export async function batchUploadImagesAction(
   try {
     const orderItems = JSON.parse(formData.get('orderItems') as string);
     const urls: (string | null)[] = new Array(orderItems.length).fill(null);
-
-    // Create a single timestamp for the entire order
     const timestamp = Date.now();
     const orderFolderPath = `order-images/${orderId}-${timestamp}`;
 
-    // Process all images in parallel
-    const uploadPromises = orderItems.map(async (_: unknown, index: number) => {
+    const uploadPromises = orderItems.map(async (_: any, index: number) => {
       const imageFile = formData.get(`orderItem${index}Image`) as File;
-      if (!imageFile) return;
+      if (!imageFile) return null;
 
       try {
         const buffer = Buffer.from(await imageFile.arrayBuffer());
         const processedImageBuffer = await Sharp(buffer, {
           failOnError: false,
           sequentialRead: true,
+          limitInputPixels: 268402689, // 16384 x 16384
         })
           .rotate()
           .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
@@ -60,6 +49,8 @@ export async function batchUploadImagesAction(
             compressionLevel: IMAGE_CONFIG.compressionLevel,
             adaptiveFiltering: IMAGE_CONFIG.adaptiveFiltering,
             palette: IMAGE_CONFIG.palette,
+            effort: IMAGE_CONFIG.effort,
+            progressive: IMAGE_CONFIG.progressive,
           })
           .toBuffer();
 
@@ -76,13 +67,22 @@ export async function batchUploadImagesAction(
           })
         );
 
-        urls[index] = `${SPACES_CDN_ENDPOINT}/${filename}`;
+        return { index, url: `${SPACES_CDN_ENDPOINT}/${filename}` };
       } catch (error) {
         console.error(`Failed to process image ${index}:`, error);
+        return { index, url: null };
       }
     });
 
-    await Promise.all(uploadPromises);
+    const results = await Promise.all(uploadPromises);
+
+    // Update urls array with results
+    results.forEach((result) => {
+      if (result) {
+        urls[result.index] = result.url;
+      }
+    });
+
     return { urls };
   } catch (error) {
     return { urls: [], error: 'Failed to process image uploads' };

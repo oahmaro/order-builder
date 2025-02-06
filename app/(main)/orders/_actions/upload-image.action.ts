@@ -1,20 +1,11 @@
 'use server';
 
-import { PutObjectCommand } from '@aws-sdk/client-s3';
 import Sharp from 'sharp';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 import { auth } from '@/auth';
+import { IMAGE_CONFIG } from '@/config/image.config';
 import { spacesClient, SPACES_BUCKET, SPACES_CDN_ENDPOINT } from '@/lib/spaces-client';
-
-const IMAGE_CONFIG = {
-  maxWidth: 1200,
-  maxHeight: 1200,
-  format: 'png',
-  quality: 80,
-  compressionLevel: 6,
-  adaptiveFiltering: true,
-  palette: true,
-} as const;
 
 type UploadImageResponse = {
   url?: string;
