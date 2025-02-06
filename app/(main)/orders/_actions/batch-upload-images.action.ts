@@ -34,54 +34,66 @@ export async function batchUploadImagesAction(
     const timestamp = Date.now();
     const orderFolderPath = `order-images/${orderId}-${timestamp}`;
 
-    // Process all images in parallel with optimized Sharp configuration
-    const processPromises = orderItems.map(async (_: OrderItem, index: number) => {
-      const imageFile = formData.get(`orderItem${index}Image`) as File;
-      if (!imageFile) return { index, url: null };
+    // Process images in chunks to prevent memory overload
+    const CHUNK_SIZE = 2;
+    const chunks = Array.from({ length: Math.ceil(orderItems.length / CHUNK_SIZE) }, (_, i) =>
+      orderItems.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE)
+    );
 
-      try {
-        const buffer = Buffer.from(await imageFile.arrayBuffer());
-        const processedImageBuffer = await Sharp(buffer, {
-          failOnError: false,
-          sequentialRead: true,
-        })
-          .rotate()
-          .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
-            fit: 'inside',
-            withoutEnlargement: true,
-            fastShrinkOnLoad: true,
-          })
-          .png({
-            quality: IMAGE_CONFIG.quality,
-            compressionLevel: IMAGE_CONFIG.compressionLevel,
-            adaptiveFiltering: true,
-            palette: true,
-          })
-          .toBuffer({ resolveWithObject: false });
+    const results = await chunks.reduce(
+      async (promise, chunk, chunkIndex) => {
+        const previousResults = await promise;
+        const chunkPromises = chunk.map(async (_, index) => {
+          const actualIndex = chunkIndex * CHUNK_SIZE + index;
+          const imageFile = formData.get(`orderItem${actualIndex}Image`) as File;
+          if (!imageFile) return { index: actualIndex, url: null };
 
-        const filename = `${orderFolderPath}/item-${index}.png`;
+          try {
+            const buffer = Buffer.from(await imageFile.arrayBuffer());
+            const processedImageBuffer = await Sharp(buffer, {
+              failOnError: false,
+              sequentialRead: true,
+              limitInputPixels: IMAGE_CONFIG.limitInputPixels,
+            })
+              .rotate()
+              .resize(IMAGE_CONFIG.maxWidth, IMAGE_CONFIG.maxHeight, {
+                fit: 'inside',
+                withoutEnlargement: true,
+                fastShrinkOnLoad: true,
+              })
+              .webp({
+                // Using WebP instead of PNG for better compression
+                quality: IMAGE_CONFIG.quality,
+                effort: IMAGE_CONFIG.effort,
+              })
+              .toBuffer();
 
-        await spacesClient.send(
-          new PutObjectCommand({
-            Bucket: SPACES_BUCKET,
-            Key: filename,
-            Body: processedImageBuffer,
-            ACL: 'public-read',
-            ContentType: 'image/png',
-            CacheControl: 'public, max-age=31536000',
-          })
-        );
+            const filename = `${orderFolderPath}/item-${actualIndex}.webp`;
 
-        return { index, url: `${SPACES_CDN_ENDPOINT}/${filename}` };
-      } catch (error) {
-        console.error(`Failed to process image ${index}:`, error);
-        return { index, url: null };
-      }
-    });
+            await spacesClient.send(
+              new PutObjectCommand({
+                Bucket: SPACES_BUCKET,
+                Key: filename,
+                Body: processedImageBuffer,
+                ACL: 'public-read',
+                ContentType: 'image/webp',
+                CacheControl: 'public, max-age=31536000',
+              })
+            );
 
-    const results = await Promise.all(processPromises);
+            return { index: actualIndex, url: `${SPACES_CDN_ENDPOINT}/${filename}` };
+          } catch (error) {
+            console.error(`Failed to process image ${actualIndex}:`, error);
+            return { index: actualIndex, url: null };
+          }
+        });
 
-    // Update urls array with results
+        const chunkResults = await Promise.all(chunkPromises);
+        return [...previousResults, ...chunkResults];
+      },
+      Promise.resolve([] as { index: number; url: string | null }[])
+    );
+
     results.forEach((result) => {
       if (result) {
         urls[result.index] = result.url;
