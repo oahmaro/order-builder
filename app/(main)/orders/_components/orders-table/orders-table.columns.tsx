@@ -27,6 +27,28 @@ export type OrderDataType = Partial<Order> & {
 
 const columnHelper = createColumnHelper<OrderDataType>();
 
+const CellWrapper = ({
+  children,
+  isCanceled,
+}: {
+  children: React.ReactNode;
+  isCanceled: boolean;
+}) => {
+  if (isCanceled) {
+    return (
+      <span
+        style={{
+          textDecoration: 'line-through',
+          opacity: 0.4,
+        }}
+      >
+        {children}
+      </span>
+    );
+  }
+  return <>{children}</>;
+};
+
 export const columns = [
   columnHelper.accessor((row) => String(row.id), {
     id: 'id',
@@ -35,18 +57,18 @@ export const columns = [
       const isCanceled = info.row.original.status === OrderStatus.CANCELED;
       const orderIdText = `ORD-${info.getValue()}`;
 
-      if (isCanceled) {
-        return (
-          <Tooltip label={ordersTableContent.t(OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP)}>
-            <span style={{ cursor: 'not-allowed' }}>{orderIdText}</span>
-          </Tooltip>
-        );
-      }
-
       return (
-        <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
-          {orderIdText}
-        </Anchor>
+        <CellWrapper isCanceled={isCanceled}>
+          {isCanceled ? (
+            <Tooltip label={ordersTableContent.t(OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP)}>
+              <span style={{ cursor: 'not-allowed' }}>{orderIdText}</span>
+            </Tooltip>
+          ) : (
+            <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
+              {orderIdText}
+            </Anchor>
+          )}
+        </CellWrapper>
       );
     },
   }),
@@ -54,16 +76,30 @@ export const columns = [
   columnHelper.accessor((row) => `${row.customer.firstName} ${row.customer.lastName}`, {
     id: 'customerName',
     header: ordersTableContent.t(OrdersTableContentPhrases.CUSTOMER),
-    cell: (info) => (
-      <Anchor component={Link} size="sm" href={`/customers/${info.row.original.customer.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+
+      return (
+        <CellWrapper isCanceled={isCanceled}>
+          <Anchor component={Link} size="sm" href={`/customers/${info.row.original.customer.id}`}>
+            {info.getValue()}
+          </Anchor>
+        </CellWrapper>
+      );
+    },
   }),
 
   columnHelper.accessor('amountPaid', {
     header: ordersTableContent.t(OrdersTableContentPhrases.AMOUNT_PAID),
-    cell: (info) => <NumberFormatter prefix="₪" value={info.getValue() || 0} thousandSeparator />,
+    cell: (info) => {
+      const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+
+      return (
+        <CellWrapper isCanceled={isCanceled}>
+          <NumberFormatter prefix="₪" value={info.getValue() || 0} thousandSeparator />
+        </CellWrapper>
+      );
+    },
   }),
 
   columnHelper.accessor(
@@ -76,7 +112,10 @@ export const columns = [
       id: 'status',
       header: ordersTableContent.t(OrdersTableContentPhrases.STATUS),
       cell: (info) => (
-        <Badge color={getOrderStatusMapping(info.row.original.status as OrderStatus).color}>
+        <Badge
+          variant="light"
+          color={getOrderStatusMapping(info.row.original.status as OrderStatus).color}
+        >
           {getOrderStatusMapping(info.row.original.status as OrderStatus).label}
         </Badge>
       ),
@@ -86,6 +125,10 @@ export const columns = [
   columnHelper.accessor((row) => row.orderItems.length, {
     id: 'itemsCount',
     header: ordersTableContent.t(OrdersTableContentPhrases.ITEMS_COUNT),
+    cell: (info) => {
+      const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+      return <CellWrapper isCanceled={isCanceled}>{info.getValue()}</CellWrapper>;
+    },
   }),
 
   columnHelper.accessor(
@@ -93,16 +136,21 @@ export const columns = [
       row.createdByUser ? `${row.createdByUser.id} ${generateUserTitle(row.createdByUser)}` : '-',
     {
       id: 'createdBy',
-      enableSorting: false,
       header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_BY),
       cell: (info) => {
+        const isCanceled = info.row.original.status === OrderStatus.CANCELED;
         const user = info.row.original.createdByUser;
-        return user ? (
-          <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {info.getValue()}
-          </Anchor>
-        ) : (
-          '-'
+
+        return (
+          <CellWrapper isCanceled={isCanceled}>
+            {user ? (
+              <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+                {info.getValue()}
+              </Anchor>
+            ) : (
+              '-'
+            )}
+          </CellWrapper>
         );
       },
     }
@@ -113,16 +161,21 @@ export const columns = [
       row.updatedByUser ? `${row.updatedByUser.id} ${generateUserTitle(row.updatedByUser)}` : '-',
     {
       id: 'updatedBy',
-      enableSorting: false,
       header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_BY),
       cell: (info) => {
+        const isCanceled = info.row.original.status === OrderStatus.CANCELED;
         const user = info.row.original.updatedByUser;
-        return user ? (
-          <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            {info.getValue()}
-          </Link>
-        ) : (
-          '-'
+
+        return (
+          <CellWrapper isCanceled={isCanceled}>
+            {user ? (
+              <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                {info.getValue()}
+              </Link>
+            ) : (
+              '-'
+            )}
+          </CellWrapper>
         );
       },
     }
@@ -136,9 +189,15 @@ export const columns = [
     {
       id: 'createdAt',
       header: ordersTableContent.t(OrdersTableContentPhrases.CREATED_AT),
-      cell: (info) =>
-        info.row.original.createdAt &&
-        dayjs(info.row.original.createdAt).format('DD/MM/YYYY HH:mm'),
+      cell: (info) => {
+        const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+        return (
+          <CellWrapper isCanceled={isCanceled}>
+            {info.row.original.createdAt &&
+              dayjs(info.row.original.createdAt).format('DD/MM/YYYY HH:mm')}
+          </CellWrapper>
+        );
+      },
     }
   ),
 
@@ -150,9 +209,15 @@ export const columns = [
     {
       id: 'updatedAt',
       header: ordersTableContent.t(OrdersTableContentPhrases.UPDATED_AT),
-      cell: (info) =>
-        info.row.original.updatedAt &&
-        dayjs(info.row.original.updatedAt).format('DD/MM/YYYY HH:mm'),
+      cell: (info) => {
+        const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+        return (
+          <CellWrapper isCanceled={isCanceled}>
+            {info.row.original.updatedAt &&
+              dayjs(info.row.original.updatedAt).format('DD/MM/YYYY HH:mm')}
+          </CellWrapper>
+        );
+      },
     }
   ),
 ];

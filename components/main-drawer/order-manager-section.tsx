@@ -24,7 +24,7 @@ const menus = [
   {
     label: mainDrawerContent.t(MainDrawerPhrases.ORDERS),
     value: 'orders',
-    url: '/orders?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc',
+    url: '/orders?page=1&pageSize=10&sortBy=createdAt&sortDir=desc',
     icon: <PiReceipt style={{ width: rem(16), height: rem(16) }} />,
   },
   {
