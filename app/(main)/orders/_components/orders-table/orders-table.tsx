@@ -206,7 +206,13 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       headerActions={
         <OrderStatusFilter selectedStatus={statusFilter} onStatusChange={handleStatusChange} />
       }
-      initialColumnsVisibility={{ id: true, createdAt: false, updatedAt: false }}
+      initialColumnsVisibility={{
+        id: true,
+        createdAt: false,
+        updatedAt: true,
+        updatedBy: false,
+        createdBy: false,
+      }}
       onSortingChange={handleSortingChange}
       initialSorting={sorting}
       onPageSizeChange={handlePageSizeChange}
