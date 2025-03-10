@@ -21,6 +21,7 @@ export enum OrdersTableContentPhrases {
   SEND_WHATSAPP = 'sendWhatsapp',
   CANCELED_ORDER_TOOLTIP = 'canceledOrderTooltip',
   REVERT_CANCELED_ORDER = 'revert-canceled-order',
+  CUSTOMER_PHONE = 'customer_phone',
 }
 
 export const ordersTableContent = new Polyglot({
@@ -44,5 +45,6 @@ export const ordersTableContent = new Polyglot({
     [OrdersTableContentPhrases.SEND_WHATSAPP]: 'שלח בוואטסאפ',
     [OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP]: 'הזמנה מבוטלת',
     [OrdersTableContentPhrases.REVERT_CANCELED_ORDER]: 'שחזר הזמנה מבוטלת',
+    [OrdersTableContentPhrases.CUSTOMER_PHONE]: 'מספר טלפון לקוח',
   },
 });

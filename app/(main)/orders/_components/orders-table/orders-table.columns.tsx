@@ -89,6 +89,23 @@ export const columns = [
     },
   }),
 
+  columnHelper.accessor(
+    (row) => {
+      const primaryPhone = row.customer.phones?.find((phone) => phone.isPrimary)?.number;
+      return primaryPhone || row.customer.phones?.[0]?.number || '';
+    },
+    {
+      id: 'customerPhone',
+      header: ordersTableContent.t(OrdersTableContentPhrases.CUSTOMER_PHONE) || 'Phone',
+      cell: (info) => {
+        const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+        const phoneNumber = info.getValue();
+
+        return <CellWrapper isCanceled={isCanceled}>{phoneNumber || '-'}</CellWrapper>;
+      },
+    }
+  ),
+
   columnHelper.accessor('amountPaid', {
     header: ordersTableContent.t(OrdersTableContentPhrases.AMOUNT_PAID),
     cell: (info) => {
