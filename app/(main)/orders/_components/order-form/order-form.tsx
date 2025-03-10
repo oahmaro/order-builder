@@ -125,7 +125,7 @@ export default function OrderForm({
           color: 'green',
         });
         form.resetDirty();
-        router.push('/orders?page=1&pageSize=10&sortBy=id&sortDir=asc');
+        router.push('/orders?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc');
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),

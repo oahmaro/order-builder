@@ -78,7 +78,7 @@ export default function StatCardList({
       chartData: pendingChartData,
       icon: <PiPause className={classes.icon} />,
       title: statCardListContent.t(StatCardListPhrases.NEW),
-      href: '/orders?page=1&pageSize=10&sortBy=id&sortDir=asc&status=NEW',
+      href: '/orders?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc&status=NEW',
       valueLabel: statCardListContent.t(StatCardListPhrases.NEW_ORDERS),
     },
     {
@@ -87,7 +87,7 @@ export default function StatCardList({
       chartData: deliveredChartData,
       icon: <PiHandshake className={classes.icon} />,
       title: statCardListContent.t(StatCardListPhrases.COMPLETED),
-      href: '/orders?page=1&pageSize=10&sortBy=id&sortDir=asc&status=COMPLETED',
+      href: '/orders?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc&status=COMPLETED',
       valueLabel: statCardListContent.t(StatCardListPhrases.COMPLETED_ORDERS),
     },
   ] as const;
@@ -117,7 +117,7 @@ export default function StatCardList({
                 value={customers}
                 chartData={customersChartData}
                 icon={<PiUsers className={classes.icon} />}
-                href="/customers?page=1&pageSize=10&sortBy=id&sortDir=asc"
+                href="/customers?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc"
                 title={statCardListContent.t(StatCardListPhrases.CUSTOMERS)}
                 subtitle={statCardListContent.t(StatCardListPhrases.ALL_CUSTOMERS)}
                 onDateRangeChange={(range) =>
@@ -135,7 +135,7 @@ export default function StatCardList({
                 defaultExpanded
                 chartData={ordersChartData}
                 icon={<PiReceipt className={classes.icon} />}
-                href="/orders?page=1&pageSize=10&sortBy=id&sortDir=asc"
+                href="/orders?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc"
                 title={statCardListContent.t(StatCardListPhrases.ORDERS)}
                 subtitle={statCardListContent.t(StatCardListPhrases.ALL_ORDERS)}
                 onDateRangeChange={(range) =>

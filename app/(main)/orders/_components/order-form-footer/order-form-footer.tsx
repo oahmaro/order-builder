@@ -31,7 +31,7 @@ export default function OrderFormFooter({
     <Group justify="flex-end" gap="md">
       <Button
         variant="default"
-        onClick={() => router.push('/orders?page=1&pageSize=10&sortBy=id&sortDir=asc')}
+        onClick={() => router.push('/orders?page=1&pageSize=10&sortBy=updatedAt&sortDir=desc')}
       >
         {orderFormContent.t(OrderFormContentPhrases.CANCEL)}
       </Button>
