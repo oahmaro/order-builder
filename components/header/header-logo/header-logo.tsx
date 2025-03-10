@@ -1,8 +1,7 @@
-import { Anchor, Box, Group } from '@mantine/core';
+import { Anchor, Group, Image } from '@mantine/core';
 
 import { Link } from '@/components';
 import classes from './header-logo.module.css';
-import { headerLogoContent, HeaderLogoPhrases } from './header-logo.content';
 
 interface HeaderLogoProps {
   onClick?(): void;
@@ -18,8 +17,8 @@ export default function HeaderLogo({ onClick }: HeaderLogoProps) {
       onClick={onClick}
     >
       <Group gap={12} px="xs">
-        <Box className={classes.logo} />
-        <Box fw={600}>{headerLogoContent.t(HeaderLogoPhrases.TITLE)}</Box>
+        <Image src="/logo-column.jpeg" alt="Logo" height={60} width="auto" fit="contain" />
+        {/* <Box fw={600}>{headerLogoContent.t(HeaderLogoPhrases.TITLE)}</Box> */}
       </Group>
     </Anchor>
   );
