@@ -21,7 +21,7 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:reset": "docker-compose down -v --rmi all",
-    "seed:run": "node prisma/seed.js",
+    "initialize": "node prisma/initialize.js",
     "schema:drop": "npx prisma migrate reset",
     "migration:run": "npx prisma generate",
     "migration:generate": "npx prisma migrate dev"

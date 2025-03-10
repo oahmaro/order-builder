@@ -55,7 +55,7 @@ export const columns = [
     header: ordersTableContent.t(OrdersTableContentPhrases.ID),
     cell: (info) => {
       const isCanceled = info.row.original.status === OrderStatus.CANCELED;
-      const orderIdText = `ORD-${info.getValue()}`;
+      const orderIdText = `${info.getValue()}`;
 
       return (
         <CellWrapper isCanceled={isCanceled}>

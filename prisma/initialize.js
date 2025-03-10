@@ -1,12 +1,72 @@
 /* eslint-disable no-console */
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
+const { S3Client, ListObjectsV2Command, DeleteObjectsCommand } = require('@aws-sdk/client-s3');
 const { adhesions, descriptions, prints, users, company } = require('./data.js');
 
 const prisma = new PrismaClient();
 
+// Configure S3 client for Digital Ocean Spaces
+const s3Client = new S3Client({
+  region: process.env.DO_SPACES_REGION || 'us-east-1',
+  endpoint: process.env.DO_SPACES_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.DO_SPACES_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET,
+  },
+});
+
+// Function to delete all objects in a bucket
+async function emptyBucket() {
+  const bucketName = process.env.DO_SPACES_BUCKET;
+
+  if (!bucketName) {
+    console.log('No bucket name provided, skipping bucket cleanup');
+    return;
+  }
+
+  try {
+    console.log(`Emptying bucket: ${bucketName}`);
+
+    // List all objects in the bucket
+    const listCommand = new ListObjectsV2Command({
+      Bucket: bucketName,
+    });
+
+    const listedObjects = await s3Client.send(listCommand);
+
+    if (!listedObjects.Contents || listedObjects.Contents.length === 0) {
+      console.log('Bucket is already empty');
+      return;
+    }
+
+    // Prepare objects for deletion
+    const objectsToDelete = listedObjects.Contents.map(({ Key }) => ({ Key }));
+
+    // Delete objects
+    const deleteCommand = new DeleteObjectsCommand({
+      Bucket: bucketName,
+      Delete: { Objects: objectsToDelete },
+    });
+
+    await s3Client.send(deleteCommand);
+    console.log(`Successfully deleted ${objectsToDelete.length} objects from bucket`);
+
+    // If there are more objects (pagination), recursively delete them
+    if (listedObjects.IsTruncated) {
+      await emptyBucket();
+    }
+  } catch (error) {
+    console.error('Error emptying bucket:', error);
+  }
+}
+
 async function load() {
   try {
+    // Empty Digital Ocean Spaces bucket
+    await emptyBucket();
+    console.log('Cleaned up Digital Ocean bucket images');
+
     // Delete records
     await prisma.user.deleteMany();
     console.log('Deleted records in user table');
@@ -38,6 +98,10 @@ async function load() {
 
     await prisma.$queryRaw`ALTER SEQUENCE "Company_id_seq" RESTART WITH 1`;
     console.log('reset company auto increment to 1');
+
+    // Set Order sequence to start from 11260
+    await prisma.$queryRaw`ALTER SEQUENCE "Order_id_seq" RESTART WITH 11260`;
+    console.log('set order auto increment to 11260');
 
     const usersWithHashedPassword = await Promise.all(
       users.map(async (user) => ({
