@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
+    padding: 15,
     fontSize: 12,
     direction: 'rtl',
     fontFamily: 'Rubik',
@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row-reverse',
     borderRadius: 4,
-    padding: 8,
-    gap: 10,
+    padding: 5,
+    gap: 6,
+    marginBottom: 5,
   },
   leftSection: {
     flex: 1.2,
@@ -40,9 +41,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   logo: {
-    width: 160,
+    width: 120,
     height: 'auto',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   orderNumber: {
     fontSize: 14,
@@ -52,13 +53,13 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#666',
-    marginLeft: 5,
-    fontSize: 11,
+    marginLeft: 4,
+    fontSize: 10,
   },
   value: {
-    marginBottom: 5,
+    marginBottom: 3,
     textAlign: 'right',
-    fontSize: 11,
+    fontSize: 10,
   },
   table: {
     marginTop: 20,
@@ -137,8 +138,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   orderItemCard: {
-    marginBottom: 15,
-    padding: 10,
+    marginBottom: 8,
+    padding: 6,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 4,
@@ -158,22 +159,25 @@ const styles = StyleSheet.create({
   },
   itemRow: {
     flexDirection: 'row-reverse',
-    marginBottom: 10,
-    gap: 20,
+    marginBottom: 4,
+    gap: 15,
+    minHeight: 16,
   },
   lastItemRow: {
     flexDirection: 'row-reverse',
     marginBottom: 0,
-    gap: 20,
+    gap: 15,
+    minHeight: 16,
   },
   imageDescription: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#666',
-    marginTop: 4,
-    marginBottom: 8,
+    marginTop: 3,
+    marginBottom: 0,
     textAlign: 'left',
-    maxWidth: 120,
-    minHeight: 52,
+    maxWidth: 160,
+    minHeight: 80,
+    height: 80,
     padding: 4,
     borderWidth: 1,
     borderColor: '#eee',
@@ -202,7 +206,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   imageContainer: {
-    width: 120,
+    width: 160,
     height: 120,
     display: 'flex',
     justifyContent: 'center',
@@ -210,6 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderRadius: 4,
     overflow: 'hidden',
+    flexShrink: 0,
   },
   itemImage: {
     maxWidth: '100%',
@@ -219,10 +224,11 @@ const styles = StyleSheet.create({
   itemContent: {
     flex: 1,
     direction: 'rtl',
+    gap: 4,
   },
   itemContainer: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 8,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
@@ -239,19 +245,22 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 8,
+    marginRight: 6,
+    minHeight: 14,
   },
   checkboxLabel: {
-    fontSize: 10,
-    marginLeft: 4,
+    fontSize: 9,
+    marginLeft: 3,
+    lineHeight: 1.2,
   },
   checkboxRow: {
     flexDirection: 'row-reverse',
-    marginBottom: 8,
-    gap: 20,
+    marginBottom: 4,
+    gap: 15,
+    minHeight: 16,
   },
   imagePlaceholder: {
-    width: 120,
+    width: 160,
     height: 120,
     backgroundColor: '#f5f5f5',
     borderRadius: 4,
@@ -262,22 +271,24 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   printSection: {
-    marginTop: 8,
-    paddingTop: 8,
+    marginTop: 4,
+    paddingTop: 4,
     borderTopWidth: 1,
     borderTopColor: '#eee',
+    minHeight: 16,
   },
   sectionRow: {
     flexDirection: 'row-reverse',
     gap: 5,
     marginBottom: 0,
+    minHeight: 16,
   },
   sectionLabel: {
     color: '#666',
-    fontSize: 10,
+    fontSize: 9,
   },
   sectionValue: {
-    fontSize: 10,
+    fontSize: 9,
   },
   priceSection: {
     marginTop: 12,
@@ -291,15 +302,20 @@ const styles = StyleSheet.create({
   tagContainer: {
     flexDirection: 'row-reverse',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: 4,
+    marginTop: 1,
+    marginBottom: 1,
+    alignItems: 'flex-start',
+    minHeight: 12,
   },
   tag: {
     backgroundColor: '#f5f5f5',
-    borderRadius: 4,
-    padding: '2 6',
+    borderRadius: 3,
+    padding: '2 5',
     fontSize: 9,
     borderWidth: 1,
     borderColor: '#e0e0e0',
+    marginBottom: 2,
   },
 });
 
@@ -425,14 +441,14 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                 style={{
                   flexDirection: 'row-reverse',
                   justifyContent: 'space-between',
-                  paddingVertical: 6,
-                  paddingHorizontal: 15,
+                  paddingVertical: 3,
+                  paddingHorizontal: 10,
                   borderTopWidth: 1,
                   borderTopColor: '#ddd',
                   borderBottomWidth: 1.5,
                   borderBottomColor: '#000',
-                  marginBottom: 12,
-                  marginTop: 8,
+                  marginBottom: 8,
+                  marginTop: 5,
                 }}
               >
                 <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
@@ -472,7 +488,7 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
           {chunk.map((item, index) => (
             <View key={index} wrap={false} style={styles.orderItemCard}>
               <View style={styles.itemContainer}>
-                <View style={{ gap: 8 }}>
+                <View style={{ gap: 8, display: 'flex', flexDirection: 'column' }}>
                   {item.image ? (
                     <View style={styles.imageContainer}>
                       <Image
