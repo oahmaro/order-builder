@@ -177,8 +177,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     direction: 'ltr',
     maxWidth: 160,
-    minHeight: 'auto',
-    maxHeight: 70,
+    minHeight: 80,
     padding: 4,
     borderWidth: 1,
     borderColor: '#eee',
@@ -540,6 +539,7 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     </Text>
                   </View>
 
+                  {/* Ensure consistent spacing with fixed minHeight */}
                   <View style={[styles.itemRow, { marginBottom: 3, minHeight: 15 }]}>
                     <Text style={styles.itemLabel}>:מידות תמונה</Text>
                     <Text style={styles.itemValue}>
@@ -568,9 +568,10 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     </View>
                   </View>
 
+                  {/* Always render checkbox row with consistent height */}
                   <View style={[styles.checkboxRow, { marginBottom: 3, minHeight: 15 }]}>
                     {Object.entries(
-                      JSON.parse(String(item.glassTypes)) as Record<string, boolean>
+                      JSON.parse(String(item.glassTypes || '{}')) as Record<string, boolean>
                     ).map(([key, value]) => (
                       <View key={key} style={styles.checkboxContainer}>
                         <Svg style={styles.checkboxIcon} viewBox="0 0 14 14">
@@ -621,18 +622,18 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                         </Text>
                       </View>
                     ))}
+                    {/* Add empty placeholder if no glass types to maintain consistent height */}
+                    {(!item.glassTypes ||
+                      Object.keys(JSON.parse(String(item.glassTypes || '{}'))).length === 0) && (
+                      <Text style={styles.itemValue}>-</Text>
+                    )}
                   </View>
 
-                  <View
-                    style={
-                      index === (item.adhesions?.length || 0) - 1
-                        ? [styles.lastItemRow, { minHeight: 13 }]
-                        : [styles.itemRow, { marginBottom: 3, minHeight: 13 }]
-                    }
-                  >
+                  {/* Always render adhesions section with consistent height */}
+                  <View style={[styles.itemRow, { marginBottom: 3, minHeight: 20 }]}>
                     <Text style={styles.itemLabel}>:הדבקות</Text>
                     {item.adhesions?.length ? (
-                      <View style={[styles.tagContainer, { gap: 2, minHeight: 10 }]}>
+                      <View style={[styles.tagContainer, { gap: 2, minHeight: 16 }]}>
                         {item.adhesions.map((adhesion, i) => (
                           <Text key={i} style={[styles.tag, { fontSize: 9, padding: '1 3' }]}>
                             {adhesion.name}
@@ -644,16 +645,11 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     )}
                   </View>
 
-                  <View
-                    style={
-                      index === (item.prints?.length || 0) - 1
-                        ? [styles.lastItemRow, { minHeight: 13 }]
-                        : [styles.itemRow, { marginBottom: 3, minHeight: 13 }]
-                    }
-                  >
+                  {/* Always render prints section with consistent height */}
+                  <View style={[styles.itemRow, { marginBottom: 3, minHeight: 20 }]}>
                     <Text style={styles.itemLabel}>:הדפסות</Text>
                     {item.prints?.length ? (
-                      <View style={[styles.tagContainer, { gap: 2, minHeight: 10 }]}>
+                      <View style={[styles.tagContainer, { gap: 2, minHeight: 16 }]}>
                         {item.prints.map((print, i) => (
                           <Text key={i} style={[styles.tag, { fontSize: 9, padding: '1 3' }]}>
                             {print.name}
@@ -665,16 +661,11 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     )}
                   </View>
 
-                  <View
-                    style={
-                      index === (item.descriptions?.length || 0) - 1
-                        ? [styles.lastItemRow, { minHeight: 13 }]
-                        : [styles.itemRow, { marginBottom: 3, minHeight: 13 }]
-                    }
-                  >
+                  {/* Always render descriptions section with consistent height */}
+                  <View style={[styles.itemRow, { marginBottom: 3, minHeight: 20 }]}>
                     <Text style={styles.itemLabel}>:תיאור</Text>
                     {item.descriptions?.length ? (
-                      <View style={[styles.tagContainer, { gap: 2, minHeight: 10 }]}>
+                      <View style={[styles.tagContainer, { gap: 2, minHeight: 16 }]}>
                         {item.descriptions.map((description, i) => (
                           <Text key={i} style={[styles.tag, { fontSize: 9, padding: '1 3' }]}>
                             {description.name}
@@ -686,28 +677,25 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     )}
                   </View>
 
+                  {/* Ensure pricing section is consistently displayed */}
                   <View
                     style={[styles.printSection, { marginTop: 3, paddingTop: 3, minHeight: 16 }]}
                   >
                     <View style={[styles.sectionRow, { minHeight: 16 }]}>
-                      <View
-                        style={{
-                          flexDirection: 'row-reverse',
-                          gap: 12,
-                          alignItems: 'center',
-                        }}
-                      >
+                      <View style={{ flexDirection: 'row-reverse', gap: 12, alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
                           <Text style={styles.itemLabel}>:כמות</Text>
-                          <Text style={styles.itemValue}>{item.quantity}</Text>
+                          <Text style={styles.itemValue}>{item.quantity || '-'}</Text>
                         </View>
                         <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
                           <Text style={styles.itemLabel}>:מחיר יחידה</Text>
-                          <Text style={styles.itemValue}>₪{item.unitPrice}</Text>
+                          <Text style={styles.itemValue}>₪{item.unitPrice || '0'}</Text>
                         </View>
                         <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
                           <Text style={styles.itemLabel}>:מחיר</Text>
-                          <Text style={styles.itemValue}>₪{item.unitPrice * item.quantity}</Text>
+                          <Text style={styles.itemValue}>
+                            ₪{(item.unitPrice || 0) * (item.quantity || 0)}
+                          </Text>
                         </View>
                       </View>
                     </View>
