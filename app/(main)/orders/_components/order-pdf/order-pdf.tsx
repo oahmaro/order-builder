@@ -11,6 +11,7 @@ import {
   Rect,
 } from '@react-pdf/renderer';
 import { Order, OrderItem, Customer, Company, Address, Phone } from '@prisma/client';
+import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
   page: {
@@ -396,11 +397,7 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
                     <Text style={styles.label}> :תאריך</Text>
                     <Text style={styles.value}>
-                      {order.createdAt
-                        ? `${new Date(order.createdAt).getDate()}-${
-                            new Date(order.createdAt).getMonth() + 1
-                          }-${new Date(order.createdAt).getFullYear()}`
-                        : '—'}
+                      {order.createdAt ? dayjs(order.createdAt).format('DD/MM/YYYY HH:mm') : '—'}
                     </Text>
                   </View>
 

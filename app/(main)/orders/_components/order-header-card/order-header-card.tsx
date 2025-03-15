@@ -224,7 +224,7 @@ export default function OrderHeaderCard({ customers, company, disabled }: OrderH
           {form.values?.createdAt && (
             <StaticField
               label={orderHeaderContent.t(OrderHeaderContentPhrases.DATE)}
-              value={dayjs(form.values.createdAt).format('DD-M-YYYY')}
+              value={dayjs(form.values.createdAt).format('DD/MM/YYYY HH:mm')}
               separator=": "
             />
           )}
