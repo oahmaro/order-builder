@@ -380,19 +380,6 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                       </Text>
                     </View>
                   ))}
-                  <View style={{ flexDirection: 'row-reverse' }}>
-                    <Text style={styles.label}> :מקדמה</Text>
-                    <Text style={[styles.value, { color: 'black' }]}>
-                      <Text style={{ color: 'red' }}>₪{order.amountPaid}</Text>
-                    </Text>
-                  </View>
-                  <View style={styles.separator} />
-                  <View style={{ flexDirection: 'row-reverse' }}>
-                    <Text style={styles.label}> :סה״כ לתשלום</Text>
-                    <Text style={[styles.value, { fontWeight: 'medium', color: 'red' }]}>
-                      ₪{remaining}
-                    </Text>
-                  </View>
                 </View>
 
                 <View style={styles.middleSection}>
@@ -432,7 +419,52 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   </View>
                 </View>
               </View>
-              <View style={styles.headerSeparator} />
+
+              {/* New payment information row */}
+              <View
+                style={{
+                  flexDirection: 'row-reverse',
+                  justifyContent: 'space-between',
+                  paddingVertical: 6,
+                  paddingHorizontal: 15,
+                  borderTopWidth: 1,
+                  borderTopColor: '#ddd',
+                  borderBottomWidth: 1.5,
+                  borderBottomColor: '#000',
+                  marginBottom: 12,
+                  marginTop: 8,
+                }}
+              >
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                  <Text style={[styles.label, { marginBottom: 0 }]}> :מקדמה</Text>
+                  <Text style={[styles.value, { marginBottom: 0, marginLeft: 10 }]}>
+                    ₪{order.amountPaid}
+                  </Text>
+                </View>
+
+                <View style={{ width: 1, height: 16, backgroundColor: '#ddd' }} />
+
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                  <Text style={[styles.label, { marginBottom: 0 }]}> :סה״כ</Text>
+                  <Text style={[styles.value, { marginBottom: 0, marginLeft: 10 }]}>
+                    ₪{order.orderItems.reduce((sum, item) => sum + (item.price || 0), 0)}
+                  </Text>
+                </View>
+
+                <View style={{ width: 1, height: 16, backgroundColor: '#ddd' }} />
+
+                <View style={{ flexDirection: 'row-reverse', alignItems: 'center' }}>
+                  <Text style={[styles.label, { marginBottom: 0 }]}> :סה״כ לתשלום</Text>
+                  <Text
+                    style={[
+                      styles.value,
+                      { marginBottom: 0, marginLeft: 10, fontWeight: 'medium', color: 'red' },
+                    ]}
+                  >
+                    ₪{remaining}
+                  </Text>
+                </View>
+              </View>
             </>
           )}
 

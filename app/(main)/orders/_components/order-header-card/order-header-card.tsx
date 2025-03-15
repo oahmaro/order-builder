@@ -170,36 +170,6 @@ export default function OrderHeaderCard({ customers, company, disabled }: OrderH
               disabled={disabled}
             />
           </Group>
-
-          <NumberInput
-            size="xs"
-            prefix="₪"
-            max={total}
-            hideControls
-            allowLeadingZeros={false}
-            rightSectionWidth={40}
-            styles={{
-              wrapper: { flex: 1 },
-              root: { display: 'flex', alignItems: 'center' },
-              label: { marginLeft: '8px', width: 48, margin: 0 },
-              input: { width: '100%' },
-            }}
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}
-            {...form.getInputProps('amountPaid')}
-            disabled={disabled}
-          />
-
-          <Box c="dimmed">-----------------------------------</Box>
-
-          <StaticField
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL_TO_PAY)}
-            value={
-              <Box component="span" c="red" fw="bold" fz="sm">
-                <NumberFormatter prefix="₪" value={remainingToPay} thousandSeparator />
-              </Box>
-            }
-            separator=": "
-          />
         </Stack>
 
         <Stack flex={2} h="100%" align="center">
@@ -254,6 +224,51 @@ export default function OrderHeaderCard({ customers, company, disabled }: OrderH
           />
         </Stack>
       </Group>
+
+      <Box mt="md" pt="xs" style={{ borderTop: '1px solid var(--mantine-color-gray-3)' }}>
+        <Group gap="xl">
+          <Group>
+            <Text fw="bold" fz="sm">
+              {orderHeaderContent.t(OrderHeaderContentPhrases.ADVANCE_PAYMENT)}:
+            </Text>
+            <NumberInput
+              size="xs"
+              prefix="₪"
+              max={total}
+              hideControls
+              allowLeadingZeros={false}
+              styles={{
+                wrapper: { width: 120 },
+                input: { textAlign: 'right' },
+              }}
+              {...form.getInputProps('amountPaid')}
+              disabled={disabled}
+            />
+          </Group>
+
+          <Box style={{ borderLeft: '1px solid var(--mantine-color-gray-3)', height: 30 }} />
+
+          <Group>
+            <Text fw="bold" fz="sm">
+              {orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL)}:
+            </Text>
+            <Text fz="sm">
+              <NumberFormatter prefix="₪" value={total} thousandSeparator />
+            </Text>
+          </Group>
+
+          <Box style={{ borderLeft: '1px solid var(--mantine-color-gray-3)', height: 30 }} />
+
+          <Group>
+            <Text fw="bold" fz="sm">
+              {orderHeaderContent.t(OrderHeaderContentPhrases.TOTAL_TO_PAY)}:
+            </Text>
+            <Text c="red" fw="bold" fz="sm">
+              <NumberFormatter prefix="₪" value={remainingToPay} thousandSeparator />
+            </Text>
+          </Group>
+        </Group>
+      </Box>
     </Paper>
   );
 }
