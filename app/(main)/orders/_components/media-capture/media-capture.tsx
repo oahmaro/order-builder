@@ -41,7 +41,10 @@ export default function MediaCapture({
   const initializeCamera = async () => {
     try {
       // First request camera permissions explicitly
-      await navigator.mediaDevices.getUserMedia({ video: true });
+      const permissionStream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+      // Stop this initial permission stream immediately after getting permissions
+      permissionStream.getTracks().forEach((track) => track.stop());
 
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter((device) => device.kind === 'videoinput');
@@ -247,7 +250,18 @@ export default function MediaCapture({
     }
   };
 
-  useEffect(() => () => streamRef.current?.getTracks().forEach((track) => track.stop()), []);
+  useEffect(
+    () => () => {
+      // Ensure we stop any active stream when component unmounts
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => {
+          track.stop();
+        });
+        streamRef.current = null;
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const handleError = () => {
