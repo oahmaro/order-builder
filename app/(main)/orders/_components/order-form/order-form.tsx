@@ -124,8 +124,12 @@ export default function OrderForm({
           message: response.message,
           color: 'green',
         });
+
         form.resetDirty();
-        router.push('/orders?page=1&pageSize=10&sortBy=createdAt&sortDir=desc');
+
+        if (!isUpdate) {
+          router.push(`/orders/${response.orderId}`);
+        }
       } else {
         notifications.show({
           title: commonContent.t(CommonPhrases.ERROR),

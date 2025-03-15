@@ -17,6 +17,7 @@ import { batchUploadImagesAction } from './batch-upload-images.action';
 type FormState = {
   message: string;
   errors?: any[];
+  orderId?: number;
 };
 
 export async function updateOrderAction(data: FormData): Promise<FormState> {
@@ -153,6 +154,7 @@ export async function updateOrderAction(data: FormData): Promise<FormState> {
 
     return {
       message: orderFormContent.t(OrderFormContentPhrases.ORDER_UPDATED),
+      orderId: updatedOrder.id,
     };
   } catch (error) {
     return {
