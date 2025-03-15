@@ -175,13 +175,15 @@ const styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 0,
     textAlign: 'left',
+    direction: 'ltr',
     maxWidth: 160,
-    minHeight: 80,
-    height: 80,
+    minHeight: 'auto',
+    maxHeight: 70,
     padding: 4,
     borderWidth: 1,
     borderColor: '#eee',
     borderRadius: 4,
+    overflow: 'hidden',
   },
   itemLabel: {
     color: '#666',
@@ -486,11 +488,15 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
 
           {/* Render the chunk of order items (max 3 per page) */}
           {chunk.map((item, index) => (
-            <View key={index} wrap={false} style={styles.orderItemCard}>
-              <View style={styles.itemContainer}>
-                <View style={{ gap: 8, display: 'flex', flexDirection: 'column' }}>
+            <View
+              key={index}
+              wrap={false}
+              style={[styles.orderItemCard, { marginBottom: 4, padding: 5 }]}
+            >
+              <View style={[styles.itemContainer, { gap: 6 }]}>
+                <View style={{ gap: 4, display: 'flex', flexDirection: 'column', width: 160 }}>
                   {item.image ? (
-                    <View style={styles.imageContainer}>
+                    <View style={[styles.imageContainer, { height: 130 }]}>
                       <Image
                         src={getProxiedImageUrl(item.image)}
                         style={styles.itemImage}
@@ -498,15 +504,43 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                       />
                     </View>
                   ) : (
-                    <View style={styles.imagePlaceholder} />
+                    <View style={[styles.imagePlaceholder, { height: 130 }]} />
                   )}
-                  <View style={[styles.imageDescription, { margin: 0 }]}>
+                  <View
+                    style={[
+                      styles.imageDescription,
+                      {
+                        margin: 0,
+                        height: 70,
+                        maxHeight: 70,
+                        overflow: 'hidden',
+                      },
+                    ]}
+                  >
                     <Text>{item.notes || ''}</Text>
                   </View>
                 </View>
 
                 <View style={styles.itemContent}>
-                  <View style={styles.itemRow}>
+                  {/* Add the item number with minimal space */}
+                  <View
+                    style={[
+                      styles.itemRow,
+                      {
+                        marginBottom: 4,
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#eee',
+                        paddingBottom: 2,
+                        minHeight: 15,
+                      },
+                    ]}
+                  >
+                    <Text style={[styles.itemTitle, { fontWeight: 'medium' }]}>
+                      פריט הזמנה {pageIndex * 3 + index + 1}
+                    </Text>
+                  </View>
+
+                  <View style={[styles.itemRow, { marginBottom: 3, minHeight: 15 }]}>
                     <Text style={styles.itemLabel}>:מידות תמונה</Text>
                     <Text style={styles.itemValue}>
                       {item.width ? `${item.width}cm` : '-'} x{' '}
@@ -514,13 +548,13 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     </Text>
                   </View>
 
-                  <View style={styles.itemRow}>
+                  <View style={[styles.itemRow, { marginBottom: 3, minHeight: 15 }]}>
                     <Text style={styles.itemLabel}>:מספר מסגרת</Text>
                     <Text style={styles.itemValue}>{item.frame?.name || '-'}</Text>
                   </View>
 
-                  <View style={styles.itemRow}>
-                    <View style={{ flexDirection: 'row-reverse', gap: 20 }}>
+                  <View style={[styles.itemRow, { marginBottom: 3, minHeight: 15 }]}>
+                    <View style={{ flexDirection: 'row-reverse', gap: 12 }}>
                       <View style={{ flexDirection: 'row-reverse', gap: 5 }}>
                         <Text style={styles.itemLabel}>:מספר פספרטו</Text>
                         <Text style={styles.itemValue}>{item.passepartout?.name || '-'}</Text>
@@ -534,7 +568,7 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     </View>
                   </View>
 
-                  <View style={styles.checkboxRow}>
+                  <View style={[styles.checkboxRow, { marginBottom: 3, minHeight: 15 }]}>
                     {Object.entries(
                       JSON.parse(String(item.glassTypes)) as Record<string, boolean>
                     ).map(([key, value]) => (
@@ -592,15 +626,15 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   <View
                     style={
                       index === (item.adhesions?.length || 0) - 1
-                        ? styles.lastItemRow
-                        : styles.itemRow
+                        ? [styles.lastItemRow, { minHeight: 13 }]
+                        : [styles.itemRow, { marginBottom: 3, minHeight: 13 }]
                     }
                   >
                     <Text style={styles.itemLabel}>:הדבקות</Text>
                     {item.adhesions?.length ? (
-                      <View style={styles.tagContainer}>
+                      <View style={[styles.tagContainer, { gap: 2, minHeight: 10 }]}>
                         {item.adhesions.map((adhesion, i) => (
-                          <Text key={i} style={styles.tag}>
+                          <Text key={i} style={[styles.tag, { fontSize: 9, padding: '1 3' }]}>
                             {adhesion.name}
                           </Text>
                         ))}
@@ -612,14 +646,16 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
 
                   <View
                     style={
-                      index === (item.prints?.length || 0) - 1 ? styles.lastItemRow : styles.itemRow
+                      index === (item.prints?.length || 0) - 1
+                        ? [styles.lastItemRow, { minHeight: 13 }]
+                        : [styles.itemRow, { marginBottom: 3, minHeight: 13 }]
                     }
                   >
                     <Text style={styles.itemLabel}>:הדפסות</Text>
                     {item.prints?.length ? (
-                      <View style={styles.tagContainer}>
+                      <View style={[styles.tagContainer, { gap: 2, minHeight: 10 }]}>
                         {item.prints.map((print, i) => (
-                          <Text key={i} style={styles.tag}>
+                          <Text key={i} style={[styles.tag, { fontSize: 9, padding: '1 3' }]}>
                             {print.name}
                           </Text>
                         ))}
@@ -632,15 +668,15 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   <View
                     style={
                       index === (item.descriptions?.length || 0) - 1
-                        ? styles.lastItemRow
-                        : styles.itemRow
+                        ? [styles.lastItemRow, { minHeight: 13 }]
+                        : [styles.itemRow, { marginBottom: 3, minHeight: 13 }]
                     }
                   >
                     <Text style={styles.itemLabel}>:תיאור</Text>
                     {item.descriptions?.length ? (
-                      <View style={styles.tagContainer}>
+                      <View style={[styles.tagContainer, { gap: 2, minHeight: 10 }]}>
                         {item.descriptions.map((description, i) => (
-                          <Text key={i} style={styles.tag}>
+                          <Text key={i} style={[styles.tag, { fontSize: 9, padding: '1 3' }]}>
                             {description.name}
                           </Text>
                         ))}
@@ -650,12 +686,14 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     )}
                   </View>
 
-                  <View style={styles.printSection}>
-                    <View style={styles.sectionRow}>
+                  <View
+                    style={[styles.printSection, { marginTop: 3, paddingTop: 3, minHeight: 16 }]}
+                  >
+                    <View style={[styles.sectionRow, { minHeight: 16 }]}>
                       <View
                         style={{
                           flexDirection: 'row-reverse',
-                          gap: 20,
+                          gap: 12,
                           alignItems: 'center',
                         }}
                       >

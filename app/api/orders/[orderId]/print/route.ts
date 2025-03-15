@@ -21,6 +21,9 @@ export async function GET(request: Request, { params }: { params: { orderId: str
               descriptions: true,
               passepartout: true,
             },
+            orderBy: {
+              orderIndex: 'asc',
+            },
           },
         },
       }),
