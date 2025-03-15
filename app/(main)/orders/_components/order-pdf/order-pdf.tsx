@@ -288,6 +288,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: 40,
   },
+  tagContainer: {
+    flexDirection: 'row-reverse',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  tag: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 4,
+    padding: '2 6',
+    fontSize: 9,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
 });
 
 Font.register({
@@ -536,9 +549,17 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     }
                   >
                     <Text style={styles.itemLabel}>:הדבקות</Text>
-                    <Text style={styles.itemValue}>
-                      {item.adhesions?.length ? item.adhesions.map((a) => a.name).join(', ') : '-'}
-                    </Text>
+                    {item.adhesions?.length ? (
+                      <View style={styles.tagContainer}>
+                        {item.adhesions.map((adhesion, i) => (
+                          <Text key={i} style={styles.tag}>
+                            {adhesion.name}
+                          </Text>
+                        ))}
+                      </View>
+                    ) : (
+                      <Text style={styles.itemValue}>-</Text>
+                    )}
                   </View>
 
                   <View
@@ -547,9 +568,17 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     }
                   >
                     <Text style={styles.itemLabel}>:הדפסות</Text>
-                    <Text style={styles.itemValue}>
-                      {item.prints?.length ? item.prints.map((p) => p.name).join(', ') : '-'}
-                    </Text>
+                    {item.prints?.length ? (
+                      <View style={styles.tagContainer}>
+                        {item.prints.map((print, i) => (
+                          <Text key={i} style={styles.tag}>
+                            {print.name}
+                          </Text>
+                        ))}
+                      </View>
+                    ) : (
+                      <Text style={styles.itemValue}>-</Text>
+                    )}
                   </View>
 
                   <View
@@ -560,11 +589,17 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                     }
                   >
                     <Text style={styles.itemLabel}>:תיאור</Text>
-                    <Text style={styles.itemValue}>
-                      {item.descriptions?.length
-                        ? item.descriptions.map((d) => d.name).join(', ')
-                        : '-'}
-                    </Text>
+                    {item.descriptions?.length ? (
+                      <View style={styles.tagContainer}>
+                        {item.descriptions.map((description, i) => (
+                          <Text key={i} style={styles.tag}>
+                            {description.name}
+                          </Text>
+                        ))}
+                      </View>
+                    ) : (
+                      <Text style={styles.itemValue}>-</Text>
+                    )}
                   </View>
 
                   <View style={styles.printSection}>
