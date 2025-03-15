@@ -1,7 +1,7 @@
 'use client';
 
 import { modals } from '@mantine/modals';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect, useReducer, useCallback } from 'react';
 import { notifications } from '@mantine/notifications';
 import { Button, Image, Stack, ActionIcon } from '@mantine/core';
 import { IconCamera, IconUpload, IconX, IconCameraRotate } from '@tabler/icons-react';
@@ -18,6 +18,21 @@ interface MediaCaptureProps {
   onCapture: (file: File | undefined) => Promise<void>;
 }
 
+const mediaReducer = (state: any, action: any) => {
+  switch (action.type) {
+    case 'setIsCameraActive':
+      return { ...state, isCameraActive: action.payload };
+    case 'setCurrentDeviceId':
+      return { ...state, currentDeviceId: action.payload };
+    case 'setAvailableDevices':
+      return { ...state, availableDevices: action.payload };
+    case 'setLocalImageUrl':
+      return { ...state, localImageUrl: action.payload };
+    default:
+      return state;
+  }
+};
+
 export default function MediaCapture({
   value,
   onCapture,
@@ -29,13 +44,15 @@ export default function MediaCapture({
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isCameraActive, setIsCameraActive] = useState(false);
-  const [currentDeviceId, setCurrentDeviceId] = useState<string>();
-  const [availableDevices, setAvailableDevices] = useState<MediaDeviceInfo[]>([]);
-  const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(value);
+  const [state, dispatch] = useReducer(mediaReducer, {
+    isCameraActive: false,
+    currentDeviceId: undefined,
+    availableDevices: [],
+    localImageUrl: value,
+  });
 
   useEffect(() => {
-    setLocalImageUrl(value);
+    dispatch({ type: 'setLocalImageUrl', payload: value });
   }, [value]);
 
   const initializeCamera = async () => {
@@ -49,9 +66,9 @@ export default function MediaCapture({
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
-      setAvailableDevices(videoDevices);
+      dispatch({ type: 'setAvailableDevices', payload: videoDevices });
       if (videoDevices.length > 0) {
-        setCurrentDeviceId(videoDevices[0].deviceId);
+        dispatch({ type: 'setCurrentDeviceId', payload: videoDevices[0].deviceId });
       }
     } catch (error) {
       notifications.show({
@@ -62,31 +79,34 @@ export default function MediaCapture({
     }
   };
 
-  const handleFileCapture = async (file: File | undefined) => {
-    if (!file) {
-      setLocalImageUrl(undefined);
-      onCapture(undefined);
-      return;
-    }
+  const handleFileCapture = useCallback(
+    async (file: File | undefined) => {
+      if (!file) {
+        dispatch({ type: 'setLocalImageUrl', payload: undefined });
+        onCapture(undefined);
+        return;
+      }
 
-    // Create local URL for preview
-    const objectUrl = URL.createObjectURL(file);
-    setLocalImageUrl(objectUrl);
+      // Create local URL for preview
+      const objectUrl = URL.createObjectURL(file);
+      dispatch({ type: 'setLocalImageUrl', payload: objectUrl });
 
-    // Pass the file to parent
-    await onCapture(file);
-  };
+      // Pass the file to parent
+      await onCapture(file);
+    },
+    [onCapture]
+  );
 
   useEffect(
     () => () => {
-      if (localImageUrl && !localImageUrl.startsWith('https://')) {
-        URL.revokeObjectURL(localImageUrl);
+      if (state.localImageUrl && !state.localImageUrl.startsWith('https://')) {
+        URL.revokeObjectURL(state.localImageUrl);
       }
     },
-    [localImageUrl]
+    [state.localImageUrl]
   );
 
-  const checkCameraSupport = async () => {
+  const checkCameraSupport = useCallback(async () => {
     try {
       // Check if getUserMedia is supported
       if (!navigator.mediaDevices?.getUserMedia) {
@@ -104,7 +124,7 @@ export default function MediaCapture({
       });
       return false;
     }
-  };
+  }, []);
 
   const startCamera = async () => {
     try {
@@ -116,14 +136,14 @@ export default function MediaCapture({
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          deviceId: currentDeviceId ? { exact: currentDeviceId } : undefined,
+          deviceId: state.currentDeviceId ? { exact: state.currentDeviceId } : undefined,
           width: { ideal: typeof width === 'number' ? width : parseInt(width as string, 10) },
           height: { ideal: typeof height === 'number' ? height : parseInt(height as string, 10) },
         },
       });
 
       streamRef.current = stream;
-      setIsCameraActive(true);
+      dispatch({ type: 'setIsCameraActive', payload: true });
 
       await new Promise<void>((resolve) => {
         const checkVideoRef = () => {
@@ -144,7 +164,7 @@ export default function MediaCapture({
         streamRef.current = null;
       }
 
-      setIsCameraActive(false);
+      dispatch({ type: 'setIsCameraActive', payload: false });
 
       const errorMessage =
         error instanceof Error
@@ -162,11 +182,11 @@ export default function MediaCapture({
   const switchCamera = async () => {
     try {
       // Find next device
-      const currentIndex = availableDevices.findIndex(
-        (device) => device.deviceId === currentDeviceId
+      const currentIndex = state.availableDevices.findIndex(
+        (device: MediaDeviceInfo) => device.deviceId === state.currentDeviceId
       );
-      const nextIndex = (currentIndex + 1) % availableDevices.length;
-      const nextDevice = availableDevices[nextIndex];
+      const nextIndex = (currentIndex + 1) % state.availableDevices.length;
+      const nextDevice = state.availableDevices[nextIndex];
 
       // Stop current stream
       if (streamRef.current) {
@@ -178,10 +198,7 @@ export default function MediaCapture({
       }
 
       // Update device ID and wait for state to update
-      await new Promise<void>((resolve) => {
-        setCurrentDeviceId(nextDevice.deviceId);
-        setTimeout(resolve, 0);
-      });
+      dispatch({ type: 'setCurrentDeviceId', payload: nextDevice.deviceId });
 
       // Start new stream with selected device
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -213,7 +230,7 @@ export default function MediaCapture({
         videoRef.current.srcObject = null;
       }
       streamRef.current = null;
-      setIsCameraActive(false);
+      dispatch({ type: 'setIsCameraActive', payload: false });
     }
   };
 
@@ -250,8 +267,24 @@ export default function MediaCapture({
     }
   };
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    // Ensure we stop any active stream when component unmounts
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      streamRef.current = null;
+    }
+
+    // Clean up any object URLs
+    if (state.localImageUrl && !state.localImageUrl.startsWith('https://')) {
+      URL.revokeObjectURL(state.localImageUrl);
+    }
+
+    return () => {
+      abortController.abort();
       // Ensure we stop any active stream when component unmounts
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => {
@@ -259,9 +292,13 @@ export default function MediaCapture({
         });
         streamRef.current = null;
       }
-    },
-    []
-  );
+
+      // Clean up any object URLs
+      if (state.localImageUrl && !state.localImageUrl.startsWith('https://')) {
+        URL.revokeObjectURL(state.localImageUrl);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleError = () => {
@@ -286,7 +323,7 @@ export default function MediaCapture({
   return (
     <div className={classes.root}>
       <div className={classes.uploadContainer}>
-        {isCameraActive ? (
+        {state.isCameraActive ? (
           <Stack gap="xs">
             <div className={classes.videoContainer}>
               <video ref={videoRef} autoPlay playsInline muted className={classes.video} />
@@ -309,7 +346,7 @@ export default function MediaCapture({
                 {mediaCaptureContent.t(MediaCaptureContentPhrases.CAPTURE)}
               </Button>
 
-              {availableDevices.length > 1 && (
+              {state.availableDevices.length > 1 && (
                 <ActionIcon
                   className={classes.switchCameraButton}
                   variant="filled"
@@ -321,7 +358,7 @@ export default function MediaCapture({
               )}
             </div>
           </Stack>
-        ) : !localImageUrl ? (
+        ) : !state.localImageUrl ? (
           <div className={classes.buttonContainer}>
             <input
               ref={fileInputRef}
@@ -361,22 +398,21 @@ export default function MediaCapture({
         ) : (
           <div className={classes.imageContainer}>
             <Image
-              src={localImageUrl}
+              src={state.localImageUrl}
               fallbackSrc={fallbackSrc}
               className={classes.image}
               onError={(e) => {
-                console.error('Error loading image:', localImageUrl);
                 e.currentTarget.src = fallbackSrc;
               }}
               onClick={() => {
-                if (localImageUrl) {
+                if (state.localImageUrl) {
                   modals.open({
                     centered: true,
                     styles: { header: { display: 'none' }, body: { padding: '0' } },
                     size: 'lg',
                     children: (
                       <Image
-                        src={localImageUrl}
+                        src={state.localImageUrl}
                         fit="contain"
                         pos="relative"
                         top="0"
@@ -401,7 +437,7 @@ export default function MediaCapture({
                 if (fileInputRef.current) {
                   fileInputRef.current.value = '';
                 }
-                setLocalImageUrl(undefined);
+                dispatch({ type: 'setLocalImageUrl', payload: undefined });
                 await onCapture(undefined);
               }}
             >

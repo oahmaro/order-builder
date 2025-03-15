@@ -67,7 +67,11 @@ async function load() {
     await emptyBucket();
     console.log('Cleaned up Digital Ocean bucket images');
 
-    // Delete records
+    // Delete Audit records first
+    await prisma.audit.deleteMany();
+    console.log('Deleted records in audit table');
+
+    // Then delete User records
     await prisma.user.deleteMany();
     console.log('Deleted records in user table');
 
