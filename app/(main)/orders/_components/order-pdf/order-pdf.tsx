@@ -383,11 +383,12 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                 </View>
 
                 <View style={styles.middleSection}>
-                  <Image src="/logo.png" style={styles.logo} />
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={[styles.hebrewText, { color: 'red' }]}>{order.id}</Text>
                     <Text style={styles.hebrewText}> הזמנה מס׳</Text>
                   </View>
+
+                  <Image src="/logo.png" style={styles.logo} />
                 </View>
 
                 <View style={styles.rightSection}>
