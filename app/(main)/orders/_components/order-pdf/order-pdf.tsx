@@ -383,9 +383,6 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                 </View>
 
                 <View style={styles.middleSection}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={[styles.hebrewText, { color: 'red' }]}>PDF</Text>
-                  </View>
                   <Image src="/logo.png" style={styles.logo} />
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={[styles.hebrewText, { color: 'red' }]}>{order.id}</Text>
