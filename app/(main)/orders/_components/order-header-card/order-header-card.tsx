@@ -230,6 +230,16 @@ export default function OrderHeaderCard({ customers, company, disabled }: OrderH
           )}
 
           <StaticField
+            label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE)}
+            value={
+              <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
+                {formattedCompanyPhone}
+              </span>
+            }
+            separator=": "
+          />
+
+          <StaticField
             label={orderHeaderContent.t(OrderHeaderContentPhrases.ADDRESS)}
             value={companyAddress}
             separator=": "
@@ -239,16 +249,6 @@ export default function OrderHeaderCard({ customers, company, disabled }: OrderH
             label={orderHeaderContent.t(OrderHeaderContentPhrases.EMAIL)}
             value={
               company?.email || orderHeaderContent.t(OrderHeaderContentPhrases.PLACEHOLDER_EMAIL)
-            }
-            separator=": "
-          />
-
-          <StaticField
-            label={orderHeaderContent.t(OrderHeaderContentPhrases.PHONE)}
-            value={
-              <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
-                {formattedCompanyPhone}
-              </span>
             }
             separator=": "
           />

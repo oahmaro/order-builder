@@ -413,8 +413,12 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   </View>
 
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-                    <Text style={styles.label}> :אימייל</Text>
-                    <Text style={styles.value}>{company.email}</Text>
+                    <Text style={styles.label}> :טלפון</Text>
+                    {company.phones.map((phone) => (
+                      <Text key={phone.id} style={[styles.value, styles.phoneNumber]}>
+                        {formatPhoneForPDF(phone.number)}
+                      </Text>
+                    ))}
                   </View>
 
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
@@ -423,12 +427,8 @@ export function OrderPDF({ order, company }: OrderPDFProps) {
                   </View>
 
                   <View style={{ flexDirection: 'row-reverse', alignSelf: 'flex-end' }}>
-                    <Text style={styles.label}> :טלפון</Text>
-                    {company.phones.map((phone) => (
-                      <Text key={phone.id} style={[styles.value, styles.phoneNumber]}>
-                        {formatPhoneForPDF(phone.number)}
-                      </Text>
-                    ))}
+                    <Text style={styles.label}> :אימייל</Text>
+                    <Text style={styles.value}>{company.email}</Text>
                   </View>
                 </View>
               </View>
