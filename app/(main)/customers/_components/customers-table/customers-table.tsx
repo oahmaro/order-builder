@@ -52,10 +52,18 @@ export default function CustomersTable({ customers }: CustomersTableProps) {
       data={customers}
       columns={columns}
       enableSorting
-      onSortingChange={handleSortingChange}
       initialSorting={sorting}
-      onPageSizeChange={handlePageSizeChange}
       initialPageSize={initialPageSize}
+      initialColumnsVisibility={{
+        id: false,
+        updatedAt: true,
+        createdAt: false,
+        dateOfBirth: false,
+        createdByUser: true,
+        updatedByUser: false,
+      }}
+      onSortingChange={handleSortingChange}
+      onPageSizeChange={handlePageSizeChange}
     />
   );
 }

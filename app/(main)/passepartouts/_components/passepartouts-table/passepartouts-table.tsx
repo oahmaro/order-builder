@@ -49,13 +49,20 @@ export default function PassepartoutsTable({ passepartouts }: PassepartoutsTable
 
   return (
     <MainTable<PassepartoutDataType>
-      data={passepartouts}
-      columns={columns}
       enableSorting
-      onSortingChange={handleSortingChange}
+      columns={columns}
+      data={passepartouts}
       initialSorting={sorting}
-      onPageSizeChange={handlePageSizeChange}
       initialPageSize={initialPageSize}
+      onSortingChange={handleSortingChange}
+      onPageSizeChange={handlePageSizeChange}
+      initialColumnsVisibility={{
+        id: false,
+        updatedAt: true,
+        createdAt: false,
+        createdByUser: true,
+        updatedByUser: false,
+      }}
     />
   );
 }

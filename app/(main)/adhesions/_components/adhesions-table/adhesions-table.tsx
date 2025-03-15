@@ -49,13 +49,20 @@ export default function AdhesionsTable({ adhesions }: AdhesionsTableProps) {
 
   return (
     <MainTable<AdhesionDataType>
+      enableSorting
       data={adhesions}
       columns={columns}
-      enableSorting
-      onSortingChange={handleSortingChange}
       initialSorting={sorting}
-      onPageSizeChange={handlePageSizeChange}
       initialPageSize={initialPageSize}
+      onSortingChange={handleSortingChange}
+      onPageSizeChange={handlePageSizeChange}
+      initialColumnsVisibility={{
+        id: false,
+        createdAt: false,
+        updatedAt: true,
+        createdBy: true,
+        updatedBy: false,
+      }}
     />
   );
 }

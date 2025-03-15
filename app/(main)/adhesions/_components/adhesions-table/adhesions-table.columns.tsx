@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor } from '@mantine/core';
+import { Anchor, Highlight } from '@mantine/core';
 import { Adhesion } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
@@ -18,18 +18,28 @@ export const columns = [
   columnHelper.accessor((row) => String(row.id), {
     id: 'id',
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.ID),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const adhesionId = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return searchQuery ? <Highlight highlight={searchQuery}>{adhesionId}</Highlight> : adhesionId;
+    },
   }),
 
   columnHelper.accessor('name', {
     id: 'name',
     header: adhesionsTableContent.t(AdhesionsTableContentPhrases.NAME),
     sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/adhesions/${info.row.original.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const name = info.getValue() || '';
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return (
+        <Anchor size="sm" component={Link} href={`/adhesions/${info.row.original.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{name}</Highlight> : name}
+        </Anchor>
+      );
+    },
   }),
 
   columnHelper.accessor(
@@ -40,9 +50,12 @@ export const columns = [
       header: adhesionsTableContent.t(AdhesionsTableContentPhrases.CREATED_BY),
       cell: (info) => {
         const user = info.row.original.createdByUser;
+        const searchQuery = info.table.getState().globalFilter || '';
+        const userTitle = user ? generateUserTitle(user) : 'N/A';
+
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {generateUserTitle(user)}
+            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
           </Anchor>
         ) : (
           'N/A'
@@ -59,9 +72,12 @@ export const columns = [
       header: adhesionsTableContent.t(AdhesionsTableContentPhrases.UPDATED_BY),
       cell: (info) => {
         const user = info.row.original.updatedByUser;
+        const searchQuery = info.table.getState().globalFilter || '';
+        const userTitle = user ? generateUserTitle(user) : 'N/A';
+
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {generateUserTitle(user)}
+            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
           </Anchor>
         ) : (
           'N/A'

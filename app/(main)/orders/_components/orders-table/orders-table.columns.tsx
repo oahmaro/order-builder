@@ -2,7 +2,7 @@
 
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor, Badge, NumberFormatter, Tooltip } from '@mantine/core';
+import { Anchor, Badge, NumberFormatter, Tooltip, Highlight } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Order, OrderStatus, OrderItem } from '@prisma/client';
 
@@ -56,18 +56,33 @@ export const columns = [
     cell: (info) => {
       const isCanceled = info.row.original.status === OrderStatus.CANCELED;
       const orderIdText = `${info.getValue()}`;
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      if (isCanceled) {
+        return (
+          <CellWrapper isCanceled={isCanceled}>
+            <Tooltip label={ordersTableContent.t(OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP)}>
+              <span style={{ cursor: 'not-allowed' }}>
+                {searchQuery ? (
+                  <Highlight highlight={searchQuery}>{orderIdText}</Highlight>
+                ) : (
+                  orderIdText
+                )}
+              </span>
+            </Tooltip>
+          </CellWrapper>
+        );
+      }
 
       return (
         <CellWrapper isCanceled={isCanceled}>
-          {isCanceled ? (
-            <Tooltip label={ordersTableContent.t(OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP)}>
-              <span style={{ cursor: 'not-allowed' }}>{orderIdText}</span>
-            </Tooltip>
-          ) : (
-            <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
-              {orderIdText}
-            </Anchor>
-          )}
+          <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
+            {searchQuery ? (
+              <Highlight highlight={searchQuery}>{orderIdText}</Highlight>
+            ) : (
+              orderIdText
+            )}
+          </Anchor>
         </CellWrapper>
       );
     },
@@ -78,11 +93,17 @@ export const columns = [
     header: ordersTableContent.t(OrdersTableContentPhrases.CUSTOMER),
     cell: (info) => {
       const isCanceled = info.row.original.status === OrderStatus.CANCELED;
+      const customerName = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
 
       return (
         <CellWrapper isCanceled={isCanceled}>
           <Anchor component={Link} size="sm" href={`/customers/${info.row.original.customer.id}`}>
-            {info.getValue()}
+            {searchQuery ? (
+              <Highlight highlight={searchQuery}>{customerName}</Highlight>
+            ) : (
+              customerName
+            )}
           </Anchor>
         </CellWrapper>
       );
@@ -100,8 +121,23 @@ export const columns = [
       cell: (info) => {
         const isCanceled = info.row.original.status === OrderStatus.CANCELED;
         const phoneNumber = info.getValue();
+        const searchQuery = info.table.getState().globalFilter || '';
 
-        return <CellWrapper isCanceled={isCanceled}>{phoneNumber || '-'}</CellWrapper>;
+        return (
+          <CellWrapper isCanceled={isCanceled}>
+            {phoneNumber ? (
+              searchQuery ? (
+                <Highlight fz="sm" highlight={searchQuery}>
+                  {phoneNumber}
+                </Highlight>
+              ) : (
+                phoneNumber
+              )
+            ) : (
+              '-'
+            )}
+          </CellWrapper>
+        );
       },
     }
   ),
@@ -162,7 +198,7 @@ export const columns = [
           <CellWrapper isCanceled={isCanceled}>
             {user ? (
               <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-                {info.getValue()}
+                {generateUserTitle(user)}
               </Anchor>
             ) : (
               '-'

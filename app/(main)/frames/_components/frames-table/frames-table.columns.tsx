@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Frame } from '@prisma/client';
-import { Anchor } from '@mantine/core';
+import { Anchor, Highlight } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { generateUserTitle } from '@/utils/get-user-title';
@@ -18,18 +18,28 @@ export const columns = [
   columnHelper.accessor((row) => String(row.id), {
     id: 'id',
     header: framesTableContent.t(FramesTableContentPhrases.ID),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const frameId = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return searchQuery ? <Highlight highlight={searchQuery}>{frameId}</Highlight> : frameId;
+    },
   }),
 
   columnHelper.accessor('name', {
     id: 'name',
     header: framesTableContent.t(FramesTableContentPhrases.NAME),
     sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/frames/${info.row.original.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const frameName = info.getValue() || '';
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return (
+        <Anchor size="sm" component={Link} href={`/frames/${info.row.original.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{frameName}</Highlight> : frameName}
+        </Anchor>
+      );
+    },
   }),
 
   columnHelper.accessor(
@@ -40,9 +50,12 @@ export const columns = [
       header: framesTableContent.t(FramesTableContentPhrases.CREATED_BY),
       cell: (info) => {
         const user = info.row.original.createdByUser;
+        const userTitle = user ? generateUserTitle(user) : 'N/A';
+        const searchQuery = info.table.getState().globalFilter || '';
+
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {generateUserTitle(user)}
+            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
           </Anchor>
         ) : (
           'N/A'
@@ -59,9 +72,12 @@ export const columns = [
       header: framesTableContent.t(FramesTableContentPhrases.UPDATED_BY),
       cell: (info) => {
         const user = info.row.original.updatedByUser;
+        const userTitle = user ? generateUserTitle(user) : 'N/A';
+        const searchQuery = info.table.getState().globalFilter || '';
+
         return user ? (
           <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            {generateUserTitle(user)}
+            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
           </Link>
         ) : (
           'N/A'

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor } from '@mantine/core';
+import { Anchor, Highlight } from '@mantine/core';
 import { Passepartout } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
@@ -11,57 +11,90 @@ import {
 import { generateUserTitle } from '@/utils/get-user-title';
 
 type PassepartoutDataType = Partial<Passepartout> & {
-  createdByUser?: { id: number; firstName: string; lastName: string } | null;
-  updatedByUser?: { id: number; firstName: string; lastName: string } | null;
+  createdByUser?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    username?: string | null;
+  } | null;
+  updatedByUser?: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    username?: string | null;
+  } | null;
 };
 
 const columnHelper = createColumnHelper<PassepartoutDataType>();
 
 export const columns = [
-  columnHelper.accessor('id', {
+  columnHelper.accessor((row) => String(row.id), {
+    id: 'id',
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.ID),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const passepartoutId = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return searchQuery ? (
+        <Highlight highlight={searchQuery}>{passepartoutId}</Highlight>
+      ) : (
+        passepartoutId
+      );
+    },
   }),
 
   columnHelper.accessor('name', {
     id: 'name',
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.NAME),
     sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/passepartouts/${info.row.original.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const value = info.getValue() || '';
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return value ? (
+        <Anchor size="sm" component={Link} href={`/passepartouts/${info.row.original.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{value}</Highlight> : value}
+        </Anchor>
+      ) : (
+        '-'
+      );
+    },
   }),
 
   columnHelper.accessor('createdByUser', {
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.CREATED_BY),
-    cell: (info) =>
-      info.getValue()?.id ? (
-        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
-          {generateUserTitle({
-            firstName: info.getValue()?.firstName,
-            lastName: info.getValue()?.lastName,
-          })}
+    cell: (info) => {
+      const user = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      if (!user?.id) return '-';
+
+      const userTitle = generateUserTitle(user);
+
+      return (
+        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
         </Anchor>
-      ) : (
-        'N/A'
-      ),
+      );
+    },
   }),
 
   columnHelper.accessor('updatedByUser', {
     header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.UPDATED_BY),
-    cell: (info) =>
-      info.getValue()?.id ? (
-        <Anchor size="sm" component={Link} href={`/users/${info.getValue()?.id}`}>
-          {generateUserTitle({
-            firstName: info.getValue()?.firstName,
-            lastName: info.getValue()?.lastName,
-          })}
+    cell: (info) => {
+      const user = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      if (!user?.id) return '-';
+
+      const userTitle = generateUserTitle(user);
+
+      return (
+        <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
         </Anchor>
-      ) : (
-        'N/A'
-      ),
+      );
+    },
   }),
 
   columnHelper.accessor(
@@ -73,8 +106,9 @@ export const columns = [
       id: 'createdAt',
       header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.CREATED_AT),
       cell: (info) =>
-        info.row.original.createdAt &&
-        dayjs(info.row.original.createdAt).format('MMMM D, YYYY h:mm A'),
+        info.row.original.createdAt
+          ? dayjs(info.row.original.createdAt).format('MMMM D, YYYY h:mm A')
+          : '-',
     }
   ),
 
@@ -87,8 +121,9 @@ export const columns = [
       id: 'updatedAt',
       header: passepartoutsTableContent.t(PassepartoutsTableContentPhrases.UPDATED_AT),
       cell: (info) =>
-        info.row.original.updatedAt &&
-        dayjs(info.row.original.updatedAt).format('MMMM D, YYYY h:mm A'),
+        info.row.original.updatedAt
+          ? dayjs(info.row.original.updatedAt).format('MMMM D, YYYY h:mm A')
+          : '-',
     }
   ),
 ];

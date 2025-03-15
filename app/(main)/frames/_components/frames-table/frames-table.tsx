@@ -52,10 +52,16 @@ export default function FramesTable({ frames }: FramesTableProps) {
       data={frames}
       columns={columns}
       enableSorting
-      onSortingChange={handleSortingChange}
       initialSorting={sorting}
-      onPageSizeChange={handlePageSizeChange}
+      initialColumnsVisibility={{
+        id: false,
+        createdAt: false,
+        updatedAt: true,
+        createdByUser: true,
+      }}
       initialPageSize={initialPageSize}
+      onSortingChange={handleSortingChange}
+      onPageSizeChange={handlePageSizeChange}
     />
   );
 }

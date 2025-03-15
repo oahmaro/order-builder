@@ -3,6 +3,7 @@ export * from './date-validator';
 export * from './error-messages';
 export * from './get-user-title';
 export * from './with-audit-info';
+export * from './highlight-search';
 export * from './get-user-initials';
 export * from './format-phone-number';
 export * from './get-order-status-mapping';

@@ -50,12 +50,19 @@ export default function PrintsTable({ prints }: PrintsTableProps) {
   return (
     <MainTable<PrintDataType>
       data={prints}
-      columns={columns}
       enableSorting
-      onSortingChange={handleSortingChange}
+      columns={columns}
       initialSorting={sorting}
-      onPageSizeChange={handlePageSizeChange}
       initialPageSize={initialPageSize}
+      onSortingChange={handleSortingChange}
+      onPageSizeChange={handlePageSizeChange}
+      initialColumnsVisibility={{
+        id: false,
+        updatedAt: true,
+        createdAt: false,
+        createdBy: true,
+        updatedBy: false,
+      }}
     />
   );
 }

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Print } from '@prisma/client';
-import { Anchor } from '@mantine/core';
+import { Anchor, Highlight } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { generateUserTitle } from '@/utils/get-user-title';
@@ -18,18 +18,28 @@ export const columns = [
   columnHelper.accessor((row) => String(row.id), {
     id: 'id',
     header: printsTableContent.t(PrintsTableContentPhrases.ID),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const printId = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return searchQuery ? <Highlight highlight={searchQuery}>{printId}</Highlight> : printId;
+    },
   }),
 
   columnHelper.accessor('name', {
     id: 'name',
     header: printsTableContent.t(PrintsTableContentPhrases.NAME),
     sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/prints/${info.row.original.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const printName = info.getValue() || '';
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return (
+        <Anchor size="sm" component={Link} href={`/prints/${info.row.original.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{printName}</Highlight> : printName}
+        </Anchor>
+      );
+    },
   }),
 
   columnHelper.accessor(
@@ -40,12 +50,15 @@ export const columns = [
       header: printsTableContent.t(PrintsTableContentPhrases.CREATED_BY),
       cell: (info) => {
         const user = info.row.original.createdByUser;
-        return user ? (
+        const userName = user ? generateUserTitle(user) : 'N/A';
+        const searchQuery = info.table.getState().globalFilter || '';
+
+        if (!user) return 'N/A';
+
+        return (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {generateUserTitle(user)}
+            {searchQuery ? <Highlight highlight={searchQuery}>{userName}</Highlight> : userName}
           </Anchor>
-        ) : (
-          'N/A'
         );
       },
     }
@@ -59,12 +72,15 @@ export const columns = [
       header: printsTableContent.t(PrintsTableContentPhrases.UPDATED_BY),
       cell: (info) => {
         const user = info.row.original.updatedByUser;
-        return user ? (
+        const userName = user ? generateUserTitle(user) : 'N/A';
+        const searchQuery = info.table.getState().globalFilter || '';
+
+        if (!user) return 'N/A';
+
+        return (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {generateUserTitle(user)}
+            {searchQuery ? <Highlight highlight={searchQuery}>{userName}</Highlight> : userName}
           </Anchor>
-        ) : (
-          'N/A'
         );
       },
     }

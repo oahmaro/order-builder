@@ -49,13 +49,20 @@ export default function DescriptionsTable({ descriptions }: DescriptionsTablePro
 
   return (
     <MainTable<DescriptionDataType>
-      data={descriptions}
-      columns={columns}
       enableSorting
-      onSortingChange={handleSortingChange}
+      columns={columns}
+      data={descriptions}
       initialSorting={sorting}
-      onPageSizeChange={handlePageSizeChange}
       initialPageSize={initialPageSize}
+      onSortingChange={handleSortingChange}
+      onPageSizeChange={handlePageSizeChange}
+      initialColumnsVisibility={{
+        id: false,
+        updatedAt: true,
+        createdAt: false,
+        createdByUser: true,
+        updatedByUser: false,
+      }}
     />
   );
 }

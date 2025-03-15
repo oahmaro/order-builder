@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor } from '@mantine/core';
 import { Description } from '@prisma/client';
+import { Anchor, Highlight } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import {
@@ -20,30 +20,48 @@ const columnHelper = createColumnHelper<DescriptionDataType>();
 export const columns = [
   columnHelper.accessor('id', {
     header: descriptionsTableContent.t(DescriptionsTableContentPhrases.ID),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const descriptionId = String(info.getValue());
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return searchQuery ? (
+        <Highlight highlight={searchQuery}>{descriptionId}</Highlight>
+      ) : (
+        descriptionId
+      );
+    },
   }),
 
   columnHelper.accessor('name', {
     id: 'name',
     header: descriptionsTableContent.t(DescriptionsTableContentPhrases.NAME),
     sortingFn: (rowA, rowB) => (rowA.original.name ?? '').localeCompare(rowB.original.name ?? ''),
-    cell: (info) => (
-      <Anchor size="sm" component={Link} href={`/descriptions/${info.row.original.id}`}>
-        {info.getValue()}
-      </Anchor>
-    ),
+    cell: (info) => {
+      const name = info.getValue() || '';
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return (
+        <Anchor size="sm" component={Link} href={`/descriptions/${info.row.original.id}`}>
+          {searchQuery ? <Highlight highlight={searchQuery}>{name}</Highlight> : name}
+        </Anchor>
+      );
+    },
   }),
 
   columnHelper.accessor('createdByUser', {
     header: descriptionsTableContent.t(DescriptionsTableContentPhrases.CREATED_BY),
     cell: (info) => {
       const user = info.getValue();
-      return user ? (
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      if (!user) return 'N/A';
+
+      const userTitle = generateUserTitle(user);
+
+      return (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
+          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
         </Anchor>
-      ) : (
-        'N/A'
       );
     },
   }),
@@ -52,12 +70,16 @@ export const columns = [
     header: descriptionsTableContent.t(DescriptionsTableContentPhrases.UPDATED_BY),
     cell: (info) => {
       const user = info.getValue();
-      return user ? (
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      if (!user) return 'N/A';
+
+      const userTitle = generateUserTitle(user);
+
+      return (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
+          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
         </Anchor>
-      ) : (
-        'N/A'
       );
     },
   }),
