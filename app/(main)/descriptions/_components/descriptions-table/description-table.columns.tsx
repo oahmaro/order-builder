@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Description } from '@prisma/client';
-import { Anchor, Highlight } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import {
@@ -9,6 +9,7 @@ import {
   DescriptionsTableContentPhrases,
 } from './description-table.content';
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 
 type DescriptionDataType = Partial<Description> & {
   createdByUser?: { id: number; firstName: string; lastName: string } | null;
@@ -24,11 +25,7 @@ export const columns = [
       const descriptionId = String(info.getValue());
       const searchQuery = info.table.getState().globalFilter || '';
 
-      return searchQuery ? (
-        <Highlight highlight={searchQuery}>{descriptionId}</Highlight>
-      ) : (
-        descriptionId
-      );
+      return highlightSearchTerm(descriptionId, searchQuery);
     },
   }),
 
@@ -42,7 +39,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/descriptions/${info.row.original.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{name}</Highlight> : name}
+          {highlightSearchTerm(name, searchQuery)}
         </Anchor>
       );
     },
@@ -60,7 +57,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+          {highlightSearchTerm(userTitle, searchQuery)}
         </Anchor>
       );
     },
@@ -78,7 +75,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+          {highlightSearchTerm(userTitle, searchQuery)}
         </Anchor>
       );
     },

@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Print } from '@prisma/client';
-import { Anchor, Highlight } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 import { printsTableContent, PrintsTableContentPhrases } from './prints-table.content';
 
 type PrintDataType = Partial<Print> & {
@@ -22,7 +23,7 @@ export const columns = [
       const printId = info.getValue();
       const searchQuery = info.table.getState().globalFilter || '';
 
-      return searchQuery ? <Highlight highlight={searchQuery}>{printId}</Highlight> : printId;
+      return highlightSearchTerm(printId, searchQuery);
     },
   }),
 
@@ -36,7 +37,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/prints/${info.row.original.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{printName}</Highlight> : printName}
+          {highlightSearchTerm(printName, searchQuery)}
         </Anchor>
       );
     },
@@ -57,7 +58,7 @@ export const columns = [
 
         return (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {searchQuery ? <Highlight highlight={searchQuery}>{userName}</Highlight> : userName}
+            {highlightSearchTerm(userName, searchQuery)}
           </Anchor>
         );
       },
@@ -79,7 +80,7 @@ export const columns = [
 
         return (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {searchQuery ? <Highlight highlight={searchQuery}>{userName}</Highlight> : userName}
+            {highlightSearchTerm(userName, searchQuery)}
           </Anchor>
         );
       },

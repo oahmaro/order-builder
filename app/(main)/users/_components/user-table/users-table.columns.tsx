@@ -5,6 +5,7 @@ import { Anchor, Badge } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 import { UserTableContent, userTableContent } from './users-table.content';
 
 type UserDataType = Partial<User> & {
@@ -18,7 +19,12 @@ export const columns = [
   columnHelper.accessor((row) => String(row.id), {
     id: 'id',
     header: userTableContent.t(UserTableContent.ID),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const userId = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return highlightSearchTerm(userId, searchQuery);
+    },
   }),
 
   columnHelper.accessor(
@@ -29,22 +35,37 @@ export const columns = [
     {
       id: 'fullName',
       header: userTableContent.t(UserTableContent.FULL_NAME),
-      cell: (info) => (
-        <Anchor size="sm" component={Link} href={`/users/${info.row.original.id}`}>
-          {info.getValue()}
-        </Anchor>
-      ),
+      cell: (info) => {
+        const fullName = info.getValue();
+        const searchQuery = info.table.getState().globalFilter || '';
+
+        return (
+          <Anchor size="sm" component={Link} href={`/users/${info.row.original.id}`}>
+            {highlightSearchTerm(fullName, searchQuery)}
+          </Anchor>
+        );
+      },
     }
   ),
 
   columnHelper.accessor('email', {
     header: userTableContent.t(UserTableContent.EMAIL),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const email = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return highlightSearchTerm(email || '', searchQuery);
+    },
   }),
 
   columnHelper.accessor('username', {
     header: userTableContent.t(UserTableContent.USERNAME),
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const username = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+
+      return highlightSearchTerm(username || '', searchQuery);
+    },
   }),
 
   columnHelper.accessor((row) => `${row.role} ${userTableContent.t(`ROLE_${row.role}`)}`, {
@@ -65,9 +86,12 @@ export const columns = [
       header: userTableContent.t(UserTableContent.CREATED_BY),
       cell: (info) => {
         const user = info.row.original.createdByUser;
+        const searchQuery = info.table.getState().globalFilter || '';
+        const userTitle = user ? generateUserTitle(user) : 'N/A';
+
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {generateUserTitle(user)}
+            {highlightSearchTerm(userTitle, searchQuery)}
           </Anchor>
         ) : (
           'N/A'
@@ -94,9 +118,12 @@ export const columns = [
     header: userTableContent.t(UserTableContent.UPDATED_BY),
     cell: (info) => {
       const user = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+      const userTitle = user ? generateUserTitle(user) : 'N/A';
+
       return user ? (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
+          {highlightSearchTerm(userTitle, searchQuery)}
         </Anchor>
       ) : (
         'N/A'

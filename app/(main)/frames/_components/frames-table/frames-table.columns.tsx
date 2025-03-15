@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Frame } from '@prisma/client';
-import { Anchor, Highlight } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 import { framesTableContent, FramesTableContentPhrases } from './frames-table.content';
 
 type FrameDataType = Partial<Frame> & {
@@ -22,7 +23,7 @@ export const columns = [
       const frameId = info.getValue();
       const searchQuery = info.table.getState().globalFilter || '';
 
-      return searchQuery ? <Highlight highlight={searchQuery}>{frameId}</Highlight> : frameId;
+      return highlightSearchTerm(frameId, searchQuery);
     },
   }),
 
@@ -36,7 +37,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/frames/${info.row.original.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{frameName}</Highlight> : frameName}
+          {highlightSearchTerm(frameName, searchQuery)}
         </Anchor>
       );
     },
@@ -55,7 +56,7 @@ export const columns = [
 
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+            {highlightSearchTerm(userTitle, searchQuery)}
           </Anchor>
         ) : (
           'N/A'
@@ -77,7 +78,7 @@ export const columns = [
 
         return user ? (
           <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+            {highlightSearchTerm(userTitle, searchQuery)}
           </Link>
         ) : (
           'N/A'

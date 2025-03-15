@@ -2,11 +2,12 @@
 
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor, Badge, NumberFormatter, Tooltip, Highlight } from '@mantine/core';
+import { Anchor, Badge, NumberFormatter, Tooltip } from '@mantine/core';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Order, OrderStatus, OrderItem } from '@prisma/client';
 
 import { generateUserTitle, getOrderStatusMapping } from '@/utils';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 import { ordersTableContent, OrdersTableContentPhrases } from './orders-table.content';
 
 export type OrderDataType = Partial<Order> & {
@@ -63,11 +64,7 @@ export const columns = [
           <CellWrapper isCanceled={isCanceled}>
             <Tooltip label={ordersTableContent.t(OrdersTableContentPhrases.CANCELED_ORDER_TOOLTIP)}>
               <span style={{ cursor: 'not-allowed' }}>
-                {searchQuery ? (
-                  <Highlight highlight={searchQuery}>{orderIdText}</Highlight>
-                ) : (
-                  orderIdText
-                )}
+                {highlightSearchTerm(orderIdText, searchQuery)}
               </span>
             </Tooltip>
           </CellWrapper>
@@ -77,11 +74,7 @@ export const columns = [
       return (
         <CellWrapper isCanceled={isCanceled}>
           <Anchor size="sm" component={Link} href={`/orders/${info.row.original.id}`}>
-            {searchQuery ? (
-              <Highlight highlight={searchQuery}>{orderIdText}</Highlight>
-            ) : (
-              orderIdText
-            )}
+            {highlightSearchTerm(orderIdText, searchQuery)}
           </Anchor>
         </CellWrapper>
       );
@@ -99,11 +92,7 @@ export const columns = [
       return (
         <CellWrapper isCanceled={isCanceled}>
           <Anchor component={Link} size="sm" href={`/customers/${info.row.original.customer.id}`}>
-            {searchQuery ? (
-              <Highlight highlight={searchQuery}>{customerName}</Highlight>
-            ) : (
-              customerName
-            )}
+            {highlightSearchTerm(customerName, searchQuery)}
           </Anchor>
         </CellWrapper>
       );
@@ -125,17 +114,7 @@ export const columns = [
 
         return (
           <CellWrapper isCanceled={isCanceled}>
-            {phoneNumber ? (
-              searchQuery ? (
-                <Highlight fz="sm" highlight={searchQuery}>
-                  {phoneNumber}
-                </Highlight>
-              ) : (
-                phoneNumber
-              )
-            ) : (
-              '-'
-            )}
+            {phoneNumber ? highlightSearchTerm(phoneNumber, searchQuery) : '-'}
           </CellWrapper>
         );
       },
@@ -193,12 +172,14 @@ export const columns = [
       cell: (info) => {
         const isCanceled = info.row.original.status === OrderStatus.CANCELED;
         const user = info.row.original.createdByUser;
+        const searchQuery = info.table.getState().globalFilter || '';
+        const userTitle = user ? generateUserTitle(user) : '-';
 
         return (
           <CellWrapper isCanceled={isCanceled}>
             {user ? (
               <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-                {generateUserTitle(user)}
+                {highlightSearchTerm(userTitle, searchQuery)}
               </Anchor>
             ) : (
               '-'
@@ -218,12 +199,14 @@ export const columns = [
       cell: (info) => {
         const isCanceled = info.row.original.status === OrderStatus.CANCELED;
         const user = info.row.original.updatedByUser;
+        const searchQuery = info.table.getState().globalFilter || '';
+        const userTitle = user ? generateUserTitle(user) : '-';
 
         return (
           <CellWrapper isCanceled={isCanceled}>
             {user ? (
               <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                {info.getValue()}
+                {highlightSearchTerm(userTitle, searchQuery)}
               </Link>
             ) : (
               '-'

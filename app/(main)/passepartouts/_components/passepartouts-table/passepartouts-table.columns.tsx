@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor, Highlight } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { Passepartout } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
@@ -9,6 +9,7 @@ import {
   PassepartoutsTableContentPhrases,
 } from './passepartouts-table.content';
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 
 type PassepartoutDataType = Partial<Passepartout> & {
   createdByUser?: {
@@ -35,11 +36,7 @@ export const columns = [
       const passepartoutId = info.getValue();
       const searchQuery = info.table.getState().globalFilter || '';
 
-      return searchQuery ? (
-        <Highlight highlight={searchQuery}>{passepartoutId}</Highlight>
-      ) : (
-        passepartoutId
-      );
+      return highlightSearchTerm(passepartoutId, searchQuery);
     },
   }),
 
@@ -53,7 +50,7 @@ export const columns = [
 
       return value ? (
         <Anchor size="sm" component={Link} href={`/passepartouts/${info.row.original.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{value}</Highlight> : value}
+          {highlightSearchTerm(value, searchQuery)}
         </Anchor>
       ) : (
         '-'
@@ -73,7 +70,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+          {highlightSearchTerm(userTitle, searchQuery)}
         </Anchor>
       );
     },
@@ -91,7 +88,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+          {highlightSearchTerm(userTitle, searchQuery)}
         </Anchor>
       );
     },

@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor, Highlight } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { Adhesion } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { adhesionsTableContent, AdhesionsTableContentPhrases } from './adhesions-table.content';
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 
 type AdhesionDataType = Partial<Adhesion> & {
   createdByUser?: { id: number; firstName: string; lastName: string } | null;
@@ -22,7 +23,7 @@ export const columns = [
       const adhesionId = info.getValue();
       const searchQuery = info.table.getState().globalFilter || '';
 
-      return searchQuery ? <Highlight highlight={searchQuery}>{adhesionId}</Highlight> : adhesionId;
+      return highlightSearchTerm(adhesionId, searchQuery);
     },
   }),
 
@@ -36,7 +37,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/adhesions/${info.row.original.id}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{name}</Highlight> : name}
+          {highlightSearchTerm(name, searchQuery)}
         </Anchor>
       );
     },
@@ -55,7 +56,7 @@ export const columns = [
 
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+            {highlightSearchTerm(userTitle, searchQuery)}
           </Anchor>
         ) : (
           'N/A'
@@ -77,7 +78,7 @@ export const columns = [
 
         return user ? (
           <Anchor size="sm" component={Link} href={`/users/${user.id}`}>
-            {searchQuery ? <Highlight highlight={searchQuery}>{userTitle}</Highlight> : userTitle}
+            {highlightSearchTerm(userTitle, searchQuery)}
           </Anchor>
         ) : (
           'N/A'

@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Anchor, Highlight } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { Customer, Phone } from '@prisma/client';
 import { createColumnHelper } from '@tanstack/react-table';
 
 import { formatPhoneNumber } from '@/utils';
 import { generateUserTitle } from '@/utils/get-user-title';
+import { highlightSearchTerm } from '@/utils/highlight-search';
 import { customersTableContent, CustomersTableContentPhrases } from './customers-table.content';
 
 type CustomerDataType = Partial<Customer> & {
@@ -25,7 +26,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/customers/${info.getValue()}`}>
-          {searchQuery ? <Highlight highlight={searchQuery}>{customerId}</Highlight> : customerId}
+          {highlightSearchTerm(customerId, searchQuery)}
         </Anchor>
       );
     },
@@ -40,11 +41,7 @@ export const columns = [
 
       return (
         <Anchor size="sm" component={Link} href={`/customers/${info.row.original.id}`}>
-          {searchQuery ? (
-            <Highlight highlight={searchQuery}>{customerName}</Highlight>
-          ) : (
-            customerName
-          )}
+          {highlightSearchTerm(customerName, searchQuery)}
         </Anchor>
       );
     },
@@ -64,11 +61,7 @@ export const columns = [
 
         return (
           <span style={{ direction: 'ltr', unicodeBidi: 'embed', display: 'inline-block' }}>
-            {searchQuery ? (
-              <Highlight highlight={searchQuery}>{phoneNumber}</Highlight>
-            ) : (
-              phoneNumber
-            )}
+            {highlightSearchTerm(phoneNumber, searchQuery)}
           </span>
         );
       },
@@ -81,7 +74,7 @@ export const columns = [
       const email = info.getValue();
       const searchQuery = info.table.getState().globalFilter || '';
 
-      return searchQuery && email ? <Highlight highlight={searchQuery}>{email}</Highlight> : email;
+      return highlightSearchTerm(email || '', searchQuery);
     },
   }),
 
@@ -94,9 +87,12 @@ export const columns = [
     header: customersTableContent.t(CustomersTableContentPhrases.CREATED_BY),
     cell: (info) => {
       const user = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+      const userTitle = user ? generateUserTitle(user) : 'N/A';
+
       return user ? (
         <Anchor component={Link} size="sm" href={`/users/${user.id}`}>
-          {generateUserTitle(user)}
+          {highlightSearchTerm(userTitle, searchQuery)}
         </Anchor>
       ) : (
         'N/A'
@@ -108,10 +104,13 @@ export const columns = [
     header: customersTableContent.t(CustomersTableContentPhrases.UPDATED_BY),
     cell: (info) => {
       const user = info.getValue();
+      const searchQuery = info.table.getState().globalFilter || '';
+      const userTitle = user ? generateUserTitle(user) : 'N/A';
+
       return user ? (
-        <Link href={`/users/${user.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-          {generateUserTitle(user)}
-        </Link>
+        <Anchor component={Link} size="sm" href={`/users/${user.id}`}>
+          {highlightSearchTerm(userTitle, searchQuery)}
+        </Anchor>
       ) : (
         'N/A'
       );
