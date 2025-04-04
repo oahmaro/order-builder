@@ -103,9 +103,9 @@ async function load() {
     await prisma.$queryRaw`ALTER SEQUENCE "Company_id_seq" RESTART WITH 1`;
     console.log('reset company auto increment to 1');
 
-    // Set Order sequence to start from 11260
-    await prisma.$queryRaw`ALTER SEQUENCE "Order_id_seq" RESTART WITH 11260`;
-    console.log('set order auto increment to 11260');
+    // Set Order sequence to start from 11300
+    await prisma.$queryRaw`ALTER SEQUENCE "Order_id_seq" RESTART WITH 11300`;
+    console.log('set order auto increment to 11300');
 
     const usersWithHashedPassword = await Promise.all(
       users.map(async (user) => ({
